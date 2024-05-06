@@ -35,20 +35,20 @@ jobs:
           git config --local user.name "eds-multisite-helper[bot]"
           
           # iterate over child repositories
-          while IFS=$'\t' read -r repo folder _; do
-          # copy the override files into the root of the repo
-          cp -a .multisite/$folder/. ./
-        
-          # commit the changes
-          git add .
-          git commit -m"eds-multisite-helper: Override specific site's files for ${folder}"
+          while IFS=$'\t' read -r folder repo _; do
+            # copy the override files into the root of the repo
+            cp -a .multisite/$folder/. ./
           
-          # add the destination child repo
-          git remote add $folder $repo
-        
-          # force push to override the complete history, and only have one last "override" commit
-          git push $folder --force
-        
-          # reset for the next iteration
-          git reset --hard origin/$GITHUB_REF_NAME
+            # commit the changes
+            git add .
+            git commit -m"eds-multisite-helper: Override specific site's files for ${folder}"
+            
+            # add the destination child repo
+            git remote add $folder $repo
+          
+            # force push to override the complete history, and only have one last "override" commit
+            git push $folder --force
+          
+            # reset for the next iteration
+            git reset --hard origin/$GITHUB_REF_NAME
           done < <(yq e '.sites | to_entries[] | [.key, .value.origin] | @tsv' '.multisite/config.yaml')
