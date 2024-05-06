@@ -1,0 +1,4 @@
+sites:
+  demo:
+    origin: https://github.com/techdivision/eds-eder-googledrivedemo
+    port: 3001

@@ -7,3 +7,7 @@ helix-importer-ui
 .DS_Store
 *.bak
 .idea
+
+# multisite
+.multisite/.active
+
