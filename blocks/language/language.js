@@ -1,7 +1,7 @@
 function getLanguageData(block) {
   const languages = new Map();
   for (let i = 0; i < block.children.length; i++) {
-    const child = block.children.get(i);
+    const child = block.children.item(i);
     const key = child.children.item(0).querySelector('p').innerHTML;
     const name = child.children.item(1).querySelector('p').innerHTML;
     const label = child.children.item(2).querySelector('p').innerHTML;
