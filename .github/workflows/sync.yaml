@@ -1,0 +1,54 @@
+name: Sync master repository to clones
+on: push
+
+jobs:
+  sync:
+    # because this repo is synced to other repositories, we need to specify the repository where we explicitly want this action to run
+    if: github.event.repository.name == 'eds-eder-main'
+    runs-on: ubuntu-latest
+    steps:
+      # generate a token with the help of a GitHub app. GitHub apps provide more control for organizations about access, independent to actual individual user accounts
+      - name: Generate Token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          # pass the owner to get a token with the access scope to all repos with this app by this owner
+          owner: ${{ github.repository_owner }}
+      - name: Checkout Master Repository
+        uses: actions/checkout@v4
+        with:
+          # use the previous token to set up git with this token for later steps (pushing to other repos)
+          token: ${{ steps.app-token.outputs.token }}
+          # fetch the complete commit history, to be able to push it later with the complete history
+          fetch-depth: 0
+      # install yq to be able to parse the yaml configuration file
+      - name: Install yq
+        uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: v4.43.1
+      - name: Merge and push changes to child repositories
+        run: |
+          # setup a email and name to be able to make a commit
+          git config --local user.email "${{ secrets.APP_ID }}+eds-multisite-helper[bot]@users.noreply.github.com"
+          git config --local user.name "eds-multisite-helper[bot]"
+          
+          # iterate over child repositories
+          while IFS=$'\t' read -r repo folder _; do
+          # copy the override files into the root of the repo
+          cp -a .multisite/$folder/. ./
+        
+          # commit the changes
+          git add .
+          git commit -m"eds-multisite-helper: Override specific site's files for ${folder}"
+          
+          # add the destination child repo
+          git remote add $folder $repo
+        
+          # force push to override the complete history, and only have one last "override" commit
+          git push $folder --force
+        
+          # reset for the next iteration
+          git reset --hard origin/$GITHUB_REF_NAME
+          done < <(yq e '.sites | to_entries[] | [.key, .value.origin] | @tsv' '.multisite/config.yaml')
