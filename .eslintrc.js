@@ -17,6 +17,5 @@ module.exports = {
     'import/extensions': ['error', {
       js: 'always',
     }],
-    'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
   },
 };

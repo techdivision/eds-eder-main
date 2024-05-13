@@ -1,74 +1,83 @@
-function getLanguageData(block) {
-  const languages = new Map();
-  for (let i = 0; i < block.children.length; i++) {
-    const child = block.children.item(i);
-    const key = child.children.item(0).querySelector('p').innerHTML;
-    const name = child.children.item(1).querySelector('p').innerHTML;
-    const label = child.children.item(2).querySelector('p').innerHTML;
-    const image = child.children.item(3).querySelector('img').src;
+import { defaultLanguage } from '../../scripts/defaults.js';
 
-    languages.set(key, { name, label, image });
-  }
+function getLanguageData(block) {
+  const languages = {};
+  [...block.children].forEach((row) => {
+    const key = row.children.item(0).querySelector('p').innerHTML;
+    const name = row.children.item(1).querySelector('p').innerHTML;
+    const label = row.children.item(2).querySelector('p').innerHTML;
+    const image = row.children.item(3).querySelector('img').src;
+
+    languages[key] = { name, label, image };
+  });
   return languages;
 }
 
-function addLanguageItems(ul, languages, languageSites) {
-  languages.forEach((language, langKey) => {
-    const languageSite = languageSites.find((site) => site.lang === langKey);
-    const li = document.createElement('li');
-    const a = document.createElement('a');
+function addLanguageItems(languageSelectorList, possibleLanguagesList, languageSites) {
+  Object.entries(possibleLanguagesList).forEach((language) => {
+    const languageSite = languageSites.find((site) => site.lang === language[0]);
+    const languageListItem = document.createElement('li');
+    const languageSiteLink = document.createElement('a');
 
-    const urlKey = langKey === 'de' ? '' : langKey;
-    a.href = languageSite ? languageSite.path : `/${urlKey}`;
+    const urlKey = language[0] === defaultLanguage ? '' : language[0];
+    languageSiteLink.href = languageSite ? languageSite.path : `/${urlKey}`;
     const img = document.createElement('img');
-    img.src = language.image;
+    img.src = language[1].image;
 
     const textSpan = document.createElement('span');
-    textSpan.innerHTML = language.name;
+    textSpan.innerHTML = language[1].name;
 
-    a.append(img);
-    a.append(textSpan);
-    li.append(a);
-    ul.append(li);
+    languageSiteLink.append(img);
+    languageSiteLink.append(textSpan);
+    languageListItem.append(languageSiteLink);
+    languageSelectorList.append(languageListItem);
   });
 }
 
 export default async function decorate(block) {
-  const languages = getLanguageData(block);
+  const possibleLanguages = getLanguageData(block);
   block.innerHTML = '';
-  const response = await fetch('/query-index.json');
-  if (!response.ok) {
-    return null;
-  }
-  const sites = await response.json();
 
   const keyMetaObject = document.querySelector('meta[name="key"]');
   const key = keyMetaObject ? keyMetaObject.content : 'index';
 
   const langMetaObject = document.querySelector('meta[name="lang"]');
-  const lang = langMetaObject ? langMetaObject.content : 'en';
+  const currentLanguage = langMetaObject ? langMetaObject.content : defaultLanguage;
 
-  const languageSites = sites.data.filter((site) => site.key === key);
+  const currentLanguageImage = document.createElement('img');
+  currentLanguageImage.src = possibleLanguages[currentLanguage].image;
 
-  const languageImage = document.createElement('img');
-  languageImage.src = languages.get(lang).image;
+  const currentLanguageText = document.createElement('p');
+  currentLanguageText.innerHTML = possibleLanguages[currentLanguage].label;
 
-  const languageText = document.createElement('p');
-  languageText.innerHTML = languages.get(lang).label;
+  block.append(currentLanguageImage);
+  block.append(currentLanguageText);
 
-  block.append(languageImage);
-  block.append(languageText);
-  const ul = document.createElement('ul');
-  ul.className = 'language-list hidden';
-  block.append(ul);
-  addLanguageItems(ul, languages, languageSites);
+  const languageSelectorList = document.createElement('ul');
+  languageSelectorList.classList.add('language-list', 'hidden');
 
   block.addEventListener('mouseover', () => {
-    ul.className = 'language-list';
+    languageSelectorList.classList.remove('hidden');
   });
 
   block.addEventListener('mouseleave', () => {
-    ul.className = 'language-list hidden';
+    languageSelectorList.classList.add('hidden');
   });
+
+  block.append(languageSelectorList);
+  // Render default language select
+  addLanguageItems(languageSelectorList, possibleLanguages, []);
+
+  const response = await fetch('/query-index.json');
+  if (!response.ok) {
+    return null;
+  }
+  const sites = await response.json();
+  const languageSites = sites.data.filter((site) => site.key === key);
+
+  // Clear Language select and render again with fetch data
+  languageSelectorList.innerHTML = '';
+  addLanguageItems(languageSelectorList, possibleLanguages, languageSites);
+
   return block;
 }
