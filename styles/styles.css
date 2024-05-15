@@ -43,8 +43,16 @@
   --heading-font-size-xl: 24px;
   --heading-font-size-l: 21px;
   --heading-font-size-m: 18px;
-  --heading-font-size-s: 16px;
-  --heading-font-size-xs: 12px;
+
+
+  /* line heights */
+  --heading-line-height-xxl: 120%;
+  --heading-line-height-xl: 130%;
+  --heading-line-height-l: 130%;
+  --heading-line-height-m: 120%;
+  --body-line-height-m: 24px;
+  --body-line-height-s: 20px;
+  --body-line-height-xs: 16px;
 
   /* nav height */
   --nav-height: 64px;
@@ -63,16 +71,18 @@
     --heading-font-size-xl: 32px;
     --heading-font-size-l: 28px;
     --heading-font-size-m: 22px;
-    --heading-font-size-s: 18px;
-    --heading-font-size-xs: 16px;
+    --heading-line-height-xxl: 120%;
+    --heading-line-height-xl: 130%;
+    --heading-line-height-l: 130%;
+    --heading-line-height-m: 130%;
   }
 }
 
 body {
   font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height-m);
   margin: 0;
   font-family: var(--body-font-family);
-  line-height: 1.6;
   color: var(--text-color);
   background-color: var(--background-color);
   display: none;
@@ -90,7 +100,6 @@ h1, h2, h3,
 h4, h5, h6 {
   font-family: var(--heading-font-family);
   font-weight: var(--font-weight-regular);
-  line-height: 1.25;
   margin-top: 1em;
   margin-bottom: .5em;
   scroll-margin: calc(var(--nav-height) + 1em);
@@ -98,25 +107,27 @@ h4, h5, h6 {
 
 h1 {
   font-size: var(--heading-font-size-xxl);
+  line-height: var(--heading-line-height-xxl);
   text-transform: uppercase;
 }
 
 h2 {
   font-size: var(--heading-font-size-xl);
+  line-height: var(--heading-line-height-xl);
   text-transform: uppercase;
 }
 
 h3 {
   font-size: var(--heading-font-size-l);
+  line-height: var(--heading-line-height-l);
   font-weight: var(--font-weight-bold);
 }
 
 h4 {
   font-size: var(--heading-font-size-m);
+  line-height: var(--heading-line-height-m);
   font-weight: var(--font-weight-black);
 }
-h5 { font-size: var(--heading-font-size-s) }
-h6 { font-size: var(--heading-font-size-xs) }
 
 p, dl, ol, ul, pre, blockquote {
   margin-top: 1em;
@@ -126,6 +137,7 @@ p, dl, ol, ul, pre, blockquote {
 code, pre {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
+  line-height: var(--body-line-height-s);
 }
 
 code {
