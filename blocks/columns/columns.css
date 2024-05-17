@@ -19,11 +19,12 @@
   display: block;
 }
 
+/* styling desktop */
 @media (width >= 900px) {
   .columns > div {
-    align-items: center;
+    align-items: start;
     flex-direction: unset;
-    gap: 32px;
+    gap: var(--spacing-simple);
   }
 
   .columns > div > div {

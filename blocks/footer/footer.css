@@ -1,14 +1,111 @@
 footer {
-  padding: 2rem;
-  background-color: var(--light-color);
   font-size: var(--body-font-size-s);
 }
 
-footer .footer {
+footer .section {
+  padding-left: var(--spacing-simple);
+  padding-right: var(--spacing-simple);
+}
+
+footer .section > div {
   max-width: 1200px;
   margin: auto;
 }
 
+footer .footer h4 {
+  margin-bottom: var(--spacing-simple);
+}
+
 footer .footer p {
   margin: 0;
+}
+
+footer .footer p a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+footer .footer p a:any-link {
+  color: inherit;
+}
+
+footer .footer p a:hover {
+  text-decoration: underline;
+}
+
+/* light gray footer */
+footer .section.background-light-gray {
+  padding-top: var(--spacing-simple);
+  padding-bottom: var(--spacing-simple);
+}
+
+footer .section.background-light-gray .columns > div > div {
+  padding-bottom: var(--spacing-simple);
+}
+
+/* dark footer */
+footer .section.background-dark-gray {
+  padding-top: var(--spacing-simple);
+  padding-bottom: var(--spacing-simple);
+  color: var(--color-white);
+  text-align: center;
+}
+
+footer .section.background-dark-gray p {
+  margin-bottom: 20px;
+}
+
+footer .section.background-dark-gray p a {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+}
+
+/* social media */
+footer .section.background-light-gray:nth-child(2) {
+  padding-top: var(--spacing-half);
+  text-align: center;
+}
+
+footer .section.background-light-gray:nth-child(2) > div p {
+  display: inline-block;
+  margin-right: var(--spacing-half);
+}
+
+footer .section.background-light-gray:nth-child(2) > div p:last-child {
+  margin-right: 0;
+}
+
+footer .section.background-light-gray:nth-child(2n) span.icon {
+  box-sizing: border-box;
+  width: 35px;
+  height: 35px;
+}
+
+/* styling desktop */
+@media (width >= 900px) {
+  footer .section.background-dark-gray > div {
+    display: grid;
+    grid-template-columns: 2fr 8fr 2fr;
+  }
+
+  footer .section.background-dark-gray > div p:first-of-type {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+
+  footer .section.background-dark-gray > div p:nth-child(2),
+  footer .section.background-dark-gray > div p:nth-child(3) {
+    padding: 0 var(--spacing-simple);
+  }
+
+  footer .section.background-dark-gray > div p:last-of-type {
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+
+  footer .section.background-light-gray {
+    padding-top: var(--spacing-double);
+  }
 }
