@@ -55,7 +55,7 @@
 }
 
 .brand-row img {
-    width: 15%;
+    width: 20%;
     display: inline-block;
     padding-right: 10px;
     padding-left: 10px;
@@ -64,13 +64,13 @@
 
 .brand-row p {
     display: inline-block;
-    width: 40%;
+    width: 55%;
     margin: 0;
 }
 
 .link-container {
     display: inline-block;
-    width: 35%;
+    width: 15%;
 }
 
 .link-container > a {
