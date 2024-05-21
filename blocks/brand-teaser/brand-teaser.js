@@ -1,9 +1,7 @@
 export default function decorate(block) {
   /* change to ul, li */
   const ul = document.createElement('ul');
-  const blockData = block;
-  block.innerHTML = '';
-  [...blockData.children].forEach((row) => {
+  [...block.children].forEach((row) => {
     const li = document.createElement('li');
     const innerRows = [...row.children];
 
@@ -49,5 +47,7 @@ export default function decorate(block) {
     li.append(brandsContainer);
     ul.append(li);
   });
+
+  block.innerHTML = '';
   block.append(ul);
 }
