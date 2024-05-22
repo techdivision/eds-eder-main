@@ -1,0 +1,18 @@
+.filter {
+    display: flex;
+    flex-wrap: wrap;
+
+  .filter-item {
+    display: flex;
+    margin: 0 20px;
+
+    &.filter-type-slider {
+      display: block;
+      width: 400px;
+    }
+
+    img {
+      height: 30px;
+    }
+  }
+}

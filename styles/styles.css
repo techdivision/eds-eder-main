@@ -250,3 +250,7 @@ main .section.highlight {
 [data-align="right"] {
   text-align: right;
 }
+
+.hidden {
+  display: none;
+}
