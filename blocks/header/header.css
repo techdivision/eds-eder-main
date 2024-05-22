@@ -277,13 +277,13 @@ header nav .nav-tools {
 /* breadcrumbs */
 header .breadcrumbs {
   display: none;
-  padding: 0 32px;
+  padding: 0 var(--spacing-simple);
   width: 100%;
-  height: var(--breadcrumbs-height);
+  height: var(--body-line-height-s);
   max-width: 1200px;
   overflow: hidden;
   margin: 0 auto;
-  font-size: var(--breadcrumbs-font-size);
+  font-size: var(--body-font-size-s);
 }
 
 header .breadcrumbs ol {
