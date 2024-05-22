@@ -18,8 +18,9 @@
   --color-gray-dark: #4c4c4c;
   --color-gray-darker: #303030;
   --color-black: #000;
+  --color-white: #fff;
   --link-color: var(--color-red);
-  --background-color: #fff;
+  --background-color: var(--color-white);
   --light-color: #eee;
   --dark-color: #ccc;
   --text-color: var(--color-black);
@@ -56,6 +57,11 @@
 
   /* nav height */
   --nav-height: 64px;
+
+  /* spacing */
+  --spacing-simple: 30px;
+  --spacing-double: calc(var(--spacing-simple) * 2);
+  --spacing-half: calc(var(--spacing-simple) / 2);
 }
 
 @font-face {
@@ -249,4 +255,13 @@ main .section.highlight {
 
 [data-align="right"] {
   text-align: right;
+}
+
+/* background colors */
+.background-light-gray {
+  background-color: var(--color-gray-light);
+}
+
+.background-dark-gray {
+  background-color: var(--color-gray-dark);
 }
