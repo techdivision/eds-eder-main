@@ -1,3 +1,4 @@
+/* Columns General */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -17,6 +18,21 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+/* Columns USP */
+.columns.usp span.icon {
+  box-sizing: border-box;
+  width: 85px;
+  height: 85px;
+  padding: 15px 20px 20px;
+  background: var(--color-red);
+  border-radius: 50%;
+}
+
+.columns.usp > div:first-child p strong {
+  font-size: var(--heading-font-size-m);
+  line-height: var(--heading-line-height-m);
 }
 
 @media (width >= 900px) {

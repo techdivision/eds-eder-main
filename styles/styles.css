@@ -241,3 +241,12 @@ main .section.light,
 main .section.highlight {
   background-color: var(--light-color);
 }
+
+/* basic text alignment */
+[data-align="center"] {
+  text-align: center;
+}
+
+[data-align="right"] {
+  text-align: right;
+}
