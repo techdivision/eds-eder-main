@@ -58,7 +58,7 @@ main .hero-video-container {
         width: 100%;
         background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAQAAAD8IX00AAAAEUlEQVQIW2NgYGSAgv8wBiMACh8BAsu2+n0AAAAASUVORK5CYII=');
         color: var(--text-color-reverse);
-        text-shadow: 0 1px 0 #333;
+        text-shadow: 0 1px 0 var(--color-gray-darker);
         left: 0;
         top: 0;
     }

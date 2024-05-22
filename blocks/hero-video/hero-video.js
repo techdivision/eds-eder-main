@@ -1,9 +1,19 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
+/**
+ * Read config by row name
+ * @param rows
+ * @param name
+ */
 function getConfigRow(rows, name) {
   return rows.find((row) => row.children[0].textContent.toLowerCase() === name);
 }
 
+/**
+ * Add overlay content
+ * @param overlay
+ * @param anchor
+ */
 function decorateOverlay(overlay, anchor) {
   overlay.firstElementChild.remove();
   overlay.classList.add('overlay-content');
@@ -25,6 +35,11 @@ function decorateOverlay(overlay, anchor) {
   }
 }
 
+/**
+ * Add an embedded YouTube video to a target
+ * @param video
+ * @param target
+ */
 function embedYoutube(video, target) {
   let videoKey = null;
   if (video.videoUrl) {
