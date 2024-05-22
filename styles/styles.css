@@ -24,7 +24,7 @@
   --light-color: #eee;
   --dark-color: #ccc;
   --text-color: var(--color-black);
-  --text-color-reverse: var(--color-white);
+  --text-color-reverse: #fff;
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback;
@@ -246,6 +246,15 @@ main .section {
 main .section.light,
 main .section.highlight {
   background-color: var(--light-color);
+}
+
+/* basic text alignment */
+[data-align="center"] {
+  text-align: center;
+}
+
+[data-align="right"] {
+  text-align: right;
 }
 
 /* background colors */
