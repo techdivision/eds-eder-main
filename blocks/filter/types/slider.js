@@ -88,6 +88,9 @@ function build(block, container, filter) {
   const maxSliderOption = +retrieveOptionsForFilterField(
     maxFilterField,
   ).slice(-1)[0];
+  if (!minSliderOption && !maxSliderOption) {
+    return;
+  }
 
   // define start values
   const startValues = filter.value || [minSliderOption, maxSliderOption];
