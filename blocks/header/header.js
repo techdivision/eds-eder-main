@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { decorateLinkedPictures } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -146,4 +147,17 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // load pre-header as fragment and create structure
+  const preHeaderMeta = getMetadata('brand-nav');
+  const preHeaderPath = preHeaderMeta ? new URL(preHeaderMeta, window.location).pathname : '/brand-nav';
+  const preHeaderFragment = await loadFragment(preHeaderPath);
+  const preHeader = document.createElement('div');
+  preHeader.className = 'pre-header';
+  while (preHeaderFragment.firstElementChild) preHeader.append(preHeaderFragment.firstElementChild);
+
+  nav.append(preHeader);
+
+  // link for logo
+  decorateLinkedPictures(block);
 }

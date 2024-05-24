@@ -7,7 +7,7 @@ footer .section {
 }
 
 footer .section > div {
-  max-width: 1200px;
+  max-width: var(--page-width);
   margin: auto;
 }
 
