@@ -1,0 +1,15 @@
+.search-bar input {
+    background-color: var(--dark-color);
+    color: var(--text-color-reverse);
+    border: none;
+    height: auto;
+}
+
+.search-bar input::placeholder {
+    border: none;
+    color: var(--text-color-reverse);
+}
+
+.search-bar input:focus {
+    outline: none;
+}
