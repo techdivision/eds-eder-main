@@ -1,4 +1,4 @@
-.language  img {
+.language img {
     width: 32px;
     height: 20px;
     padding-right: 5px;
@@ -22,9 +22,3 @@
 .language .language-list li {
     list-style-type: none;
 }
-
-.language p {
-    display: inline-block;
-}
-
-
