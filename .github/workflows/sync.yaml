@@ -1,5 +1,5 @@
 name: Sync master repository to clones
-on: push
+on: [push, workflow_dispatch]
 
 jobs:
   sync:
