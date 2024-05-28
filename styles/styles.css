@@ -62,6 +62,9 @@
   --spacing-simple: 30px;
   --spacing-double: calc(var(--spacing-simple) * 2);
   --spacing-half: calc(var(--spacing-simple) / 2);
+
+  /* border radius */
+  --card-border-radius: 20px;
 }
 
 @font-face {

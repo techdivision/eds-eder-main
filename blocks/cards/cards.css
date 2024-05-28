@@ -29,3 +29,28 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+.cards.teaser > ul > li {
+  border: none;
+  border-radius: var(--card-border-radius);
+  position: relative;
+  background-color: var(--color-gray-light);
+  overflow: hidden;
+}
+
+.cards.teaser > ul > li .cards-card-image img {
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.cards.teaser > ul > li .cards-card-image:nth-of-type(2) {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  top: 30px;
+}
+
+.cards.teaser > ul > li > .cards-card-body > .button-container {
+  text-align: center;
+}
