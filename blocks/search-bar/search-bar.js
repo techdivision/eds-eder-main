@@ -1,5 +1,10 @@
 import { fetchPlaceholders } from '../../scripts/aem.js';
 
+/**
+ * Build search form
+ * @param placeholders
+ * @returns {HTMLFormElement}
+ */
 function searchForm(placeholders) {
   const form = document.createElement('form');
   form.action = `/${placeholders.search || 'search'}`;
