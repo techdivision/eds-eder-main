@@ -45,7 +45,6 @@
   --heading-font-size-l: 21px;
   --heading-font-size-m: 18px;
 
-
   /* line heights */
   --heading-line-height-xxl: 120%;
   --heading-line-height-xl: 130%;
@@ -55,8 +54,13 @@
   --body-line-height-s: 20px;
   --body-line-height-xs: 16px;
 
-  /* nav height */
+  /* gerneral */
+  --page-width: 1200px;
+
+  /* nav and header sizes */
   --nav-height: 64px;
+  --header-height: 128px;
+  --header-width: 1440px;
 
   /* spacing */
   --spacing-simple: 30px;
@@ -99,10 +103,6 @@ body {
 
 body.appear {
   display: block;
-}
-
-header {
-  height: var(--nav-height);
 }
 
 h1, h2, h3,
@@ -240,7 +240,7 @@ main .section {
 
 @media (width >= 900px) {
   .section > div {
-    max-width: 1200px;
+    max-width: var(--page-width);
     margin: auto;
   }
 }
