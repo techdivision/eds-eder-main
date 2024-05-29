@@ -52,13 +52,14 @@ function toggleAllNavSections(sections, expanded = false) {
  * Toggles the entire nav
  * @param {Element} nav The container element
  * @param {Element} navSections The nav sections within the container element
+ * @param button The button element
  * @param {*} forceExpanded Optional param to force nav expand behavior when not null
  */
-function toggleMenu(nav, navSections, forceExpanded = null) {
+function toggleMenu(nav, navSections, button, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
-  const button = nav.querySelector('.nav-hamburger button');
   document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  navSections.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
@@ -88,6 +89,26 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 /**
+ * Build the basic flyout navigation functionality
+ * @param nav
+ * @param navSections
+ */
+function buildBasicFlyoutNav(nav, navSections) {
+  if (navSections) {
+    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
+      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
+      navSection.addEventListener('click', () => {
+        if (isDesktop.matches) {
+          const expanded = navSection.getAttribute('aria-expanded') === 'true';
+          toggleAllNavSections(navSections);
+          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        }
+      });
+    });
+  }
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -103,32 +124,22 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
+  const classes = ['logo', 'sections', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
   });
 
-  const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
-  if (brandLink) {
-    brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
+  // link for logo
+  const navLogo = nav.querySelector('.nav-logo');
+  const logoLink = navLogo.querySelector('.button');
+  if (logoLink) {
+    logoLink.className = '';
+    logoLink.closest('.button-container').className = '';
   }
 
   const navSections = nav.querySelector('.nav-sections');
-  if (navSections) {
-    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
-      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
-        if (isDesktop.matches) {
-          const expanded = navSection.getAttribute('aria-expanded') === 'true';
-          toggleAllNavSections(navSections);
-          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-        }
-      });
-    });
-  }
+  buildBasicFlyoutNav(nav, navSections);
 
   // hamburger for mobile
   const hamburger = document.createElement('div');
@@ -136,27 +147,45 @@ export default async function decorate(block) {
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
       <span class="nav-hamburger-icon"></span>
     </button>`;
-  hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
+  hamburger.addEventListener('click', () => toggleMenu(nav, navSections, hamburger));
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
   // prevent mobile nav behavior on window resize
-  toggleMenu(nav, navSections, isDesktop.matches);
-  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+  toggleMenu(nav, navSections, hamburger, isDesktop.matches);
+  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, hamburger, isDesktop.matches));
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // load pre-header as fragment and create structure
-  const preHeaderMeta = getMetadata('brand-nav');
-  const preHeaderPath = preHeaderMeta ? new URL(preHeaderMeta, window.location).pathname : '/brand-nav';
-  const preHeaderFragment = await loadFragment(preHeaderPath);
+  // load brand nav as fragment and create structure
+  const brandNavMeta = getMetadata('brand-nav');
+  const brandNavPath = brandNavMeta ? new URL(brandNavMeta, window.location).pathname : '/brand-nav';
+  const brandNavFragment = await loadFragment(brandNavPath);
   const preHeader = document.createElement('div');
   preHeader.className = 'pre-header';
-  while (preHeaderFragment.firstElementChild) preHeader.append(preHeaderFragment.firstElementChild);
-
+  while (brandNavFragment.firstElementChild) preHeader.append(brandNavFragment.firstElementChild);
   nav.append(preHeader);
+
+  // init brand nav flyout and mobile nav
+  const brandNav = nav.querySelector('.pre-header .section');
+  const chevron = document.createElement('div');
+  chevron.classList.add('nav-chevron');
+  chevron.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
+      <span class="nav-chevron-icon"></span>
+    </button>`;
+  chevron.addEventListener('click', () => toggleMenu(preHeader, brandNav, chevron));
+  nav.prepend(chevron);
+
+  buildBasicFlyoutNav(nav, brandNav);
+
+  const mobilePreHeaderNav = nav.querySelector('.pre-header .section .default-content-wrapper > ul');
+  mobilePreHeaderNav.addEventListener('click', () => toggleMenu(preHeader, brandNav, chevron));
+  nav.setAttribute('aria-expanded', 'false');
+  // prevent mobile nav behavior on window resize
+  toggleMenu(preHeader, brandNav, chevron, isDesktop.matches);
+  isDesktop.addEventListener('change', () => toggleMenu(preHeader, brandNav, chevron, isDesktop.matches));
 
   // link for logo
   decorateLinkedPictures(block);
