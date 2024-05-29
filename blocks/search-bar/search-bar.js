@@ -2,14 +2,14 @@ import { fetchPlaceholders } from '../../scripts/aem.js';
 
 function searchForm(placeholders) {
   const form = document.createElement('form');
-  form.action = '/suche';
+  form.action = `/${placeholders.search || 'search'}`;
   form.method = 'get';
 
   const input = document.createElement('input');
   input.name = 'q';
   input.className = 'search-input';
 
-  const searchPlaceholder = placeholders.searchBarPlaceholder || 'Search...';
+  const searchPlaceholder = placeholders.Search || 'Search...';
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -19,7 +19,6 @@ function searchForm(placeholders) {
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
-  console.log(placeholders);
   block.innerHTML = '';
   block.append(searchForm(placeholders));
 }
