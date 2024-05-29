@@ -11,6 +11,8 @@
  */
 
 :root {
+
+
   /* colors */
   --color-red: #ed1c24;
   --color-gray-light: #e5e5e5;
@@ -60,6 +62,7 @@
   /* nav and header sizes */
   --nav-height: 64px;
   --header-height: 128px;
+  --header-width: 1440px;
 
   /* spacing */
   --spacing-simple: 30px;
