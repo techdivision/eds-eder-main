@@ -1,4 +1,7 @@
 sites:
-  demo:
-    origin: https://github.com/techdivision/eds-eder-googledrivedemo
+  eder-gmbh:
+    origin: https://github.com/techdivision/eds-eder-gmbh
     port: 3001
+  eder-landtechnik:
+    origin: https://github.com/techdivision/eds-eder-landtechnik
+    port: 3002
