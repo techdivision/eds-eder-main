@@ -128,14 +128,14 @@ export default {
           level2Entry.append(handleMenuEntry(secondLevelHeadline, baseUrl));
 
           // handle third-level entries
-          let thirdLevelPoints = secondLevelPoint.querySelectorAll('li');
+          const thirdLevelPoints = secondLevelPoint.querySelectorAll('li');
 
           // check if there are any entries on the third level (not all domains have them)
           if (thirdLevelPoints.length > 0) {
-            let level3List = document.createElement('ul');
+            const level3List = document.createElement('ul');
 
             thirdLevelPoints.forEach((thirdLevelPoint) => {
-              let level3Entry = document.createElement('li');
+              const level3Entry = document.createElement('li');
 
               level3Entry.append(handleMenuEntry(thirdLevelPoint, baseUrl));
 
@@ -156,7 +156,6 @@ export default {
       resultList.append(level1Entry);
     });
 
-
     // add nested list as top-navigation
     main.append(resultList);
 
@@ -176,5 +175,5 @@ export default {
       element: main,
       path,
     }];
-  }
+  },
 };
