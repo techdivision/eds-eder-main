@@ -14,7 +14,7 @@ const removeGenericContent = (main) => {
     '.group-title',
     '.off-canvas-navigation',
     '.container-fluid',
-    '.navbar-toggle'
+    '.navbar-toggle',
   ]);
 };
 
@@ -31,13 +31,13 @@ const determineEdsBaseUrl = (params) => {
 
   const originalUrl = new URL(params.originalURL);
 
-  const urlToCheck = originalUrl.protocol + '//' + originalUrl.host;
+  const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
 
   if (urlMapping[urlToCheck]) {
     return urlMapping[urlToCheck];
   }
 
-  throw new Error('There is no mapping for the base-url ' + urlToCheck);
+  throw new Error(`There is no mapping for the base-url ${urlToCheck}`);
 };
 
 /**
@@ -56,7 +56,7 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
   }
 
   // extract link from entry
-  let href = linkEntry.getAttribute('href');
+  const href = linkEntry.getAttribute('href');
 
   // check for '#' as link target
   if (href === '#') {
@@ -73,9 +73,8 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
   return linkEntry;
 };
 
-
 export default {
-  transform: ({document, params}) => {
+  transform: ({ document, params }) => {
     const main = document.body;
 
     removeGenericContent(main, document);
@@ -84,9 +83,9 @@ export default {
     const baseUrl = determineEdsBaseUrl(params);
 
     // extract navbar-header/logo
-    let logoSection = main.querySelector('.navbar-header');
+    const logoSection = main.querySelector('.navbar-header');
 
-    let logoSectionLink = logoSection.querySelector('a');
+    const logoSectionLink = logoSection.querySelector('a');
 
     // replace original url by the eds base-url
     logoSectionLink.setAttribute('href', baseUrl);
