@@ -16,7 +16,7 @@ const removeGenericContent = (main) => {
     '.container-fluid',
     '.navbar-toggle'
   ]);
-}
+};
 
 /**
  * Determines the EDS base-url based on static mapping
@@ -25,20 +25,20 @@ const removeGenericContent = (main) => {
  */
 const determineEdsBaseUrl = (params) => {
   const urlMapping = {
-      'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
-      'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
-    };
+    'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
+    'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
+  };
 
   const originalUrl = new URL(params.originalURL);
 
   const urlToCheck = originalUrl.protocol + '//' + originalUrl.host;
 
-  if (urlMapping.hasOwnProperty(urlToCheck)) {
-    return urlMapping.urlToCheck;
+  if (urlMapping[urlToCheck]) {
+    return urlMapping[urlToCheck];
   }
 
   throw new Error('There is no mapping for the base-url ' + urlToCheck);
-}
+};
 
 /**
  * Advanced handling for menu-entries.
@@ -51,7 +51,7 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
   let linkEntry = menuEntry.querySelector('a');
 
   // if not: extract only text from entry
-  if (! linkEntry) {
+  if (!linkEntry) {
     return menuEntry.innerText;
   }
 
@@ -65,13 +65,13 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
   }
 
   // check if the target of the link is relative: add EDS base-url
-  if (href.charAt(0) ===  '/') {
+  if (href.charAt(0) === '/') {
     linkEntry.setAttribute('href', baseUrl + href);
   }
 
   // return link element
   return linkEntry;
-}
+};
 
 
 export default {
