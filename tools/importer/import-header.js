@@ -1,3 +1,8 @@
+/**
+ * Exclude generic content from migration
+ * @param main
+ * @param document
+ */
 const removeGenericContent = (main, document) => {
   // remove header, footer and generic elements from content
   WebImporter.DOMUtils.remove(main, [
@@ -11,6 +16,63 @@ const removeGenericContent = (main, document) => {
     '.navbar-toggle'
   ]);
 }
+
+/**
+ * Determines the EDS base-url based on static mapping
+ * @param params
+ * @returns {*}
+ */
+const determineEdsBaseUrl = (params) => {
+  const urlMapping =
+    {
+      'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
+      'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
+    };
+
+  const originalUrl = new URL(params['originalURL']);
+
+  let urlToCheck = originalUrl.protocol + '//' + originalUrl.host;
+
+  if (urlToCheck in urlMapping) {
+    return urlMapping[urlToCheck];
+  } else {
+    throw new Error('There is no mapping for the base-url ' + originalUrl);
+  }
+}
+
+/**
+ * Advanced handling for menu-entries.
+ * Checks for links without proper targets, makes them relative to given base-url
+ * @param menuEntry
+ * @param baseUrl
+ */
+const handleMenuEntry = (menuEntry, baseUrl) => {
+  // check of given entry is a link at all
+  let linkEntry = menuEntry.querySelector('a');
+
+  // if not: extract only text from entry
+  if (! linkEntry) {
+    return menuEntry.innerText;
+  }
+
+  // extract link from entry
+  let href = linkEntry.getAttribute('href');
+
+  // check for '#' as link target
+  if (href === '#') {
+    // return only the text of the link
+    return linkEntry.innerText;
+  }
+
+  // check if the target of the link is relative: add EDS base-url
+  if (href.charAt(0) ===  '/') {
+    linkEntry.setAttribute('href', baseUrl + href);
+  }
+
+  // return link element
+  return linkEntry;
+}
+
 
 export default {
   transform: ({document, url, html, params}) => {
@@ -117,64 +179,3 @@ export default {
     }];
   }
 };
-
-/**
- * Determines the EDS base-url based on static mapping
- * @param params
- * @returns {*}
- */
-const determineEdsBaseUrl = (params) => {
-  const urlMapping =
-    {
-      'https://www.eder-gmbh.de/': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
-      'https://www.eder-landtechnik.de/': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
-    };
-
-  const originalUrl = params['originalURL'];
-
-  let urlToCheck = originalUrl;
-
-  // check for trailing slash, add one if it's not present
-  if (urlToCheck.slice(-1) !== '/') {
-    urlToCheck = urlToCheck + '/';
-  }
-
-  if (urlToCheck in urlMapping) {
-    return urlMapping[urlToCheck];
-  } else {
-    throw new Error('There is no mapping for the base-url ' + originalUrl);
-  }
-}
-
-/**
- * Advanced handling for menu-entries.
- * Checks for links without proper targets, makes them relative to given base-url
- * @param menuEntry
- * @param baseUrl
- */
-const handleMenuEntry = (menuEntry, baseUrl) => {
-  // check of given entry is a link at all
-  let linkEntry = menuEntry.querySelector('a');
-
-  // if not: extract only text from entry
-  if (! linkEntry) {
-    return menuEntry.innerText;
-  }
-
-  // extract link from entry
-  let href = linkEntry.getAttribute('href');
-
-  // check for '#' as link target
-  if (href === '#') {
-    // return only the text of the link
-    return linkEntry.innerText;
-  }
-
-  // check if the target of the link is relative: add EDS base-url
-  if (href.charAt(0) ===  '/') {
-    linkEntry.setAttribute('href', baseUrl + href);
-  }
-
-  // return link element
-  return linkEntry;
-}
