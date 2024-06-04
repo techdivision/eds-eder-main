@@ -1,9 +1,10 @@
+/* global WebImporter */
+
 /**
  * Exclude generic content from migration
  * @param main
- * @param document
  */
-const removeGenericContent = (main, document) => {
+const removeGenericContent = (main) => {
   // remove header, footer and generic elements from content
   WebImporter.DOMUtils.remove(main, [
     '.offcanvas',
@@ -23,21 +24,20 @@ const removeGenericContent = (main, document) => {
  * @returns {*}
  */
 const determineEdsBaseUrl = (params) => {
-  const urlMapping =
-    {
+  const urlMapping = {
       'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
       'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
     };
 
-  const originalUrl = new URL(params['originalURL']);
+  const originalUrl = new URL(params.originalURL);
 
-  let urlToCheck = originalUrl.protocol + '//' + originalUrl.host;
+  const urlToCheck = originalUrl.protocol + '//' + originalUrl.host;
 
-  if (urlToCheck in urlMapping) {
-    return urlMapping[urlToCheck];
-  } else {
-    throw new Error('There is no mapping for the base-url ' + originalUrl);
+  if (urlMapping.hasOwnProperty(urlToCheck)) {
+    return urlMapping.urlToCheck;
   }
+
+  throw new Error('There is no mapping for the base-url ' + urlToCheck);
 }
 
 /**
@@ -75,7 +75,7 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
 
 
 export default {
-  transform: ({document, url, html, params}) => {
+  transform: ({document, params}) => {
     const main = document.body;
 
     removeGenericContent(main, document);
