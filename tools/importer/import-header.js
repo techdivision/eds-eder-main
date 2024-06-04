@@ -48,7 +48,7 @@ const determineEdsBaseUrl = (params) => {
  */
 const handleMenuEntry = (menuEntry, baseUrl) => {
   // check of given entry is a link at all
-  let linkEntry = menuEntry.querySelector('a');
+  const linkEntry = menuEntry.querySelector('a');
 
   // if not: extract only text from entry
   if (!linkEntry) {
@@ -90,7 +90,7 @@ export default {
     // replace original url by the eds base-url
     logoSectionLink.setAttribute('href', baseUrl);
 
-    let ulNavbar = main.querySelector('ul.navbar-nav');
+    const ulNavbar = main.querySelector('ul.navbar-nav');
 
     // clear output in order to add only required data later on
     main.innerHTML = '';
@@ -102,27 +102,27 @@ export default {
     main.append(document.createElement('hr'));
 
     // create ul-list for future top-navigation
-    let resultList = document.createElement('ul');
+    const resultList = document.createElement('ul');
 
-    let toplevelPoints = ulNavbar.childNodes;
+    const toplevelPoints = ulNavbar.childNodes;
 
     // walk through top-level navigation points
-    toplevelPoints.forEach(function (topLevelPoint) {
+    toplevelPoints.forEach((topLevelPoint) => {
       // process top-level menu-entries
-      let level1Entry = document.createElement('li');
+      const level1Entry = document.createElement('li');
 
       level1Entry.append(handleMenuEntry(topLevelPoint, baseUrl));
 
       // process second-level menu-entries
-      let secondLevelPoints = topLevelPoint.querySelectorAll('.yamm-link');
+      const secondLevelPoints = topLevelPoint.querySelectorAll('.yamm-link');
 
       if (secondLevelPoints.length > 0) {
-        let level2List = document.createElement('ul');
+        const level2List = document.createElement('ul');
 
-        secondLevelPoints.forEach(function (secondLevelPoint) {
-          let secondLevelHeadline = secondLevelPoint.querySelector('h4');
+        secondLevelPoints.forEach((secondLevelPoint) => {
+          const secondLevelHeadline = secondLevelPoint.querySelector('h4');
 
-          let level2Entry = document.createElement('li');
+          const level2Entry = document.createElement('li');
 
           // use the link and its text as the future menu-entry
           level2Entry.append(handleMenuEntry(secondLevelHeadline, baseUrl));
@@ -134,7 +134,7 @@ export default {
           if (thirdLevelPoints.length > 0) {
             let level3List = document.createElement('ul');
 
-            thirdLevelPoints.forEach(function (thirdLevelPoint) {
+            thirdLevelPoints.forEach((thirdLevelPoint) => {
               let level3Entry = document.createElement('li');
 
               level3Entry.append(handleMenuEntry(thirdLevelPoint, baseUrl));
