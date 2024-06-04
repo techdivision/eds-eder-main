@@ -109,7 +109,7 @@ export default {
     main.append(table);
 
     // set target-path to "nav" instead of the path of the original page
-    const path = 'nav';
+    const path = '/nav';
 
     return [{
       element: main,
