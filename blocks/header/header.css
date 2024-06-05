@@ -401,7 +401,6 @@ header .breadcrumbs {
   padding: 0;
   width: 100%;
   height: var(--body-line-height-s);
-  max-width: 1200px;
   overflow: hidden;
   margin: 0 auto;
   font-size: var(--body-font-size-xs);
