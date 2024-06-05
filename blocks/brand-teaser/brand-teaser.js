@@ -5,6 +5,9 @@ export default function decorate(block) {
     const li = document.createElement('li');
     const innerRows = [...row.children];
 
+    const brandTeaserImageContainer = document.createElement('div');
+    brandTeaserImageContainer.classList.add('brand-teaser-image-container');
+
     const brandTeaserImage = document.createElement('img');
     brandTeaserImage.src = innerRows[0].querySelector('img').src;
     brandTeaserImage.classList.add('brand-teaser-image');
@@ -42,8 +45,10 @@ export default function decorate(block) {
       brandsContainer.append(brand);
     });
 
-    li.append(brandTeaserImage);
-    li.append(brandTeaserHeader);
+    brandTeaserImageContainer.append(brandTeaserImage);
+    brandTeaserImageContainer.append(brandTeaserHeader);
+
+    li.append(brandTeaserImageContainer);
     li.append(brandsContainer);
     ul.append(li);
   });
