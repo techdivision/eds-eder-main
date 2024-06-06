@@ -78,6 +78,28 @@ function getVideoElement(source, replacePlaceholder, autoplay) {
   return video;
 }
 
+function embedTikTok(url) {
+  let embedLink = url;
+  let videoId;
+  if (!url.includes('embed')) {
+    [, videoId] = url.split('video/');
+    embedLink = `https://www.tiktok.com/embed/v2/${videoId}`;
+  } else {
+    [, videoId] = url.split('v2/');
+  }
+
+  const temp = document.createElement('div');
+  temp.innerHTML = `<blockquote class="tiktok-embed"
+      style="max-width: 605px;min-width: 325px;"
+      cite="${url}" data-video-id="${videoId}">
+      <iframe src="${embedLink}" 
+      style="width: 100%; height: 739px; display: block; visibility: unset; max-height: 739px;" 
+      frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  
+      title="Content from TikTok" loading="lazy"></iframe>
+    </blockquote>`;
+  return temp.children.item(0);
+}
+
 const loadVideoEmbed = (block, link, replacePlaceholder, autoplay) => {
   if (block.dataset.embedIsLoaded) {
     return;
@@ -87,6 +109,7 @@ const loadVideoEmbed = (block, link, replacePlaceholder, autoplay) => {
   const isYoutube = link.includes('youtube') || link.includes('youtu.be');
   const isVimeo = link.includes('vimeo');
   const isMp4 = link.includes('.mp4');
+  const isTikTok = link.includes('tiktok');
 
   let embedEl;
   if (isYoutube) {
@@ -95,6 +118,8 @@ const loadVideoEmbed = (block, link, replacePlaceholder, autoplay) => {
     embedEl = embedVimeo(url, replacePlaceholder, autoplay);
   } else if (isMp4) {
     embedEl = getVideoElement(link, replacePlaceholder, autoplay);
+  } else if (isTikTok) {
+    embedEl = embedTikTok(link);
   }
   block.replaceChildren(embedEl);
 
