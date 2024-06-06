@@ -17,7 +17,7 @@ function getLanguageData(block) {
     languages[key] = {
       name,
       label,
-      image
+      image,
     };
   });
   return languages;

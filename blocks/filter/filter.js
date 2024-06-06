@@ -1,6 +1,11 @@
 // noinspection JSUnresolvedReference
 
-import { getUrlParam, isEmpty, setUrlParam, transformRowsToData, } from '../../scripts/helpers.js';
+import {
+  getUrlParam,
+  isEmpty,
+  setUrlParam,
+  transformRowsToData,
+} from '../../scripts/helpers.js';
 import { build as decorateSliderFilter } from './types/slider.js';
 import { build as decorateDropdownFilter } from './types/dropdown.js';
 import { build as decorateCheckboxFilter } from './types/checkbox.js';
