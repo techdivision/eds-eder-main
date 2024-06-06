@@ -92,7 +92,8 @@ function transformRowsToData(keys, block) {
       // set data
       let content = column.textContent.trim();
       if (keyConfiguration[key] === 'options') {
-        content = column.textContent.trim().split(',');
+        content = column.textContent.trim()
+          .split(',');
       } else if (keyConfiguration[key] === 'htmlOptions') {
         content = Array.from(column.querySelectorAll('*:not(:has(*)):not(img,source), picture'));
       }
@@ -129,10 +130,48 @@ function isEmpty(check) {
     || (Array.isArray(check) && !check.length);
 }
 
+/**
+ * Get URL Param
+ *
+ * @param {string} field
+ * @returns {string}
+ */
+function getUrlParam(field) {
+  return new URLSearchParams(window.location.search).get(field) || '';
+}
+
+/**
+ * Set URL param
+ *
+ * @param param
+ * @param value
+ */
+function setUrlParam(param, value) {
+  const url = new URL(window.location);
+  if (isEmpty(value)) {
+    url.searchParams.delete(param);
+  } else {
+    url.searchParams.set(param, Array.isArray(value) ? value.join(',') : value);
+  }
+  window.history.replaceState({}, '', url);
+}
+
+/**
+ * Convert excel date
+ * @param {string|Number} excelDate
+ * @returns {Date}
+ */
+function convertDate(excelDate) {
+  return new Date(Number(excelDate) * 1000);
+}
+
 // export
 export {
   isEmpty,
   copyAttributes,
   transformRowsToData,
   transformToMetadata,
+  getUrlParam,
+  setUrlParam,
+  convertDate,
 };

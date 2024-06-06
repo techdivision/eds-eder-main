@@ -1,7 +1,5 @@
-import {
-  getFilterValueForElement,
-  retrieveOptionsForFilterField,
-} from '../filter-library.js';
+import { getFilterValueForElement } from '../filter-library.js';
+import { isEmpty } from '../../../scripts/helpers.js';
 
 /**
  * Build option
@@ -26,7 +24,9 @@ function buildOption(name, value) {
  */
 function elementMatches(filter, element) {
   const elementValue = getFilterValueForElement(element, filter.filterFields[0]);
-  return filter.value === '' || elementValue === filter.value;
+  return isEmpty(filter.value)
+    || isEmpty(elementValue)
+    || elementValue === filter.value;
 }
 
 /**
@@ -37,6 +37,9 @@ function elementMatches(filter, element) {
  * @param {Object} filter
  */
 function build(block, container, filter) {
+  // add chevron
+  container.classList.add('has-chevron', 'chevron-down');
+
   // set filter function
   filter.elementMatches = elementMatches;
 
@@ -52,7 +55,7 @@ function build(block, container, filter) {
   select.append(defaultOptionElement);
 
   // add options
-  retrieveOptionsForFilterField(filterField).forEach((option) => {
+  filter.options[filterField].forEach((option) => {
     const optionElement = buildOption(option, option);
     select.append(optionElement);
   });
@@ -67,7 +70,7 @@ function build(block, container, filter) {
     filter.value = selectedOption.getAttribute('value');
 
     // re-render filters
-    block.dispatchEvent(new Event('renderFilters'));
+    block.dispatchEvent(new Event('change'));
   });
 
   // set current filter value

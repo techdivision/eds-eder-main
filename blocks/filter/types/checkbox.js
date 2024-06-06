@@ -1,7 +1,4 @@
-import {
-  getFilterValueForElement,
-  getDecorationTextValue,
-} from '../filter-library.js';
+import { getDecorationTextValue, getFilterValueForElement } from '../filter-library.js';
 import { toClassName } from '../../../scripts/aem.js';
 import { isEmpty } from '../../../scripts/helpers.js';
 
@@ -24,6 +21,7 @@ function buildOption(filterName, decoration) {
   optionElement.setAttribute('type', 'checkbox');
   optionElement.setAttribute('id', optionId);
   optionElement.setAttribute('value', filterValue);
+  optionElement.checked = true;
 
   // build label
   const labelElement = document.createElement('label');
@@ -59,7 +57,9 @@ function getSelectedValues(checkboxes) {
  */
 function elementMatches(filter, element) {
   const elementValue = getFilterValueForElement(element, filter.filterFields[0]);
-  return isEmpty(filter.value) || filter.value.includes(elementValue);
+  return isEmpty(filter.value)
+    || isEmpty(elementValue)
+    || filter.value.includes(elementValue);
 }
 
 /**
@@ -89,7 +89,7 @@ function build(block, container, filter) {
       filter.value = getSelectedValues(checkboxes);
 
       // re-render filters
-      block.dispatchEvent(new Event('renderFilters'));
+      block.dispatchEvent(new Event('change'));
     });
   });
 

@@ -195,7 +195,7 @@ a.button:any-link, button {
   border-radius: 0;
 }
 
-a.button:hover, a.button:focus, button:hover, button:focus  {
+a.button:hover, a.button:focus, button:hover, button:focus {
   cursor: pointer;
 }
 
@@ -269,6 +269,37 @@ main .section.highlight {
   background-color: var(--color-gray-dark);
 }
 
+/* globally hidden */
 .hidden {
   display: none;
+}
+
+/* chevron */
+.has-chevron {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    display: inline-block;
+    content: '';
+    width: 6px;
+    height: 6px;
+    transform: rotate(45deg) translateY(-50%);
+    pointer-events: none;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+  }
+
+  &.chevron-left::after {
+    border-width: 0 0 2px 2px;
+  }
+
+  &.chevron-up::after {
+    border-width: 2px 0 0 2px;
+  }
+
+  &.chevron-down::after {
+    border-width: 0 2px 2px 0
+  }
 }

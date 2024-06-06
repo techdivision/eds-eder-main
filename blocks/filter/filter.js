@@ -1,8 +1,11 @@
-import { transformRowsToData } from '../../scripts/helpers.js';
+// noinspection JSUnresolvedReference
+
+import { getUrlParam, isEmpty, setUrlParam, transformRowsToData, } from '../../scripts/helpers.js';
 import { build as decorateSliderFilter } from './types/slider.js';
 import { build as decorateDropdownFilter } from './types/dropdown.js';
 import { build as decorateCheckboxFilter } from './types/checkbox.js';
-import { getFilterFieldsElements } from './filter-library.js';
+import { retrieveOptionsForFilterField } from './filter-library.js';
+import { setCurrentPage } from '../../scripts/list.js';
 
 /**
  * Process filters
@@ -11,33 +14,43 @@ import { getFilterFieldsElements } from './filter-library.js';
  * @param {Array} filters
  */
 function processFilters(block, filters) {
-  const allFilterFields = filters.flatMap((filter) => filter.filterFields);
-  const allRelevantElements = getFilterFieldsElements(allFilterFields);
-
-  // show all
-  allRelevantElements.forEach((element) => {
-    element.classList.remove('hidden');
+  // re-set matching state
+  block.filterItems.forEach((element) => {
+    element.matches = true;
   });
 
   // try for all filters
   filters.forEach((filter) => {
     // filter has not been set
-    if (!filter.value) {
+    if (!filter.value || !filter.elements) {
       return;
     }
 
     // iterate over all relevant elements
-    getFilterFieldsElements(filter.filterFields).forEach((element) => {
-      // element is already hidden by another filter
-      if (element.classList.contains('hidden')) {
+    [...filter.elements].forEach((element) => {
+      // element was not matched by a previous filter
+      if (!element.matches) {
         return;
       }
 
       // element is not applicable for this filter
       if (filter.elementMatches && !filter.elementMatches(filter, element)) {
-        element.classList.add('hidden');
+        element.matches = false;
       }
     });
+  });
+}
+
+/**
+ * Handle HTML elements visibility
+ *
+ * @param {HTMLElement} block
+ */
+function handleHtmlElementsVisibility(block) {
+  block.filterItems.forEach((element) => {
+    if (element instanceof HTMLElement) {
+      element.classList.toggle('hidden', !element.matches);
+    }
   });
 }
 
@@ -50,9 +63,18 @@ function processFilters(block, filters) {
 function renderFilters(block, filters) {
   block.textContent = '';
   filters.forEach((filter) => {
-    const container = document.createElement('div');
+    // add elements
+    filter.elements = block.filterItems;
+    filter.options = {};
+    filter.filterFields.forEach((filterField) => {
+      filter.options[filterField] = retrieveOptionsForFilterField(
+        filter,
+        filterField,
+      );
+    });
 
-    // noinspection JSUnresolvedReference
+    // build container
+    const container = document.createElement('div');
     container.classList.add(
       'filter-item',
       `filter--${filter.name}`.toLowerCase(),
@@ -60,7 +82,7 @@ function renderFilters(block, filters) {
     );
     block.append(container);
 
-    // noinspection JSUnresolvedReference
+    // build by filter type
     if (filter.filterType === 'slider') {
       decorateSliderFilter(block, container, filter);
     } else if (filter.filterType === 'dropdown') {
@@ -70,7 +92,64 @@ function renderFilters(block, filters) {
     }
 
     // filter elements
-    processFilters(block, filters);
+    block.dispatchEvent(new Event('processFilters'));
+  });
+}
+
+/**
+ * Retrieve filter elements
+ *
+ * @returns {Array|NodeList}
+ */
+function retrieveFilterItems(filters) {
+  // retrieve by filter fields
+  const allFilterFields = filters.flatMap((filter) => filter.filterFields);
+  return document.querySelectorAll(
+    allFilterFields.map((field) => `[data-${field}]`)
+      .join(', '),
+  );
+}
+
+/**
+ * Set initial filters state
+ *
+ * @param {Array} filters
+ */
+function setInitialState(filters) {
+  filters.forEach((filter) => {
+    // get values from URL
+    const urlValues = filter.filterFields.map((filterField) => {
+      let valueFromUrl = getUrlParam(filterField);
+      if (valueFromUrl.includes(',')) {
+        valueFromUrl = valueFromUrl.split(',');
+      }
+      return isEmpty(valueFromUrl) ? null : valueFromUrl;
+    });
+
+    // set filter value
+    if (!urlValues.every((value) => value === null)) {
+      filter.value = filter.filterFields.length > 1 ? urlValues : urlValues[0];
+    }
+  });
+}
+
+/**
+ * Save state
+ *
+ * @param {Array} filters
+ */
+function saveState(filters) {
+  filters.forEach((filter) => {
+    filter.filterFields.forEach((filterField, index) => {
+      let valueToSave;
+      if (filter.filterFields.length > 1 && filter.value) {
+        valueToSave = filter.value[index];
+      } else {
+        valueToSave = filter.value;
+      }
+
+      setUrlParam(filterField, valueToSave);
+    });
   });
 }
 
@@ -90,6 +169,7 @@ export default function decorate(block) {
 
   // create filters array
   const filters = transformRowsToData(headers, block);
+  setInitialState(filters);
 
   // reset block
   block.textContent = '';
@@ -98,9 +178,25 @@ export default function decorate(block) {
   block.addEventListener('renderFilters', () => {
     renderFilters(block, filters);
   });
+  block.addEventListener('change', () => {
+    setCurrentPage(null); // reset page number
+    block.dispatchEvent(new Event('renderFilters'));
+  });
+  block.addEventListener('processFilters', () => {
+    processFilters(block, filters);
+    handleHtmlElementsVisibility(block);
+    saveState(filters);
+    block.dispatchEvent(new Event('filtersProcessed'));
+  });
 
   // render filters only after initializing other elements
   setTimeout(() => {
+    if (!block.filterItems) {
+      const filterItems = retrieveFilterItems(filters);
+      if (filterItems) {
+        block.filterItems = filterItems;
+      }
+    }
     block.dispatchEvent(new Event('renderFilters'));
   }, 100);
 }

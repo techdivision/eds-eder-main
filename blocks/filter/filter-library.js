@@ -1,11 +1,14 @@
 /**
  * Get filter value for element
  *
- * @param {HTMLElement} element
+ * @param {HTMLElement|Object} element
  * @param {string} filterField
  * @returns {string}
  */
 function getFilterValueForElement(element, filterField) {
+  if (!(element instanceof HTMLElement)) {
+    return element[filterField];
+  }
   return element.getAttribute(`data-${filterField}`);
 }
 
@@ -21,40 +24,28 @@ function getNumericFilterValueForElement(element, filterField) {
 }
 
 /**
- * Get filter fields elements
- *
- * @param {Array|String} filterFields
- * @returns {NodeListOf<*>}
- */
-function getFilterFieldsElements(filterFields) {
-  const selector = ([].concat(filterFields)).map((field) => `[data-${field}]`).join(', ');
-  return document.querySelectorAll(selector);
-}
-
-/**
  * Retrieve options for filter field
  *
- * @param {String|Array} filterField
- * @param {boolean} [onlyVisible]
+ * @param {Object} filter
+ * @param {String} filterField
  * @returns {Array}
  */
-function retrieveOptionsForFilterField(filterField, onlyVisible) {
-  const elements = getFilterFieldsElements([].concat(filterField));
+function retrieveOptionsForFilterField(filter, filterField) {
   let values = new Set(); // using a set to automatically handle uniqueness
 
-  elements.forEach((element) => {
-    ([].concat(filterField)).forEach((singleFilterField) => {
-      const value = getFilterValueForElement(element, singleFilterField);
-      if (value && (!onlyVisible || !element.classList.contains('hidden'))) {
-        values.add(value);
-      }
-    });
+  // retrieve all options
+  filter.elements.forEach((element) => {
+    const value = getFilterValueForElement(element, filterField);
+    if (value) {
+      values.add(value);
+    }
   });
   values = Array.from(values);
 
-  // numeric sort
+  // apply numeric sort if all values are numeric
   if (values.every((value) => !Number.isNaN(Number(value)))) {
-    return values.map(Number).sort((a, b) => a - b);
+    return values.map(Number)
+      .sort((a, b) => a - b);
   }
   return values.sort();
 }
@@ -76,6 +67,5 @@ export {
   getNumericFilterValueForElement,
   getFilterValueForElement,
   retrieveOptionsForFilterField,
-  getFilterFieldsElements,
   getDecorationTextValue,
 };

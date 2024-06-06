@@ -2,7 +2,7 @@
 
 import '../../../scripts/vendor/nouislider.js';
 import { loadCSS } from '../../../scripts/aem.js';
-import { retrieveOptionsForFilterField, getNumericFilterValueForElement } from '../filter-library.js';
+import { getNumericFilterValueForElement } from '../filter-library.js';
 
 /**
  * PS to KW ratio
@@ -82,12 +82,8 @@ function build(block, container, filter) {
   // get min and max slider option
   const minFilterField = filter.filterFields[0];
   const maxFilterField = filter.filterFields[1];
-  const minSliderOption = +retrieveOptionsForFilterField(
-    minFilterField,
-  )[0];
-  const maxSliderOption = +retrieveOptionsForFilterField(
-    maxFilterField,
-  ).slice(-1)[0];
+  const minSliderOption = +filter.options[minFilterField][0];
+  const maxSliderOption = +filter.options[maxFilterField].slice(-1)[0];
   if (!minSliderOption && !maxSliderOption) {
     return;
   }
@@ -123,7 +119,7 @@ function build(block, container, filter) {
     filter.value = [minSliderValue, maxSliderValue];
 
     // re-render filters
-    block.dispatchEvent(new Event('renderFilters'));
+    block.dispatchEvent(new Event('change'));
   });
 }
 
