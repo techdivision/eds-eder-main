@@ -25,7 +25,7 @@ export async function loadFragment(path) {
       main.innerHTML = await resp.text();
 
       // check for usage within library - do not reset media base then
-      if (window.location.href !== "about:srcdoc") {
+      if (window.location.href !== 'about:srcdoc') {
         // reset base path for media to fragment base
         const resetAttributeBase = (tag, attr) => {
           main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
