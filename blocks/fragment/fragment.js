@@ -24,14 +24,17 @@ export async function loadFragment(path) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
 
-      // reset base path for media to fragment base
-      const resetAttributeBase = (tag, attr) => {
-        main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
-          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
-        });
-      };
-      resetAttributeBase('img', 'src');
-      resetAttributeBase('source', 'srcset');
+      // check for usage within library - do not reset media base then
+      if (window.location.href !== "about:srcdoc") {
+        // reset base path for media to fragment base
+        const resetAttributeBase = (tag, attr) => {
+          main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
+            elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
+          });
+        };
+        resetAttributeBase('img', 'src');
+        resetAttributeBase('source', 'srcset');
+      }
 
       decorateMain(main);
       await loadBlocks(main);
