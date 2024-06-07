@@ -33,10 +33,14 @@ footer .footer p a:hover {
 }
 
 /* light gray footer */
-footer .section .columns > div > div {
+footer .section:nth-child(2) .columns > div > div {
   padding-bottom: var(--spacing-simple);
   font-size: var(--body-font-size-m);
   line-height: var(--body-line-height-m);
+}
+
+footer .section:nth-child(2) h4 {
+  margin-bottom: 10px;
 }
 
 /* dark footer */
@@ -82,7 +86,7 @@ footer .section:nth-child(2) span.icon {
 /* styling desktop */
 @media (width >= 900px) {
   footer .section {
-    padding-top: var(--spacing-double);
+    padding-top: var(--spacing-simple);
   }
 
   footer .section:nth-child(3) > div {
