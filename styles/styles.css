@@ -266,5 +266,5 @@ main .section.highlight {
 }
 
 .background-dark-gray {
-  background-color: var(--color-gray-dark);
+  background-color: var(--color-gray-darker);
 }
