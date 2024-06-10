@@ -9,7 +9,8 @@
 
 .cards > ul > li {
   border: 1px solid var(--dark-color);
-  background-color: var(--background-color)
+  background-color: var(--background-color);
+  cursor: pointer;
 }
 
 .cards .cards-card-body {
@@ -49,6 +50,10 @@
   justify-content: center;
   width: 100%;
   top: 30px;
+}
+
+.cards.teaser > ul > li .cards-card-image:nth-of-type(2) img {
+  max-width: 250px;
 }
 
 .cards.teaser > ul > li > .cards-card-body > .button-container {
