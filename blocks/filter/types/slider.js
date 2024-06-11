@@ -1,6 +1,5 @@
 // noinspection JSUnresolvedReference
 
-import '../../../scripts/vendor/nouislider.js';
 import { loadCSS } from '../../../scripts/aem.js';
 import { getNumericFilterValueForElement } from '../filter-library.js';
 
@@ -95,32 +94,36 @@ function build(block, container, filter) {
   const slider = document.createElement('div');
   container.append(slider);
   loadCSS('/styles/vendor/nouislider.css').then();
-  window.noUiSlider.create(slider, {
-    start: startValues,
-    connect: true,
-    range: {
-      min: minSliderOption,
-      max: maxSliderOption,
-    },
-  });
+  import('../../../scripts/vendor/nouislider.js')
+    .then(() => {
+      // create slider
+      window.noUiSlider.create(slider, {
+        start: startValues,
+        connect: true,
+        range: {
+          min: minSliderOption,
+          max: maxSliderOption,
+        },
+      });
 
-  // render decoration
-  renderDecoration(container, filter, startValues);
+      // render decoration
+      renderDecoration(container, filter, startValues);
 
-  // on slider update
-  slider.noUiSlider.on('update', (values) => {
-    // render decoration
-    renderDecoration(container, filter, values);
-  });
-  slider.noUiSlider.on('change', (values) => {
-    // get current slider values
-    const minSliderValue = parseInt(values[0], 10);
-    const maxSliderValue = parseInt(values[1], 10);
-    filter.value = [minSliderValue, maxSliderValue];
+      // on slider update
+      slider.noUiSlider.on('update', (values) => {
+        // render decoration
+        renderDecoration(container, filter, values);
+      });
+      slider.noUiSlider.on('change', (values) => {
+        // get current slider values
+        const minSliderValue = parseInt(values[0], 10);
+        const maxSliderValue = parseInt(values[1], 10);
+        filter.value = [minSliderValue, maxSliderValue];
 
-    // re-render filters
-    block.dispatchEvent(new Event('change'));
-  });
+        // re-render filters
+        block.dispatchEvent(new Event('change'));
+      });
+    });
 }
 
 export {
