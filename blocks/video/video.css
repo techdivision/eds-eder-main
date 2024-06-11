@@ -70,3 +70,12 @@
     top: 4px;
     left: 7px;
 }
+
+.tiktok-embed {
+    width: 100%;
+    border-left: 5px solid var(--light-color);
+}
+
+.tiktok-embed iframe {
+    height: fit-content;
+}
