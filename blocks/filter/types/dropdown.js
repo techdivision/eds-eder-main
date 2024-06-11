@@ -48,6 +48,7 @@ function build(block, container, filter) {
 
   // build select
   const select = document.createElement('select');
+  select.setAttribute('aria-label', filter.name);
   select.setAttribute('placeholder', filter.name);
 
   // add default option
