@@ -71,6 +71,7 @@ function createPaginationLink(page, label) {
  */
 function createPaginationListItem(page, label) {
   const li = document.createElement('li');
+  li.classList.add('contains-link');
   li.append(createPaginationLink(page, label));
   return li;
 }

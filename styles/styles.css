@@ -325,6 +325,15 @@ main .section.highlight {
       li {
         display: inline-block;
         padding: 0 4px;
+
+        &.contains-link {
+          padding: 0;
+
+          a {
+            display: block;
+            padding: 0 4px;
+          }
+        }
       }
     }
   }
