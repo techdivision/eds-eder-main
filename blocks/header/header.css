@@ -1,6 +1,5 @@
 /* header and nav layout */
 header {
-  display: none;
   height: var(--nav-height);
 }
 
