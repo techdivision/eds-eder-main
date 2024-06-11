@@ -1,7 +1,6 @@
 /* header and nav layout */
 header {
   height: var(--nav-height);
-  display: none;
 }
 
 header .header.block {
