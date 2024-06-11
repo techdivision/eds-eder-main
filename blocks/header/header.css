@@ -1,8 +1,4 @@
 /* header and nav layout */
-header {
-  height: var(--nav-height);
-}
-
 header .header.block {
   width: 100%;
   position: fixed;
