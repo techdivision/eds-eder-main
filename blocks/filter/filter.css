@@ -1,4 +1,6 @@
 .filter {
+  min-height: 60px;
+
   @media (width >= 900px) {
     display: flex;
     flex-wrap: wrap;

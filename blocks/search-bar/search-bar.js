@@ -1,20 +1,21 @@
-import { fetchPlaceholders } from '../../scripts/aem.js';
+import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
 
 /**
  * Build search form
- * @param placeholders
+ *
  * @returns {HTMLFormElement}
  */
-function searchForm(placeholders) {
+function getSearchForm() {
+  const searchUrl = tSync('search');
   const form = document.createElement('form');
-  form.action = `/${placeholders.search || 'search'}`;
+  form.action = `/${searchUrl}`;
   form.method = 'get';
 
   const input = document.createElement('input');
   input.name = 'q';
   input.className = 'search-input';
 
-  const searchPlaceholder = placeholders.Search || 'Search...';
+  const searchPlaceholder = tSync('searchbutton');
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
@@ -23,7 +24,7 @@ function searchForm(placeholders) {
 }
 
 export default async function decorate(block) {
-  const placeholders = await fetchPlaceholders();
   block.innerHTML = '';
-  block.append(searchForm(placeholders));
+  await loadPlaceholders();
+  block.append(getSearchForm());
 }

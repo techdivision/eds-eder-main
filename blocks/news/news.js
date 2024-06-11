@@ -1,7 +1,8 @@
 import {
   fetchListItems,
   getFilterBlock,
-  renderList, renderPlaceholders,
+  renderList,
+  renderPlaceholders,
 } from '../../scripts/list.js';
 import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
 import { convertDate } from '../../scripts/helpers.js';
