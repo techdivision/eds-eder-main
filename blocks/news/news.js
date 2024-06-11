@@ -43,7 +43,7 @@ function manipulateItems(items) {
     item.picture = createOptimizedPicture(
       item.image,
       item.title,
-      false,
+      true,
       [{ width: '500' }],
     );
   });
