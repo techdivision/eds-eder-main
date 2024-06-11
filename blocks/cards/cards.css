@@ -9,7 +9,8 @@
 
 .cards > ul > li {
   border: 1px solid var(--dark-color);
-  background-color: var(--background-color)
+  background-color: var(--background-color);
+  position: relative;
 }
 
 .cards .cards-card-body {
@@ -51,6 +52,27 @@
   top: 30px;
 }
 
-.cards.teaser > ul > li > .cards-card-body > .button-container {
+.cards > ul > li > .cards-card-body > .button-container {
+  bottom: 0;
+  left: 0;
+  width: 100%;
   text-align: center;
+}
+
+
+@media (width > 635px) {
+  .cards > ul > li > .cards-card-body > .button-container {
+    position: absolute;
+  }
+
+  .cards > ul > li {
+    position: relative;
+    padding-bottom: 130px;
+  }
+}
+
+.cards.third-width > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+  grid-gap: 16px;
 }
