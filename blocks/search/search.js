@@ -1,4 +1,4 @@
-import { createOptimizedPicture, decorateIcons, } from '../../scripts/aem.js';
+import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
 
 const searchParams = new URLSearchParams(window.location.search);
@@ -34,7 +34,7 @@ function highlightTextElements(terms, elements) {
       while (offset >= 0) {
         matches.push({
           offset,
-          term: textContent.substring(offset, offset + term.length)
+          term: textContent.substring(offset, offset + term.length),
         });
         start = offset + term.length;
         offset = textContent.toLowerCase()
@@ -50,7 +50,7 @@ function highlightTextElements(terms, elements) {
     let currentIndex = 0;
     const fragment = matches.reduce((acc, {
       offset,
-      term
+      term,
     }) => {
       if (offset < currentIndex) return acc;
       const textBefore = textContent.substring(currentIndex, offset);
@@ -177,7 +177,7 @@ function filterData(searchTerms, data) {
     if (minIdx >= 0) {
       foundInHeader.push({
         minIdx,
-        result
+        result,
       });
       return;
     }
@@ -193,7 +193,7 @@ function filterData(searchTerms, data) {
     if (minIdx >= 0) {
       foundInMeta.push({
         minIdx,
-        result
+        result,
       });
     }
   });
