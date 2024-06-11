@@ -303,3 +303,29 @@ main .section.highlight {
     border-width: 0 2px 2px 0
   }
 }
+
+/* pagination */
+.pagination {
+  display: flex;
+  margin: 20px 0;
+  user-select: none;
+
+  .size,
+  .pages {
+    flex: 1;
+  }
+
+  .pages {
+    text-align: right;
+
+    ol {
+      list-style-type: none;
+      margin: 0;
+
+      li {
+        display: inline-block;
+        padding: 0 4px;
+      }
+    }
+  }
+}
