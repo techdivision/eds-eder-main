@@ -39,6 +39,9 @@ async function loadPlaceholders() {
  * @returns {object}
  */
 function getLoadedPlaceholders() {
+  if (!window.placeholders) {
+    return {};
+  }
   return {
     ...window.placeholders.default || {},
     ...window.placeholders[getCurrentPlaceholderLanguage()] || {},

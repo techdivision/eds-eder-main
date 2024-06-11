@@ -1,7 +1,7 @@
 import {
   fetchListItems,
   getFilterBlock,
-  renderList,
+  renderList, renderPlaceholders,
 } from '../../scripts/list.js';
 import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
 import { convertDate } from '../../scripts/helpers.js';
@@ -45,7 +45,7 @@ function manipulateItems(items) {
       item.title,
       true,
       [{ width: '500' }],
-    );
+    ).outerHTML;
   });
 }
 
@@ -62,7 +62,7 @@ function renderNews(item) {
   article.classList.add('news-list-item');
   article.innerHTML = `    
     <div class="image-wrapper">
-      ${item.picture.outerHTML}
+      ${item.picture}
       </div>
       <div class="details-wrapper">
       <div class="date">${item.formattedDate}</div>
@@ -85,12 +85,13 @@ function renderNews(item) {
  * @param {HTMLElement} block
  */
 export default async function decorate(block) {
-  // ensure placeholders have been loaded
-  await loadPlaceholders();
-
   // get config
   const config = readBlockConfig(block);
   const limit = Number.parseInt(config.limit, 10) || 10;
+  renderPlaceholders(block, renderNews, limit);
+
+  // ensure placeholders have been loaded
+  await loadPlaceholders();
 
   // get items (items are already sorted by sheet)
   const items = await fetchListItems('news');

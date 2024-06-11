@@ -203,6 +203,24 @@ async function fetchListItems(listType) {
 }
 
 /**
+ * Render placeholders
+ *
+ * @param {HTMLElement} block
+ * @param {function} renderer
+ * @param {Number|String} limit
+ * @returns {void}
+ */
+function renderPlaceholders(block, renderer, limit) {
+  block.innerHTML = '';
+  const items = Array.from({ length: limit }, () => ({}));
+  items.forEach((item) => {
+    const placeholder = renderer(item);
+    placeholder.classList.add('placeholder');
+    block.append(placeholder);
+  });
+}
+
+/**
  * Render list
  *
  * @param {HTMLElement} block
@@ -238,5 +256,6 @@ export {
   fetchListItems,
   getFilterBlock,
   renderPagination,
+  renderPlaceholders,
   renderList,
 };

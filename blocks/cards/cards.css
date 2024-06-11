@@ -60,7 +60,7 @@
 }
 
 
-@media (width > 635px) {
+@media (width > 600px) {
   .cards > ul > li > .cards-card-body > .button-container {
     position: absolute;
   }
