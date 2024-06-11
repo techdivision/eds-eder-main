@@ -234,17 +234,24 @@ async function renderList(block, renderer, items, limit) {
   const pagination = await renderPagination(items, getCurrentPage(), limit);
 
   // get items for current page
-  const itemsForCurrentPage = getItemsForCurrentPage(items, limit);
+  let relevantItems = items;
+  if (pagination) {
+    relevantItems = getItemsForCurrentPage(items, limit);
+  }
+
+  // build HTML
+  relevantItems.forEach((item) => {
+    if (!item.renderedHtml) {
+      item.renderedHtml = renderer(item);
+    }
+  });
 
   // render
   block.innerHTML = '';
   if (pagination) {
     block.append(pagination);
   }
-  (pagination ? itemsForCurrentPage : items).forEach((item) => {
-    if (!item.renderedHtml) {
-      item.renderedHtml = renderer(item);
-    }
+  relevantItems.forEach((item) => {
     block.append(item.renderedHtml);
   });
 }

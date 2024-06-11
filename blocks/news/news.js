@@ -89,6 +89,8 @@ export default async function decorate(block) {
   // get config
   const config = readBlockConfig(block);
   const limit = Number.parseInt(config.limit, 10) || 10;
+
+  // render placeholders to prevent layout shifts
   renderPlaceholders(block, renderNews, limit);
 
   // ensure placeholders have been loaded

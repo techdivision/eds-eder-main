@@ -159,6 +159,22 @@ function saveState(filters) {
 }
 
 /**
+ * Initialize block
+ *
+ * @param {HTMLElement} block
+ * @param {Array} filters
+ */
+function initializeBlock(block, filters) {
+  if (!block.filterItems) {
+    const filterItems = retrieveFilterItems(filters);
+    if (filterItems) {
+      block.filterItems = filterItems;
+    }
+  }
+  block.dispatchEvent(new Event('renderFilters'));
+}
+
+/**
  * Decorate filter block
  *
  * @param {HTMLElement} block
@@ -178,6 +194,7 @@ export default function decorate(block) {
 
   // reset block
   block.textContent = '';
+  initializeBlock(block, filters);
 
   // add event to render filters
   block.addEventListener('renderFilters', () => {
@@ -194,14 +211,8 @@ export default function decorate(block) {
     block.dispatchEvent(new Event('filtersProcessed'));
   });
 
-  // render filters only after initializing other elements
+  // initialize block after rendering all other elements
   setTimeout(() => {
-    if (!block.filterItems) {
-      const filterItems = retrieveFilterItems(filters);
-      if (filterItems) {
-        block.filterItems = filterItems;
-      }
-    }
-    block.dispatchEvent(new Event('renderFilters'));
+    initializeBlock(block, filters);
   }, 100);
 }
