@@ -1,5 +1,5 @@
 .filter {
-  min-height: 45px;
+  min-height: 85px;
 
   @media (width >= 900px) {
     display: flex;
@@ -17,6 +17,7 @@
     /* slider filter */
     &.filter-type-slider {
       padding: 10px 20px;
+      min-height: 55px;
 
       .filter-decoration p {
         margin: 10px 0 0;
