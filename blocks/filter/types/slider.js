@@ -97,7 +97,7 @@ function build(block, container, filter) {
   import('../../../scripts/vendor/nouislider.min.js')
     .then(async () => {
       // load placeholders
-      loadCSS('/styles/vendor/nouislider.css').then();
+      loadCSS('/styles/vendor/nouislider.min.css').then();
       await loadPlaceholders();
 
       // create slider
