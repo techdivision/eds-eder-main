@@ -2,6 +2,7 @@
 
 import { loadCSS } from '../../../scripts/aem.js';
 import { getNumericFilterValueForElement } from '../filter-library.js';
+import { loadPlaceholders, tSync } from '../../../scripts/i18n.js';
 
 /**
  * PS to KW ratio
@@ -95,7 +96,10 @@ function build(block, container, filter) {
   container.append(slider);
   loadCSS('/styles/vendor/nouislider.css').then();
   import('../../../scripts/vendor/nouislider.js')
-    .then(() => {
+    .then(async () => {
+      // load placeholders
+      await loadPlaceholders();
+
       // create slider
       window.noUiSlider.create(slider, {
         start: startValues,
@@ -104,6 +108,10 @@ function build(block, container, filter) {
           min: minSliderOption,
           max: maxSliderOption,
         },
+        handleAttributes: [
+          { 'aria-label': tSync('from') },
+          { 'aria-label': tSync('to') },
+        ],
       });
 
       // render decoration
