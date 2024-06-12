@@ -31,7 +31,7 @@ function renderDecoration(container, filter, values) {
       const decorationElementClone = decorationElement.cloneNode(true);
       // check if the node contains only text
       if (decorationElementClone.childNodes.length === 1
-          && decorationElementClone.childNodes[0].nodeType === 3) {
+          && decorationElementClone.childNodes[0].nodeType === Node.TEXT_NODE) {
         // get current slider values
         const minSliderValue = parseInt(values[0], 10);
         const maxSliderValue = parseInt(values[1], 10);

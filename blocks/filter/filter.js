@@ -165,7 +165,7 @@ function saveState(filters) {
  * @param {Array} filters
  */
 function initializeBlock(block, filters) {
-  if (!block.filterItems) {
+  if (!block.filterItems || !block.filterItems.length) {
     const filterItems = retrieveFilterItems(filters);
     if (filterItems) {
       block.filterItems = filterItems;
