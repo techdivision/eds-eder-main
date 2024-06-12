@@ -94,11 +94,11 @@ function build(block, container, filter) {
   // create slider
   const slider = document.createElement('div');
   container.append(slider);
-  loadCSS('/styles/vendor/nouislider.css').then();
   import('../../../scripts/vendor/nouislider.js')
     .then(async () => {
       // load placeholders
       await loadPlaceholders();
+      loadCSS('/styles/vendor/nouislider.css').then();
 
       // create slider
       window.noUiSlider.create(slider, {
