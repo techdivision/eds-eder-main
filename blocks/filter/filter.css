@@ -1,6 +1,4 @@
 .filter {
-  min-height: 60px;
-
   @media (width >= 900px) {
     display: flex;
     flex-wrap: wrap;
@@ -12,6 +10,7 @@
     margin: 0 0 10px;
     flex: 1;
     align-self: flex-start;
+    min-height: 45px;
 
     /* slider filter */
     &.filter-type-slider {
