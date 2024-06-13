@@ -20,6 +20,4 @@ const determineEdsBaseUrl = (params) => {
   throw new Error(`There is no mapping for the base-url ${urlToCheck}`);
 };
 
-export {
-  determineEdsBaseUrl
-}
+export default determineEdsBaseUrl;
