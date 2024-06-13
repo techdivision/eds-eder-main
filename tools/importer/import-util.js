@@ -3,7 +3,7 @@
  * @param params
  * @returns {*}
  */
-export const determineEdsBaseUrl = (params) => {
+const determineEdsBaseUrl = (params) => {
   const urlMapping = {
     'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
     'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
@@ -19,3 +19,7 @@ export const determineEdsBaseUrl = (params) => {
 
   throw new Error(`There is no mapping for the base-url ${urlToCheck}`);
 };
+
+export {
+  determineEdsBaseUrl
+}
