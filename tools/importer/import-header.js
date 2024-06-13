@@ -1,6 +1,6 @@
 /* global WebImporter */
 
-import {determineEdsBaseUrl} from "./import-util.js";
+import determineEdsBaseUrl from './import-util.js';
 
 /**
  * Exclude generic content from migration
