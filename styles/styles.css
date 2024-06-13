@@ -278,6 +278,10 @@ main .section.highlight {
   display: none;
 }
 
+.block.library-metadata, .block.metadata {
+  display: none;
+}
+
 /* chevron */
 .has-chevron {
   position: relative;
