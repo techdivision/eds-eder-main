@@ -2,7 +2,7 @@
 
 import { loadCSS } from '../../../scripts/aem.js';
 import { getNumericFilterValueForElement } from '../filter-library.js';
-import { loadPlaceholders, tSync } from '../../../scripts/i18n.js';
+import { loadPlaceholders, ts } from '../../../scripts/i18n.js';
 
 /**
  * PS to KW ratio
@@ -109,8 +109,8 @@ function build(block, container, filter) {
           max: maxSliderOption,
         },
         handleAttributes: [
-          { 'aria-label': tSync('from') },
-          { 'aria-label': tSync('to') },
+          { 'aria-label': ts('From') },
+          { 'aria-label': ts('To') },
         ],
       });
 

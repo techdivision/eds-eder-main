@@ -1,4 +1,4 @@
-import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
+import { loadPlaceholders, ts } from '../../scripts/i18n.js';
 
 /**
  * Build search form
@@ -6,16 +6,15 @@ import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
  * @returns {HTMLFormElement}
  */
 function getSearchForm() {
-  const searchUrl = tSync('search');
   const form = document.createElement('form');
-  form.action = `/${searchUrl}`;
+  form.action = `/${ts('search')}`;
   form.method = 'get';
 
   const input = document.createElement('input');
   input.name = 'q';
   input.className = 'search-input';
 
-  const searchPlaceholder = tSync('searchbutton');
+  const searchPlaceholder = ts('Search');
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 

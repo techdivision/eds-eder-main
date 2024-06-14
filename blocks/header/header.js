@@ -1,7 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { decorateLinkedPictures } from '../../scripts/scripts.js';
-import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
+import { loadPlaceholders, ts } from '../../scripts/i18n.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -150,7 +150,7 @@ function buildBreadcrumbsFromNavTree(nav, currentUrl) {
     });
   }
 
-  const homePlaceholder = tSync('home');
+  const homePlaceholder = ts('Home');
   crumbs.unshift({
     title: homePlaceholder,
     url: homeUrl,

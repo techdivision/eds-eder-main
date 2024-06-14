@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference
+
 /*
  * Copyright 2024 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -550,7 +552,9 @@ async function fetchPlaceholders(prefix = 'default') {
           json.data
             .filter((placeholder) => placeholder.Key)
             .forEach((placeholder) => {
-              placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
+              // BEGIN CHANGE TechDivision
+              placeholders[placeholder.Key] = placeholder.Text;
+              // END CHANGE TechDivision
             });
           window.placeholders[prefix] = placeholders;
           resolve(window.placeholders[prefix]);

@@ -1,5 +1,5 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
-import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
+import { loadPlaceholders, ts } from '../../scripts/i18n.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
@@ -150,7 +150,7 @@ async function renderResults(block, config, filteredData, searchTerms) {
   } else {
     const noResultsMessage = document.createElement('li');
     searchResults.classList.add('no-results');
-    noResultsMessage.textContent = tSync('searchnoresults');
+    noResultsMessage.textContent = ts('No results found.');
     searchResults.append(noResultsMessage);
   }
 }
@@ -238,7 +238,7 @@ function searchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-input';
 
-  const searchPlaceholder = tSync('searchbutton');
+  const searchPlaceholder = ts('Search');
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
