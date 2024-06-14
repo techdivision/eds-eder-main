@@ -468,6 +468,9 @@ function decorateIcon(span, prefix = '', alt = '') {
   img.src = `${window.hlx.codeBasePath}${prefix}/icons/${iconName}.svg`;
   img.alt = alt;
   img.loading = 'lazy';
+  // BEGIN CHANGE TechDivision
+  img.setAttribute('aria-label', alt !== '' ? alt : iconName);
+  // END CHANGE TechDivision
   span.append(img);
 }
 

@@ -1,12 +1,10 @@
-import {
-  createOptimizedPicture,
-  decorateIcons,
-  fetchPlaceholders,
-} from '../../scripts/aem.js';
+import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
+import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
 function findNextHeading(el) {
+  // noinspection JSUnresolvedReference
   let preceedingEl = el.parentElement.previousElement || el.parentElement.parentElement;
   let h = 'H2';
   while (preceedingEl) {
@@ -16,6 +14,7 @@ function findNextHeading(el) {
       h = level < 6 ? `H${level + 1}` : 'H6';
       preceedingEl = false;
     } else {
+      // noinspection JSUnresolvedReference
       preceedingEl = preceedingEl.previousElement || preceedingEl.parentElement;
     }
   }
@@ -30,11 +29,16 @@ function highlightTextElements(terms, elements) {
     const { textContent } = element;
     terms.forEach((term) => {
       let start = 0;
-      let offset = textContent.toLowerCase().indexOf(term.toLowerCase(), start);
+      let offset = textContent.toLowerCase()
+        .indexOf(term.toLowerCase(), start);
       while (offset >= 0) {
-        matches.push({ offset, term: textContent.substring(offset, offset + term.length) });
+        matches.push({
+          offset,
+          term: textContent.substring(offset, offset + term.length),
+        });
         start = offset + term.length;
-        offset = textContent.toLowerCase().indexOf(term.toLowerCase(), start);
+        offset = textContent.toLowerCase()
+          .indexOf(term.toLowerCase(), start);
       }
     });
 
@@ -44,7 +48,10 @@ function highlightTextElements(terms, elements) {
 
     matches.sort((a, b) => a.offset - b.offset);
     let currentIndex = 0;
-    const fragment = matches.reduce((acc, { offset, term }) => {
+    const fragment = matches.reduce((acc, {
+      offset,
+      term,
+    }) => {
       if (offset < currentIndex) return acc;
       const textBefore = textContent.substring(currentIndex, offset);
       if (textBefore) {
@@ -143,7 +150,7 @@ async function renderResults(block, config, filteredData, searchTerms) {
   } else {
     const noResultsMessage = document.createElement('li');
     searchResults.classList.add('no-results');
-    noResultsMessage.textContent = config.placeholders.searchNoResults || 'No results found.';
+    noResultsMessage.textContent = tSync('searchnoresults');
     searchResults.append(noResultsMessage);
   }
 }
@@ -160,17 +167,23 @@ function filterData(searchTerms, data) {
     let minIdx = -1;
 
     searchTerms.forEach((term) => {
-      const idx = (result.header || result.title).toLowerCase().indexOf(term);
+      // noinspection JSUnresolvedReference
+      const idx = (result.header || result.title).toLowerCase()
+        .indexOf(term);
       if (idx < 0) return;
       if (minIdx < idx) minIdx = idx;
     });
 
     if (minIdx >= 0) {
-      foundInHeader.push({ minIdx, result });
+      foundInHeader.push({
+        minIdx,
+        result,
+      });
       return;
     }
 
-    const metaContents = `${result.title} ${result.description} ${result.path.split('/').pop()}`.toLowerCase();
+    const metaContents = `${result.title} ${result.description} ${result.path.split('/')
+      .pop()}`.toLowerCase();
     searchTerms.forEach((term) => {
       const idx = metaContents.indexOf(term);
       if (idx < 0) return;
@@ -178,7 +191,10 @@ function filterData(searchTerms, data) {
     });
 
     if (minIdx >= 0) {
-      foundInMeta.push({ minIdx, result });
+      foundInMeta.push({
+        minIdx,
+        result,
+      });
     }
   });
 
@@ -201,7 +217,9 @@ async function handleSearch(e, block, config) {
     clearSearch(block);
     return;
   }
-  const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => !!term);
+  const searchTerms = searchValue.toLowerCase()
+    .split(/\s+/)
+    .filter((term) => !!term);
 
   const data = await fetchData(config.source);
   const filteredData = filterData(searchTerms, data);
@@ -220,15 +238,19 @@ function searchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-input';
 
-  const searchPlaceholder = config.placeholders.searchPlaceholder || 'Search...';
+  const searchPlaceholder = tSync('searchbutton');
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
-  input.addEventListener('input', (e) => {
-    handleSearch(e, block, config);
+  input.addEventListener('input', async (e) => {
+    await handleSearch(e, block, config);
   });
 
-  input.addEventListener('keyup', (e) => { if (e.code === 'Escape') { clearSearch(block); } });
+  input.addEventListener('keyup', (e) => {
+    if (e.code === 'Escape') {
+      clearSearch(block);
+    }
+  });
 
   return input;
 }
@@ -255,11 +277,11 @@ function searchBox(block, config) {
 }
 
 export default async function decorate(block) {
-  const placeholders = await fetchPlaceholders();
+  await loadPlaceholders();
   const source = block.querySelector('a[href]') ? block.querySelector('a[href]').href : '/query-index.json';
   block.innerHTML = '';
   block.append(
-    searchBox(block, { source, placeholders }),
+    searchBox(block, { source }),
     searchResultsContainer(block),
   );
 
