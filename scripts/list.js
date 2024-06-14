@@ -1,6 +1,6 @@
 import ffetch from './vendor/ffetch.js';
 import { getUrlParam, setUrlParam } from './helpers.js';
-import { loadPlaceholders, tSync } from './i18n.js';
+import { loadPlaceholders, ts } from './i18n.js';
 
 /**
  * Get current page
@@ -111,7 +111,7 @@ async function renderPagination(items, page, limit) {
 
   const list = document.createElement('ol');
   if (page > 1) {
-    list.append(createPaginationListItem(page - 1, tSync('previous')));
+    list.append(createPaginationListItem(page - 1, ts('Previous')));
     list.append(createPaginationListItem(1));
   }
   if (page > 3) {
@@ -144,7 +144,7 @@ async function renderPagination(items, page, limit) {
   }
   if (page < maxPages) {
     list.append(createPaginationListItem(maxPages));
-    list.append(createPaginationListItem(page + 1, tSync('next')));
+    list.append(createPaginationListItem(page + 1, ts('Next')));
   }
 
   // add list page links
@@ -155,7 +155,7 @@ async function renderPagination(items, page, limit) {
   // add list size
   const listSize = document.createElement('div');
   listSize.classList.add('size');
-  listSize.textContent = tSync('pagexofy', page, maxPages);
+  listSize.textContent = ts('Page %1 of %2', page, maxPages);
   listPagination.append(listSize, listPageLinks);
 
   // add click event

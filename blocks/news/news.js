@@ -6,7 +6,7 @@ import {
 } from '../../scripts/list.js';
 import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
 import { convertDate } from '../../scripts/helpers.js';
-import { loadPlaceholders, tSync } from '../../scripts/i18n.js';
+import { loadPlaceholders, ts } from '../../scripts/i18n.js';
 
 /**
  * Manipulate news items
@@ -57,7 +57,7 @@ function manipulateItems(items) {
  * @returns {HTMLElement}
  */
 function renderNews(item) {
-  const detailsText = tSync('details');
+  const detailsText = ts('Details');
 
   const article = document.createElement('article');
   article.classList.add('news-list-item');

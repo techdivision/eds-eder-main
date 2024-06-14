@@ -40,6 +40,8 @@ async function loadPlaceholders() {
  */
 function getLoadedPlaceholders() {
   if (!window.placeholders) {
+    // eslint-disable-next-line no-console
+    console.error('Placeholders have not been loaded yet');
     return {};
   }
   return {
@@ -83,7 +85,7 @@ function getText(text) {
  * @param {*} params
  * @returns {String}
  */
-function tSync(text, ...params) {
+function ts(text, ...params) {
   return replacePlaceholders(getText(text), ...params);
 }
 
@@ -96,12 +98,12 @@ function tSync(text, ...params) {
  */
 async function t(text, ...params) {
   await loadPlaceholders();
-  return tSync(text, ...params);
+  return ts(text, ...params);
 }
 
 export {
   t,
-  tSync,
+  ts,
   loadPlaceholders,
   getCurrentLanguage,
 };
