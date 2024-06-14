@@ -74,8 +74,7 @@ function replacePlaceholders(template, ...params) {
  * @returns {*}
  */
 function getText(text) {
-  // set to camel case (see aem.js:550)
-  return getLoadedPlaceholders()[toCamelCase(text)] || text;
+  return getLoadedPlaceholders()[text] || text;
 }
 
 /**
