@@ -238,7 +238,7 @@ function searchInput(block, config) {
   input.setAttribute('type', 'search');
   input.className = 'search-input';
 
-  const searchPlaceholder = ts('Search');
+  const searchPlaceholder = ts('Enter search term');
   input.placeholder = searchPlaceholder;
   input.setAttribute('aria-label', searchPlaceholder);
 
