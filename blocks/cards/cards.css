@@ -10,6 +10,7 @@
 .cards > ul > li {
   border: 1px solid var(--dark-color);
   background-color: var(--background-color);
+  cursor: pointer;
   position: relative;
 }
 
@@ -52,6 +53,10 @@
   top: 30px;
 }
 
+.cards.teaser > ul > li .cards-card-image:nth-of-type(2) img {
+  max-width: 250px;
+}
+
 .cards > ul > li > .cards-card-body > .button-container {
   bottom: 0;
   left: 0;
@@ -59,6 +64,15 @@
   text-align: center;
 }
 
+.cards.teaser > ul > li > .cards-card-body > .button-container {
+  text-align: center;
+}
+
+.cards.third-width > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+  grid-gap: 16px;
+}
 
 @media (width > 600px) {
   .cards > ul > li > .cards-card-body > .button-container {
@@ -69,10 +83,4 @@
     position: relative;
     padding-bottom: 130px;
   }
-}
-
-.cards.third-width > ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-  grid-gap: 16px;
 }
