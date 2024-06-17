@@ -71,7 +71,7 @@
 .cards.third-width > ul {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-  grid-gap: 16px;
+  grid-gap: 30px;
 }
 
 @media (width > 600px) {
