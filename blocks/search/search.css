@@ -136,7 +136,11 @@
     display: block;
     background-color: var(--color-gray-light);
     padding-top: 1%;
-    padding-bottom: 2%;
+    padding-bottom: 1%;
+}
+
+.search.minimal .search-box p {
+    margin-bottom: 0;
 }
 
 .search.minimal .search-box > input {
