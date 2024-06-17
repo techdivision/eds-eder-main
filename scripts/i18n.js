@@ -1,5 +1,5 @@
 import { defaultLanguage } from './defaults.js';
-import { fetchPlaceholders, getMetadata, toCamelCase } from './aem.js';
+import { fetchPlaceholders, getMetadata } from './aem.js';
 
 /**
  * Get current language
