@@ -59,6 +59,12 @@ header .pre-header .default-content-wrapper > ul > li::before {
   cursor: pointer;
 }
 
+header nav .nav-chevron[aria-expanded="true"] button span,
+header .pre-header .default-content-wrapper > ul > li[aria-expanded="true"]::before {
+  transform: rotate(-45deg);
+  top: 10px;
+}
+
 /* hamburger */
 header nav .nav-hamburger {
   height: 22px;
@@ -140,6 +146,10 @@ header .nav-logo {
   grid-area: logo;
 }
 
+header nav .nav-logo p {
+  margin: 0;
+}
+
 header nav .nav-logo img {
   width: 128px;
   height: auto;
@@ -152,6 +162,11 @@ header .pre-header {
   grid-area: sections;
   color: var(--color-white);
   background: var(--color-gray-dark);
+}
+
+header .pre-header .default-content-wrapper {
+  max-height: calc(100vh - (2* var(--nav-height)));
+  overflow-y: auto;
 }
 
 header .pre-header .default-content-wrapper ul {
@@ -168,13 +183,17 @@ header .pre-header .default-content-wrapper > ul {
 header .pre-header .default-content-wrapper > ul > li {
   position: relative;
   display: inline-block;
-  padding-left: 50px;
+  padding-left: 45px;
 }
 
 header .pre-header ul > li > ul {
   display: none;
   font-weight: var(--font-weight-bold);
   text-transform: none;
+}
+
+header .pre-header .default-content-wrapper > ul > li:first-child > span {
+  display: none;
 }
 
 header .pre-header ul > li > ul > li > ul {
@@ -195,7 +214,7 @@ header .pre-header[aria-expanded="true"] .default-content-wrapper > ul > li > ul
   display: block;
 }
 
-  /* sections */
+/* sections */
 header nav .nav-sections {
   display: none;
   visibility: hidden;
@@ -203,24 +222,64 @@ header nav .nav-sections {
   padding: 0 var(--spacing-simple);
 }
 
-header nav .nav-sections ul  {
+header nav .nav-sections ul {
   list-style: none;
   padding-left: 0;
   font-size: var(--body-font-size-s);
 }
 
+header nav .nav-sections ul li {
+  font-weight: var(--font-weight-regular);
+}
+
 header nav .nav-sections[aria-expanded="true"] {
   display: block;
   visibility: visible;
-  align-self: start;
+  align-self: flex-start;
 }
 
-header nav .nav-sections ul > li > ul > li {
-  font-weight: var(--font-weight-regular);
+header nav .nav-sections .default-content-wrapper > ul {
+  max-height: calc(100vh - (2* var(--nav-height)));
+  overflow-y: auto;
 }
 
 header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"] > ul > li {
   font-weight: var(--font-weight-bold);
+}
+
+/* mobile menu */
+header nav .mobile-menu > li {
+  padding-top: var(--spacing-half);
+}
+
+header nav .mobile-menu > li > span {
+  font-weight: var(--font-weight-bold);
+  position: relative;
+  padding-right: var(--spacing-half);
+}
+
+header nav .mobile-menu > li > span::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 6px;
+  right: 2px;
+  transform: rotate(45deg);
+  border-radius: 0 1px 0 0;
+  border-style: solid;
+  border-color: currentcolor;
+  border-width: 2px 2px 0 0;
+}
+
+header nav .mobile-menu > li > ul {
+  display: none;
+}
+
+header nav .mobile-menu li.is-visible > ul {
+  display: block;
+  margin-bottom: var(--spacing-half);
 }
 
 @media (width >= 600px) {
@@ -230,12 +289,14 @@ header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"
 }
 
 @media (width >= 900px) {
-  header {
-    height: var(--header-height);
+  /* mobile menu */
+  header nav .mobile-menu > li > span::after {
+    content: none;
   }
 
   header nav {
     width: 100%;
+    height: var(--header-height);
     position: relative;
     grid-template: 'preheader preheader preheader'
     'logo sections .';
@@ -246,6 +307,11 @@ header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"
   header nav[aria-expanded="true"] {
     min-height: 0;
     overflow: visible;
+  }
+
+  /* logo */
+  header .nav-logo {
+    padding-left: 45px;
   }
 
   /* hamburger, chevron */
@@ -260,10 +326,15 @@ header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"
     display: block;
     visibility: visible;
     white-space: nowrap;
+    padding: 0;
   }
 
   header nav[aria-expanded="true"] .nav-sections {
     align-self: unset;
+  }
+
+  header nav .nav-sections[aria-expanded="true"] {
+    align-self: center;
   }
 
   header nav .nav-sections .nav-drop {
@@ -317,6 +388,11 @@ header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"
     width: auto;
   }
 
+  header .pre-header .default-content-wrapper {
+    max-height: initial;
+    overflow-y: initial;
+  }
+
   header .pre-header .default-content-wrapper > ul > li {
     font-size: var(--body-font-size-xs);
     cursor: pointer;
@@ -325,11 +401,20 @@ header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"
   header .pre-header .default-content-wrapper > ul > li::before {
     content: '';
     top: 2px;
-    left: 25px;
+    left: 20px;
+  }
+
+  header .pre-header .default-content-wrapper > ul > li:first-child > span {
+    display: block;
   }
 
   header .pre-header .default-content-wrapper > ul > li > ul {
     font-size: var(--body-font-size-m);
+  }
+
+  header .pre-header .default-content-wrapper > ul > li > ul > li {
+    float: none;
+    padding-bottom: var(--spacing-double);
   }
 
   header .pre-header .default-content-wrapper > ul > li > ul > li > ul {

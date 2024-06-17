@@ -67,6 +67,7 @@ function toggleMenu(nav, navSections, button, forceExpanded = null) {
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   if (button) {
     button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
+    button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   }
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
@@ -95,7 +96,28 @@ function toggleMenu(nav, navSections, button, forceExpanded = null) {
 }
 
 /**
+ * Wrap text nodes in span-Tags
+ *
+ * @param container
+ */
+function wrapTextNodes(container) {
+  if (container) {
+    container.forEach((item) => {
+      const textNodes = Array.from(item.childNodes)
+        .filter((node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 1);
+
+      textNodes.forEach((node) => {
+        const span = document.createElement('span');
+        node.after(span);
+        span.appendChild(node);
+      });
+    });
+  }
+}
+
+/**
  * Build the basic flyout navigation functionality
+ *
  * @param nav
  * @param navSections
  */
@@ -112,6 +134,8 @@ function buildBasicFlyoutNav(nav, navSections) {
           }
         });
       });
+
+    wrapTextNodes(navSections.querySelectorAll('li'));
   }
 }
 
@@ -190,6 +214,34 @@ function buildBreadcrumbs() {
 }
 
 /**
+ * Mobile menu toggle behaviour
+ *
+ * @param navContainer
+ */
+function mobileMenu(navContainer) {
+  const children = navContainer.querySelectorAll(':scope > li');
+  const toggleSubmenu = function (e, child) {
+    e.stopPropagation();
+
+    child.classList.toggle('is-visible');
+  };
+
+  if (!isDesktop.matches && navContainer) {
+    if (children) navContainer.classList.add('mobile-menu');
+
+    children.forEach((child) => {
+      child.addEventListener('click', (e) => toggleSubmenu(e, child));
+    });
+  } else {
+    if (children) navContainer.classList.remove('mobile-menu');
+
+    children.forEach((child) => {
+      child.removeEventListener('click', (e) => toggleSubmenu(e, child));
+    });
+  }
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -205,7 +257,7 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['logo', 'sections', 'tools'];
+  const classes = ['logo', 'sections'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
@@ -267,6 +319,13 @@ export default async function decorate(block) {
   // prevent mobile nav behavior on window resize
   toggleMenu(preHeader, brandNav, chevron, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(preHeader, brandNav, chevron, isDesktop.matches));
+
+  // click event for mobile menu behaviour
+  mobileMenu(nav.querySelector('.pre-header .section .default-content-wrapper > ul > li > ul'));
+  mobileMenu(nav.querySelector('.nav-sections .default-content-wrapper > ul'));
+
+  isDesktop.addEventListener('change', () => mobileMenu(nav.querySelector('.pre-header .section .default-content-wrapper > ul > li > ul')));
+  isDesktop.addEventListener('change', () => mobileMenu(nav.querySelector('.nav-sections .default-content-wrapper > ul')));
 
   // link for logo
   decorateLinkedPictures(block);

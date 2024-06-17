@@ -105,10 +105,6 @@ body.appear {
   display: block;
 }
 
-header {
-  height: var(--nav-height);
-}
-
 h1, h2, h3,
 h4, h5, h6 {
   font-family: var(--heading-font-family);
@@ -282,6 +278,15 @@ main .section.highlight {
   display: none;
 }
 
+/* header */
+header {
+    height: var(--nav-height);
+}
+
+header .nav-logo picture + a {
+    display: none;
+}
+
 /* chevron */
 .has-chevron {
   position: relative;
@@ -379,4 +384,21 @@ main .section.highlight {
   100% {
     transform: translateX(100%);
   }
+}
+
+@media (width >= 600px) {
+    main .section {
+        padding: 64px 32px;
+    }
+}
+
+@media (width >= 900px) {
+    header {
+        height: var(--header-height);
+    }
+
+    .section > div {
+        max-width: var(--page-width);
+        margin: auto;
+    }
 }
