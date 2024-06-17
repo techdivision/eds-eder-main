@@ -17,6 +17,8 @@ main .hero-video-container {
 
 .hero-video-wrapper .overlay-content h1 {
     text-transform: unset;
+    margin: 0;
+    font-size: 25px;
 }
 
 @media (width >= 600px) {
@@ -121,31 +123,29 @@ main .hero-video-container {
     .hero-video-wrapper .video-mobile {
         display: none;
     }
+
+    .hero-video-container .hero-video-wrapper .video-desktop {
+        display: block;
+    }
 }
 
-@media (width <= 900px) {
-    .hero-video-wrapper .video-desktop {
-        display: none;
-    }
 
-    .hero-video-wrapper .overlay-content > div p {
-        margin: 0;
-    }
+.hero-video-wrapper .video-desktop {
+    display: none;
+}
 
-    .hero-video-wrapper .overlay-anchor,
-    .hero-video-wrapper .overlay-content > div p picture {
-        display: none;
-    }
+.hero-video-wrapper .overlay-content > div p {
+    margin: 0;
+}
 
-    .hero-video-wrapper .overlay-content {
-        box-sizing: border-box;
-        padding: 0 10px;
-        margin: 15px 0;
-        text-align: center;
-    }
+.hero-video-wrapper .overlay-anchor,
+.hero-video-wrapper .overlay-content > div p picture {
+    display: none;
+}
 
-    .hero-video-wrapper .overlay-content h1 {
-        margin: 0;
-        font-size: 25px;
-    }
+.hero-video-wrapper .overlay-content {
+    box-sizing: border-box;
+    padding: 0 10px;
+    margin: 15px 0;
+    text-align: center;
 }

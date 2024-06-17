@@ -105,6 +105,10 @@ body.appear {
   display: block;
 }
 
+header {
+  height: var(--nav-height);
+}
+
 h1, h2, h3,
 h4, h5, h6 {
   font-family: var(--heading-font-family);
@@ -195,7 +199,7 @@ a.button:any-link, button {
   border-radius: 0;
 }
 
-a.button:hover, a.button:focus, button:hover, button:focus  {
+a.button:hover, a.button:focus, button:hover, button:focus {
   cursor: pointer;
 }
 
@@ -266,5 +270,113 @@ main .section.highlight {
 }
 
 .background-dark-gray {
-  background-color: var(--color-gray-dark);
+  background-color: var(--color-gray-darker);
+}
+
+/* globally hidden */
+.hidden {
+  display: none;
+}
+
+.block.library-metadata, .block.metadata {
+  display: none;
+}
+
+/* chevron */
+.has-chevron {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    display: inline-block;
+    content: '';
+    width: 6px;
+    height: 6px;
+    transform: rotate(45deg) translateY(-50%);
+    pointer-events: none;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+  }
+
+  &.chevron-left::after {
+    border-width: 0 0 2px 2px;
+  }
+
+  &.chevron-up::after {
+    border-width: 2px 0 0 2px;
+  }
+
+  &.chevron-down::after {
+    border-width: 0 2px 2px 0
+  }
+}
+
+/* pagination */
+.pagination {
+  display: flex;
+  margin: 20px 0;
+  user-select: none;
+
+  .size,
+  .pages {
+    flex: 1;
+  }
+
+  .pages {
+    text-align: right;
+
+    ol {
+      list-style-type: none;
+      margin: 0;
+
+      li {
+        display: inline-block;
+        padding: 0 4px;
+
+        &.contains-link {
+          padding: 0;
+
+          a {
+            display: block;
+            padding: 0 4px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* placeholder */
+.placeholder {
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+
+  *:not(:has(*)) {
+    /* important is okay as we want to override everything */
+    color: transparent !important;
+    background-color: #ccc !important;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      transform: translateX(-100px);
+      background: linear-gradient(90deg, transparent, rgb(255 255 255 / 20%), transparent);
+      animation: loading 0.8s infinite;
+    }
+  }
+}
+
+@keyframes loading {
+  100% {
+    transform: translateX(100%);
+  }
 }
