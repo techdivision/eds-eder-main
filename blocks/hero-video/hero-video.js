@@ -90,9 +90,9 @@ export default function decorate(block) {
 
   const addVideos = (e) => {
     if (e.matches) {
-      embedYoutube(mobileVideo, mobileVideoContainer);
-    } else {
       embedYoutube(desktopVideo, desktopVideoContainer);
+    } else {
+      embedYoutube(mobileVideo, mobileVideoContainer);
     }
   };
 
@@ -100,7 +100,7 @@ export default function decorate(block) {
     decorateOverlay(overlayRow, anchorRow);
   }
 
-  const mql = window.matchMedia('only screen and (max-width: 900px)');
+  const mql = window.matchMedia('only screen and (min-width: 900px)');
   mql.onchange = addVideos;
   addVideos(mql);
 }
