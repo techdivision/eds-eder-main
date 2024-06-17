@@ -1,11 +1,16 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { copyAttributes, transformToMetadata } from '../../scripts/helpers.js';
 
 export default function decorate(block) {
+  // transform to metadata
+  transformToMetadata(block);
+
   /* change to ul, li */
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
     const link = row.querySelector('a');
     const li = document.createElement('li');
+    copyAttributes(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
       if (div.children.length === 1 && div.querySelector('picture')) div.className = 'cards-card-image';

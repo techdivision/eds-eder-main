@@ -1,6 +1,5 @@
 import {
   sampleRUM,
-  buildBlock,
   loadHeader,
   loadFooter,
   decorateButtons,
@@ -14,21 +13,6 @@ import {
 } from './aem.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
-
-/**
- * Builds hero block and prepends to main in a new section.
- * @param {Element} main The container element
- */
-function buildHeroBlock(main) {
-  const h1 = main.querySelector('h1');
-  const picture = main.querySelector('picture');
-  // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
-    main.prepend(section);
-  }
-}
 
 /**
  * load fonts.css and set a session storage flag
@@ -46,13 +30,60 @@ async function loadFonts() {
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
+// eslint-disable-next-line no-unused-vars
 function buildAutoBlocks(main) {
   try {
-    buildHeroBlock(main);
+    // Removed auto blocking for hero blocks
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
   }
+}
+
+/**
+ * Wraps images followed by links within a matching <a> tag.
+ * @param {Element} container The container element
+ */
+function linkPicture(picture) {
+  const checkAndAppendLink = (anchor) => {
+    if (anchor && anchor.textContent.trim().startsWith('https://')) {
+      anchor.innerHTML = '';
+      anchor.className = '';
+      anchor.appendChild(picture);
+    }
+  };
+
+  // Handle case where link is directly after image, or with a <br> between.
+  let nextSib = picture.nextElementSibling;
+  if (nextSib?.tagName === 'BR') {
+    const br = nextSib;
+    nextSib = nextSib.nextElementSibling;
+    br.remove();
+  }
+
+  if (nextSib?.tagName === 'A') {
+    checkAndAppendLink(nextSib);
+    return;
+  }
+
+  // Handle case where link is in a separate paragraph
+  const parent = picture.parentElement;
+  const parentSibling = parent.nextElementSibling;
+  if (parent.tagName === 'P' && parentSibling?.tagName === 'P') {
+    const maybeA = parentSibling.children?.[0];
+    if (parentSibling.children?.length === 1 && maybeA?.tagName === 'A') {
+      checkAndAppendLink(maybeA);
+      if (parent.children.length === 0) {
+        parent.remove();
+      }
+    }
+  }
+}
+
+export function decorateLinkedPictures(block) {
+  block.querySelectorAll('picture').forEach((picture) => {
+    linkPicture(picture);
+  });
 }
 
 /**
