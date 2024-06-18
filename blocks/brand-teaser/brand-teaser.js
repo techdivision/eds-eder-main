@@ -10,6 +10,7 @@ export default function decorate(block) {
 
     const brandTeaserImage = document.createElement('img');
     brandTeaserImage.src = innerRows[0].querySelector('img').src;
+    brandTeaserImage.alt = innerRows[0].querySelector('img').alt;
     brandTeaserImage.classList.add('brand-teaser-image');
 
     const brandTeaserHeader = innerRows[0].querySelector('h2');
