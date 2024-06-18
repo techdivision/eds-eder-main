@@ -2,6 +2,7 @@ import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { decorateLinkedPictures } from '../../scripts/scripts.js';
 import { loadPlaceholders, ts } from '../../scripts/i18n.js';
+import { getCurrentUrl } from '../../scripts/helpers.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -255,7 +256,7 @@ function mobileMenu(navContainer) {
 export default async function decorate(block) {
   // load nav as fragment
   const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  const navPath = navMeta ? new URL(navMeta, getCurrentUrl()).pathname : '/nav';
   const fragment = await loadFragment(navPath);
 
   // decorate nav DOM
@@ -301,7 +302,7 @@ export default async function decorate(block) {
 
   // load brand nav as fragment and create structure
   const brandNavMeta = getMetadata('brand-nav');
-  const brandNavPath = brandNavMeta ? new URL(brandNavMeta, window.location).pathname : '/brand-nav';
+  const brandNavPath = brandNavMeta ? new URL(brandNavMeta, getCurrentUrl()).pathname : '/brand-nav';
   const brandNavFragment = await loadFragment(brandNavPath);
   const preHeader = document.createElement('div');
   preHeader.className = 'pre-header';

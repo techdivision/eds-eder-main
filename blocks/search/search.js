@@ -1,5 +1,6 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { loadPlaceholders, ts } from '../../scripts/i18n.js';
+import { getCurrentUrl } from '../../scripts/helpers.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
@@ -129,7 +130,7 @@ function clearSearchResults(block) {
 function clearSearch(block) {
   clearSearchResults(block);
   if (window.history.replaceState) {
-    const url = new URL(window.location.href);
+    const url = new URL(getCurrentUrl());
     url.search = '';
     searchParams.delete('q');
     window.history.replaceState({}, '', url.toString());
@@ -208,7 +209,7 @@ async function handleSearch(e, block, config) {
   const searchValue = e.target.value;
   searchParams.set('q', searchValue);
   if (window.history.replaceState) {
-    const url = new URL(window.location.href);
+    const url = new URL(getCurrentUrl());
     url.search = searchParams.toString();
     window.history.replaceState({}, '', url.toString());
   }
