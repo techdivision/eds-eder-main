@@ -1,3 +1,5 @@
+// noinspection HtmlDeprecatedAttribute
+
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
 /**

@@ -1,3 +1,5 @@
+// noinspection HtmlDeprecatedAttribute
+
 /*
  * Video Block
  * Show a video referenced by a link
@@ -65,7 +67,7 @@ function getVideoElement(source, replacePlaceholder, autoplay) {
       video.removeAttribute('controls');
       video.addEventListener('canplay', () => {
         video.muted = true;
-        video.play();
+        video.play().then();
       });
     }
   }
@@ -123,7 +125,7 @@ const loadVideoEmbed = (block, link, replacePlaceholder, autoplay) => {
   }
   block.replaceChildren(embedEl);
 
-  block.dataset.embedIsLoaded = true;
+  block.dataset.embedIsLoaded = 'true';
 };
 
 export default async function decorate(block) {

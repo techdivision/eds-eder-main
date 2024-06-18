@@ -1,8 +1,8 @@
 // noinspection JSUnresolvedReference
 
-import { loadCSS } from '../../../scripts/aem.js';
 import { getNumericFilterValueForElement } from '../filter-library.js';
 import { loadPlaceholders, ts } from '../../../scripts/i18n.js';
+import { loadThirdPartyModule } from '../../../scripts/load-resource.js';
 
 /**
  * PS to KW ratio
@@ -32,7 +32,7 @@ function renderDecoration(container, filter, values) {
       const decorationElementClone = decorationElement.cloneNode(true);
       // check if the node contains only text
       if (decorationElementClone.childNodes.length === 1
-          && decorationElementClone.childNodes[0].nodeType === Node.TEXT_NODE) {
+        && decorationElementClone.childNodes[0].nodeType === Node.TEXT_NODE) {
         // get current slider values
         const minSliderValue = parseInt(values[0], 10);
         const maxSliderValue = parseInt(values[1], 10);
@@ -65,7 +65,7 @@ function elementMatches(filter, element) {
 
   // show or hide elements that match the filter
   return !Number.isNaN(elementMinValue) && !Number.isNaN(elementMaxValue)
-      && ((filter.value[0] <= elementMaxValue) && (filter.value[1] >= elementMinValue));
+    && ((filter.value[0] <= elementMaxValue) && (filter.value[1] >= elementMinValue));
 }
 
 /**
@@ -94,44 +94,42 @@ function build(block, container, filter) {
   // create slider
   const slider = document.createElement('div');
   container.append(slider);
-  import('../../../scripts/vendor/nouislider.min.js')
-    .then(async () => {
-      // load placeholders
-      loadCSS('/styles/vendor/nouislider.min.css').then();
-      await loadPlaceholders();
+  loadThirdPartyModule('nouislider.min', async () => {
+    // load placeholders
+    await loadPlaceholders();
 
-      // create slider
-      window.noUiSlider.create(slider, {
-        start: startValues,
-        connect: true,
-        range: {
-          min: minSliderOption,
-          max: maxSliderOption,
-        },
-        handleAttributes: [
-          { 'aria-label': ts('From') },
-          { 'aria-label': ts('To') },
-        ],
-      });
-
-      // render decoration
-      renderDecoration(container, filter, startValues);
-
-      // on slider update
-      slider.noUiSlider.on('update', (values) => {
-        // render decoration
-        renderDecoration(container, filter, values);
-      });
-      slider.noUiSlider.on('change', (values) => {
-        // get current slider values
-        const minSliderValue = parseInt(values[0], 10);
-        const maxSliderValue = parseInt(values[1], 10);
-        filter.value = [minSliderValue, maxSliderValue];
-
-        // re-render filters
-        block.dispatchEvent(new Event('change'));
-      });
+    // create slider
+    window.noUiSlider.create(slider, {
+      start: startValues,
+      connect: true,
+      range: {
+        min: minSliderOption,
+        max: maxSliderOption,
+      },
+      handleAttributes: [
+        { 'aria-label': ts('From') },
+        { 'aria-label': ts('To') },
+      ],
     });
+
+    // render decoration
+    renderDecoration(container, filter, startValues);
+
+    // on slider update
+    slider.noUiSlider.on('update', (values) => {
+      // render decoration
+      renderDecoration(container, filter, values);
+    });
+    slider.noUiSlider.on('change', (values) => {
+      // get current slider values
+      const minSliderValue = parseInt(values[0], 10);
+      const maxSliderValue = parseInt(values[1], 10);
+      filter.value = [minSliderValue, maxSliderValue];
+
+      // re-render filters
+      block.dispatchEvent(new Event('change'));
+    });
+  });
 }
 
 export {
