@@ -176,7 +176,12 @@ function setUrlParam(param, value) {
   } else {
     url.searchParams.set(param, Array.isArray(value) ? value.join(',') : value);
   }
-  window.history.replaceState({}, '', url);
+
+  try {
+    window.history.replaceState({}, '', url);
+  } catch (e) {
+    // history is not available in library
+  }
 }
 
 /**
