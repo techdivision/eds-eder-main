@@ -481,6 +481,7 @@ header .breadcrumbs {
   display: none;
   padding: 0;
   width: 100%;
+  max-width: var(--page-width);
   height: var(--body-line-height-s);
   overflow: hidden;
   margin: 0 auto;
@@ -498,7 +499,6 @@ header .breadcrumbs ol {
   gap: 1ch;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 header .breadcrumbs ol li {
   padding-inline-start: 0;
   opacity: 0.7;
@@ -509,12 +509,10 @@ header .breadcrumbs ol li:not(:last-child)::after {
   padding-left: 1ch;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 header .breadcrumbs ol li a:any-link {
   color: var(--text-color);
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 header .breadcrumbs ol li:last-of-type {
   opacity: 1;
 }
@@ -522,5 +520,18 @@ header .breadcrumbs ol li:last-of-type {
 @media screen and (width >= 900px) {
   header .breadcrumbs {
     display: block;
+  }
+}
+
+/* search */
+.header .search-bar-container {
+  display: none;
+
+  @media screen and (width >= 900px) {
+    display: block;
+  }
+
+  .search-input {
+    padding: 10px;
   }
 }

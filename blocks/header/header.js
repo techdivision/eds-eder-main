@@ -214,17 +214,24 @@ function buildBreadcrumbs() {
 }
 
 /**
+ * Toggle submenu
+ *
+ * @param {Event} e
+ * @param {HTMLElement} child
+ */
+function toggleSubmenu(e, child) {
+  e.stopPropagation();
+
+  child.classList.toggle('is-visible');
+}
+
+/**
  * Mobile menu toggle behaviour
  *
  * @param navContainer
  */
 function mobileMenu(navContainer) {
   const children = navContainer.querySelectorAll(':scope > li');
-  const toggleSubmenu = function (e, child) {
-    e.stopPropagation();
-
-    child.classList.toggle('is-visible');
-  };
 
   if (!isDesktop.matches && navContainer) {
     if (children) navContainer.classList.add('mobile-menu');
@@ -330,7 +337,8 @@ export default async function decorate(block) {
   // link for logo
   decorateLinkedPictures(block);
 
-  if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
+  if (getMetadata('breadcrumbs')
+    .toLowerCase() === 'true') {
     await loadPlaceholders();
     navWrapper.append(buildBreadcrumbs());
   }
