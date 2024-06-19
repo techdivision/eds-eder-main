@@ -278,7 +278,7 @@ async function loadCSS(href) {
 /**
  * Loads a non module JS file.
  * @param {string} src URL to the JS file
- * @param {Object} attrs additional optional attributes
+ * @param {Object} [attrs] additional optional attributes
  */
 async function loadScript(src, attrs) {
   return new Promise((resolve, reject) => {
@@ -633,6 +633,12 @@ function buildBlock(blockName, content) {
 async function loadBlock(block) {
   const status = block.dataset.blockStatus;
   if (status !== 'loading' && status !== 'loaded') {
+    // BEGIN CHANGE TechDivision
+    if (['metadata', 'section-metadata', 'library-metadata'].includes(block.dataset.blockName)) {
+      block.dataset.blockStatus = 'loaded';
+      return block;
+    }
+    // END CHANGE TechDivision
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
     try {
