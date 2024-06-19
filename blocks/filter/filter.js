@@ -214,5 +214,5 @@ export default function decorate(block) {
   // initialize block after rendering all other elements
   setTimeout(() => {
     initializeBlock(block, filters);
-  }, 100);
+  }, 200);
 }

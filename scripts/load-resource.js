@@ -82,8 +82,8 @@ async function betterLoadScript(href, attrs) {
 function loadThirdPartyModule(name, callback) {
   Promise.all(
     [
-      import(`../../../scripts/vendor/${name}.js`),
       betterLoadCSS(`/styles/vendor/${name}.css`),
+      import(`../../../scripts/vendor/${name}.js`),
     ],
   )
     .then(callback);
@@ -98,8 +98,8 @@ function loadThirdPartyModule(name, callback) {
 function loadThirdPartyBundle(name, callback) {
   Promise.all(
     [
-      betterLoadScript(`../../../scripts/vendor/${name}.js`),
       betterLoadCSS(`/styles/vendor/${name}.css`),
+      betterLoadScript(`../../../scripts/vendor/${name}.js`),
     ],
   )
     .then(callback);
