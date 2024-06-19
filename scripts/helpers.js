@@ -131,6 +131,29 @@ function isEmpty(check) {
 }
 
 /**
+ * Check for library mode
+ *
+ * @returns {boolean}
+ */
+function isLibraryMode() {
+  return window.location.href === 'about:srcdoc';
+}
+
+/**
+ * Get current URL
+ *
+ * @returns {string}
+ */
+function getCurrentUrl() {
+  if (isLibraryMode()) {
+    return window.parent && window.parent.document
+      ? window.parent.document.URL
+      : 'https://www.google.de/';
+  }
+  return window.location.href;
+}
+
+/**
  * Get URL Param
  *
  * @param {string} field
@@ -147,13 +170,18 @@ function getUrlParam(field) {
  * @param value
  */
 function setUrlParam(param, value) {
-  const url = new URL(window.location);
+  const url = new URL(getCurrentUrl());
   if (isEmpty(value)) {
     url.searchParams.delete(param);
   } else {
     url.searchParams.set(param, Array.isArray(value) ? value.join(',') : value);
   }
-  window.history.replaceState({}, '', url);
+
+  try {
+    window.history.replaceState({}, '', url);
+  } catch (e) {
+    // history is not available in library
+  }
 }
 
 /**
@@ -174,4 +202,5 @@ export {
   getUrlParam,
   setUrlParam,
   convertDate,
+  getCurrentUrl,
 };

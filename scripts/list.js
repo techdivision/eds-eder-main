@@ -1,5 +1,5 @@
 import ffetch from './vendor/ffetch.js';
-import { getUrlParam, setUrlParam } from './helpers.js';
+import { getCurrentUrl, getUrlParam, setUrlParam } from './helpers.js';
 import { loadPlaceholders, ts } from './i18n.js';
 
 /**
@@ -53,7 +53,7 @@ function getFilteredItems(items) {
  * @returns {HTMLAnchorElement}
  */
 function createPaginationLink(page, label) {
-  const newUrl = new URL(window.location);
+  const newUrl = new URL(getCurrentUrl());
   const link = document.createElement('a');
   newUrl.searchParams.set('page', page);
   link.href = newUrl.toString();
