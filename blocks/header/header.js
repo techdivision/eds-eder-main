@@ -313,7 +313,7 @@ export default async function decorate(block) {
   const brandNav = nav.querySelector('.pre-header .section');
   const chevron = document.createElement('div');
   chevron.classList.add('nav-chevron');
-  chevron.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open brand navigation">
+  chevron.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
       <span class="nav-chevron-icon"></span>
     </button>`;
   chevron.addEventListener('click', () => toggleMenu(preHeader, brandNav, chevron));
