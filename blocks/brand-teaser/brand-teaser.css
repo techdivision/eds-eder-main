@@ -1,175 +1,177 @@
 .brand-teaser {
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .brand-teaser > ul {
-    max-width: var(--page-width);
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
+  max-width: var(--page-width);
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  padding: 0;
 }
 
 .brand-teaser > ul > li {
-    background-color: var(--background-color);
-    position: relative;
-    overflow: hidden;
+  background-color: var(--background-color);
+  position: relative;
+  overflow: hidden;
 }
 
 .brand-teaser-image-container {
-    position: relative;
+  position: relative;
 }
 
 .brand-teaser-image {
-    width: 100vw;
+  width: 100vw;
+  display: block;
 }
 
 .brand-teaser-header {
-    position: absolute;
-    top: 40%;
-    width: 100%;
-    text-align: center;
-    color: var(--text-color-reverse);
-    font-weight: bold;
-    text-transform: capitalize;
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  text-align: center;
+  color: var(--text-color-reverse);
+  font-weight: bold;
+  text-transform: capitalize;
 }
 
 .brand-teaser-header::after {
-    content: "";
-    display: none;
-    position: absolute;
-    top: 35px;
-    left: calc(50% - 7px);
-    width: 15px;
-    height: 15px;
-    transform: translateY(-50%) rotate(135deg);
-    border-style: solid;
-    border-width: 3px 3px 0 0;
+  content: "";
+  display: none;
+  position: absolute;
+  top: 35px;
+  left: calc(50% - 7px);
+  width: 15px;
+  height: 15px;
+  transform: translateY(-50%) rotate(135deg);
+  border-style: solid;
+  border-width: 3px 3px 0 0;
 }
 
 .brands-container .brand-row {
-    background-color: var(--background-color);
-    font-size: var(--body-font-size-xs);
-    text-align: center;
+  background-color: var(--background-color);
+  font-size: var(--body-font-size-xs);
+  text-align: center;
 }
 
 .brands-container .brand-row:nth-child(2n) {
-    background-color: var(--light-color);
+  background-color: var(--light-color);
 }
 
 .brand-teaser > ul > li .brand-teaser-image-container > h2 {
-    transition: all 0.5s ease-in-out;
-    font-size: var(--heading-font-size-m);
+  transition: all 0.5s ease-in-out;
+  font-size: var(--heading-font-size-m);
 }
 
 .brand-teaser > ul > li > .brands-container {
-    position: relative;
-    transform: translateY(0);
+  position: relative;
+  transform: translateY(0);
 }
 
 .brand-teaser > ul > li > .brands-container img {
-    width: 20%;
-    padding-right: 10px;
-    padding-left: 10px;
-    padding-top: 10px;
-    display: block;
-    margin: auto auto 10px;
+  width: 20%;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  display: block;
+  margin: auto auto 10px;
 }
 
 .brand-teaser > ul > li > .brands-container p {
-    width: 100%;
-    display: block;
+  width: 100%;
+  display: block;
 }
 
 .link-container {
-    width: 100%;
-    margin-top: 10px;
-    position: relative;
-    height: 10px;
+  width: 100%;
+  margin-top: 10px;
+  position: relative;
+  height: 10px;
 }
 
 .link-container a {
-    display: block;
-    bottom: 0;
-    position: absolute;
-    left: 5%;
+  display: block;
+  bottom: 0;
+  position: absolute;
+  left: 5%;
 }
 
 .link-container a:nth-child(2n) {
-    right: 5%;
-    left: auto;
+  right: 5%;
+  left: auto;
 }
 
 @media (width >= 600px) {
-    .brand-teaser > ul > li > .brands-container p {
-        width: 50%;
-        display: inline-block;
-        margin: 0;
-    }
+  .brand-teaser > ul > li > .brands-container p {
+    width: 50%;
+    display: inline-block;
+    margin: 0;
+  }
 
-    .brand-teaser > ul > li > .brands-container img {
-        display: inline-block;
-    }
+  .brand-teaser > ul > li > .brands-container img {
+    display: inline-block;
+  }
 
-    .link-container {
-        display: inline-block;
-        width: 20%;
-        margin-top: 0;
-        height: 100%;
-        padding-right: 10px;
-    }
+  .link-container {
+    display: inline-block;
+    width: 20%;
+    margin-top: 0;
+    height: 100%;
+    padding-right: 10px;
+  }
 
-     .link-container a {
-        display: block;
-        position: unset;
-        left: 0;
-    }
+  .link-container a {
+    display: block;
+    position: unset;
+    left: 0;
+  }
 
-    .link-container > .info-link {
-        right: 0;
-    }
+  .link-container > .info-link {
+    right: 0;
+  }
 
-    .brands-container .brand-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  .brands-container .brand-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 @media (width >= 900px) {
-    .brand-teaser-header {
-        top: 30%
-    }
+  .brand-teaser-header {
+    top: 30%
+  }
 
-    .brand-teaser-header::after {
-        display: block;
-    }
+  .brand-teaser-header::after {
+    display: block;
+  }
 
-    .brand-teaser > ul {
-        max-width: var(--page-width);
-        list-style: none;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 42px;
-        text-align: center;
-    }
+  .brand-teaser > ul {
+    max-width: var(--page-width);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 42px;
+    text-align: center;
+  }
 
-    .brand-teaser > ul > li > .brands-container {
-        transition: all 0.5s ease-in-out;
-        position: absolute;
-        z-index: 1;
-        bottom: 0;
-        width: 100%;
-        transform: translateY(100%);
-    }
+  .brand-teaser > ul > li > .brands-container {
+    transition: all 0.5s ease-in-out;
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    width: 100%;
+    transform: translateY(100%);
+  }
 
-    .brand-teaser > ul > li:hover > .brands-container {
-        transform: translateY(0);
-    }
+  .brand-teaser > ul > li:hover > .brands-container {
+    transform: translateY(0);
+  }
 
-    .brand-teaser > ul > li:hover .brand-teaser-image-container > h2 {
-        transform: translateY(-100px);
-        font-size: var(--heading-font-size-m);
-    }
+  .brand-teaser > ul > li:hover .brand-teaser-image-container > h2 {
+    transform: translateY(-100px);
+    font-size: var(--heading-font-size-m);
+  }
 }
