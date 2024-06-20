@@ -1,6 +1,8 @@
+/* global WebImporter */
+
 import determineEdsBaseUrl from './import-util.js';
 
-const removeGenericContent = (main, document) => {
+const removeGenericContent = (main) => {
   // remove header, footer and generic elements from content
   WebImporter.DOMUtils.remove(main, [
     'nav',
@@ -15,26 +17,6 @@ const removeGenericContent = (main, document) => {
     '.visible-ma-button',
     '.offcanvas'
   ]);
-}
-
-export default {
-  transformDOM: ({ document, params }) => {
-    const main = document.body;
-
-    removeGenericContent(main, document);
-
-    const baseUrl = determineEdsBaseUrl(params);
-
-    handleTable(main, document);
-    handleLinks(main, document, baseUrl);
-    handleSidebar(main, document);
-    handleImages(main);
-    handleIcons(main);
-
-    WebImporter.rules.createMetadata(main, document);
-
-    return main;
-  },
 };
 
 /**
@@ -162,4 +144,24 @@ const handleLinks = (main, document, baseUrl) => {
       }
     });
   }
+};
+
+export default {
+  transformDOM: ({ document, params }) => {
+    const main = document.body;
+
+    removeGenericContent(main);
+
+    const baseUrl = determineEdsBaseUrl(params);
+
+    handleTable(main, document);
+    handleLinks(main, document, baseUrl);
+    handleSidebar(main, document);
+    handleImages(main);
+    handleIcons(main);
+
+    WebImporter.rules.createMetadata(main, document);
+
+    return main;
+  },
 };
