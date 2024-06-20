@@ -91,7 +91,6 @@ const handleIcons = (main) => {
     if (iconMapping[originalClassName]) {
       originalIcon.replaceWith(iconMapping[originalClassName]);
     }
-
   });
 };
 
