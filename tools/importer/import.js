@@ -15,7 +15,7 @@ const removeGenericContent = (main) => {
     '.breadcrumb',
     '.visible-xs',
     '.visible-ma-button',
-    '.offcanvas'
+    '.offcanvas',
   ]);
 };
 
@@ -64,7 +64,7 @@ const handleSidebar = (main, document) => {
     // add metadata-table after sidebar-content
     const cells = [
       ['Section Metadata'],
-      ['Style', 'sidebar']
+      ['Style', 'sidebar'],
     ];
 
     const table = WebImporter.DOMUtils.createTable(cells, document);
