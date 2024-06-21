@@ -105,12 +105,16 @@ body.appear {
   display: block;
 }
 
-h1, h2, h3,
-h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--heading-font-family);
   font-weight: var(--font-weight-regular);
   margin-top: 1em;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   scroll-margin: calc(var(--nav-height) + 1em);
 }
 
@@ -138,19 +142,25 @@ h4 {
   font-weight: var(--font-weight-black);
 }
 
-p, dl, ol, ul, pre, blockquote {
+p,
+dl,
+ol,
+ul,
+pre,
+blockquote {
   margin-top: 1em;
   margin-bottom: 1em;
 }
 
-code, pre {
+code,
+pre {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
   line-height: var(--body-line-height-s);
 }
 
 code {
-  padding: .125em;
+  padding: 0.125em;
 }
 
 pre {
@@ -160,7 +170,7 @@ pre {
 main pre {
   background-color: var(--light-color);
   padding: 1em;
-  border-radius: .25em;
+  border-radius: 0.25em;
   overflow-x: auto;
   white-space: pre;
 }
@@ -176,7 +186,8 @@ a:hover {
 }
 
 /* buttons */
-a.button:any-link, button {
+a.button:any-link,
+button {
   font-family: var(--body-font-family);
   display: inline-block;
   box-sizing: border-box;
@@ -195,16 +206,21 @@ a.button:any-link, button {
   border-radius: 0;
 }
 
-a.button:hover, a.button:focus, button:hover, button:focus {
+a.button:hover,
+a.button:focus,
+button:hover,
+button:focus {
   cursor: pointer;
 }
 
-button:disabled, button:disabled:hover {
+button:disabled,
+button:disabled:hover {
   background-color: var(--color-gray-light);
   cursor: unset;
 }
 
-a.button.secondary, button.secondary {
+a.button.secondary,
+button.secondary {
   background-color: unset;
   border: 2px solid currentcolor;
   color: var(--text-color)
@@ -274,7 +290,8 @@ main .section.highlight {
   display: none;
 }
 
-.block.library-metadata, .block.metadata {
+.block.library-metadata,
+.block.metadata {
   display: none;
 }
 

@@ -38,7 +38,7 @@
 }
 
 .brand-teaser-header::after {
-  content: "";
+  content: '';
   display: none;
   position: absolute;
   top: 35px;
