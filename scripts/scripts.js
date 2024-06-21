@@ -26,6 +26,7 @@ async function loadFonts() {
   }
 }
 
+// noinspection JSUnusedLocalSymbols
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
@@ -33,7 +34,9 @@ async function loadFonts() {
 // eslint-disable-next-line no-unused-vars
 function buildAutoBlocks(main) {
   try {
+    // BEGIN CHANGE TechDivision
     // Removed auto blocking for hero blocks
+    // END CHANGE TechDivision
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
@@ -42,7 +45,8 @@ function buildAutoBlocks(main) {
 
 /**
  * Wraps images followed by links within a matching <a> tag.
- * @param {Element} container The container element
+ *
+ * @param {Element} picture The picture element
  */
 function linkPicture(picture) {
   const checkAndAppendLink = (anchor) => {
