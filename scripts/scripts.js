@@ -1,15 +1,15 @@
 import {
-  sampleRUM,
-  loadHeader,
-  loadFooter,
+  decorateBlocks,
   decorateButtons,
   decorateIcons,
   decorateSections,
-  decorateBlocks,
   decorateTemplateAndTheme,
-  waitForLCP,
   loadBlocks,
   loadCSS,
+  loadFooter,
+  loadHeader,
+  sampleRUM,
+  waitForLCP,
 } from './aem.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -50,7 +50,8 @@ function buildAutoBlocks(main) {
  */
 function linkPicture(picture) {
   const checkAndAppendLink = (anchor) => {
-    if (anchor && anchor.textContent.trim().startsWith('https://')) {
+    if (anchor && anchor.textContent.trim()
+      .startsWith('https://')) {
       anchor.innerHTML = '';
       anchor.className = '';
       anchor.appendChild(picture);
@@ -85,9 +86,10 @@ function linkPicture(picture) {
 }
 
 export function decorateLinkedPictures(block) {
-  block.querySelectorAll('picture').forEach((picture) => {
-    linkPicture(picture);
-  });
+  block.querySelectorAll('picture')
+    .forEach((picture) => {
+      linkPicture(picture);
+    });
 }
 
 /**

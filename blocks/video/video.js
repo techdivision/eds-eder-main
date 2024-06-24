@@ -18,7 +18,9 @@ function embedYoutube(url, replacePlaceholder, autoplay) {
       loop: autoplay ? '1' : '0',
       playsinline: autoplay ? '1' : '0',
     };
-    suffix = `&${Object.entries(suffixParams).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')}`;
+    suffix = `&${Object.entries(suffixParams)
+      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+      .join('&')}`;
   }
   let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : '';
   const embed = url.pathname;
@@ -28,7 +30,7 @@ function embedYoutube(url, replacePlaceholder, autoplay) {
 
   const temp = document.createElement('div');
   temp.innerHTML = `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-      <iframe src="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+      <iframe src="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"
       allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; picture-in-picture" allowfullscreen="" scrolling="no" title="Content from Youtube" loading="lazy"></iframe>
     </div>`;
   return temp.children.item(0);
@@ -42,13 +44,15 @@ function embedVimeo(url, replacePlaceholder, autoplay) {
       autoplay: '1',
       background: autoplay ? '1' : '0',
     };
-    suffix = `?${Object.entries(suffixParams).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')}`;
+    suffix = `?${Object.entries(suffixParams)
+      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+      .join('&')}`;
   }
   const temp = document.createElement('div');
   temp.innerHTML = `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-      <iframe src="https://player.vimeo.com/video/${video}${suffix}" 
-      style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
-      frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  
+      <iframe src="https://player.vimeo.com/video/${video}${suffix}"
+      style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"
+      frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
       title="Content from Vimeo" loading="lazy"></iframe>
     </div>`;
   return temp.children.item(0);
@@ -67,14 +71,16 @@ function getVideoElement(source, replacePlaceholder, autoplay) {
       video.removeAttribute('controls');
       video.addEventListener('canplay', () => {
         video.muted = true;
-        video.play().then();
+        video.play()
+          .then();
       });
     }
   }
 
   const sourceEl = document.createElement('source');
   sourceEl.setAttribute('src', source);
-  sourceEl.setAttribute('type', `video/${source.split('.').pop()}`);
+  sourceEl.setAttribute('type', `video/${source.split('.')
+    .pop()}`);
   video.append(sourceEl);
 
   return video;
@@ -94,9 +100,9 @@ function embedTikTok(url) {
   temp.innerHTML = `<blockquote class="tiktok-embed"
       style="max-width: 605px;min-width: 325px;"
       cite="${url}" data-video-id="${videoId}">
-      <iframe src="${embedLink}" 
-      style="width: 100%; height: 739px; display: block; visibility: unset; max-height: 739px;" 
-      frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  
+      <iframe src="${embedLink}"
+      style="width: 100%; height: 739px; display: block; visibility: unset; max-height: 739px;"
+      frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
       title="Content from TikTok" loading="lazy"></iframe>
     </blockquote>`;
   return temp.children.item(0);
