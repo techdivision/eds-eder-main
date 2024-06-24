@@ -24,7 +24,7 @@
   --light-color: #eee;
   --dark-color: #ccc;
   --text-color: var(--color-black);
-  --text-color-reverse: #fff;
+  --text-color-reverse: var(--color-white);
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback;
@@ -322,7 +322,7 @@ main .section.highlight {
 
       &.sidebar {
         grid-column: 2;
-        border-left: 1px dashed #ddd;
+        border-left: 1px dashed var(--color-gray-light);
       }
 
       /* section over both cells */
@@ -422,7 +422,7 @@ header .nav-logo picture + a {
   *:not(:has(*)) {
     /* important is okay as we want to override everything */
     color: transparent !important;
-    background-color: #ccc !important;
+    background-color: var(--dark-color) !important;
     position: relative;
     display: inline-block;
     overflow: hidden;
