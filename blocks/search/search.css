@@ -1,153 +1,152 @@
-
 /* search box */
 .search .search-box {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    gap: 8px;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: center;
 }
 
 .search .search-box input {
-    width: 100%;
-    border: 1px solid var(--dark-color);
-    padding: 5px 15px;
-    font: inherit;
+  width: 100%;
+  border: 1px solid var(--dark-color);
+  padding: 5px 15px;
+  font: inherit;
 }
 
 /* search results */
 .search ul.search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
-    gap: 16px;
-    padding-left: 0;
-    list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+  gap: 16px;
+  padding-left: 0;
+  list-style: none;
 }
 
 .search ul.search-results > li {
-    border: 1px solid var(--dark-color);
+  border: 1px solid var(--dark-color);
 }
 
 .search ul.search-results > li > a {
-    display: block;
-    background-color: var(--background-color);
-    color: currentcolor;
-    cursor: pointer;
-    height: 100%;
+  display: block;
+  background-color: var(--background-color);
+  color: currentcolor;
+  cursor: pointer;
+  height: 100%;
 }
 
 .search ul.search-results > li > a:hover,
 .search ul.search-results > li > a:focus {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .search ul.search-results > li .search-result-title,
 .search ul.search-results > li p {
-    padding: 0 16px;
+  padding: 0 16px;
 }
 
 .search ul.search-results > li .search-result-title {
-    font-size: var(--body-font-size-m);
-    font-weight: normal;
+  font-size: var(--body-font-size-m);
+  font-weight: normal;
 }
 
 .search ul.search-results > li .search-result-title a {
-    color: currentcolor;
-    text-decoration: none;
+  color: currentcolor;
+  text-decoration: none;
 }
 
 .search ul.search-results > li p {
-    font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-s);
 }
 
 .search ul.search-results > li .search-result-image {
-    aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 3;
 }
 
 .search ul.search-results > li picture img {
-    display: block;
-    width: 100%;
-    object-fit: cover;
+  display: block;
+  width: 100%;
+  object-fit: cover;
 }
 
 /* no results */
 .search ul.search-results.no-results {
-    display: block;
-    padding-left: 32px;
+  display: block;
+  padding-left: 32px;
 }
 
 .search ul.search-results.no-results > li {
-    border: none;
+  border: none;
 }
 
 /* minimal variant */
 .search.minimal ul.search-results {
-    display: block;
-    padding-left: 32px;
+  display: block;
+  padding-left: 32px;
 }
 
 .search.minimal ul.search-results > li {
-    position: relative;
-    border: none;
+  position: relative;
+  border: none;
 }
 
 .search.minimal ul.search-results > li .search-result-title,
 .search.minimal ul.search-results > li p {
-    padding: unset;
+  padding: unset;
 }
 
 .search.minimal ul.search-results > li .search-result-title a {
-    color: var(--link-color);
+  color: var(--link-color);
 }
 
 .search.minimal ul.search-results > li > a {
-    background-color: unset;
+  background-color: unset;
 }
 
 .search.minimal ul.search-results > li > a:hover a,
 .search.minimal ul.search-results > li > a:focus a {
-    text-decoration: underline;
-    color: var(--link-color);
+  text-decoration: underline;
+  color: var(--link-color);
 }
 
 .search.minimal ul.search-results > li .search-result-image {
-    display: none;
+  display: none;
 }
 
 .search.minimal ul.search-results > li picture img {
-    height: 24px;
-    width: 24px;
-    border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
 }
 
 .search.minimal ul.search-results > li > a > p {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .search.minimal ul.search-results > li > a > h2 {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .search.minimal > .search-box > .icon-search {
-    display: none;
+  display: none;
 }
 
 .search.minimal .search-box {
-    display: block;
-    background-color: var(--color-gray-light);
-    padding-top: 1%;
-    padding-bottom: 1%;
+  display: block;
+  background-color: var(--color-gray-light);
+  padding-top: 1%;
+  padding-bottom: 1%;
 }
 
 .search.minimal .search-box p {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .search.minimal .search-box > input {
-    width: 50%;
-    margin-left: 5%;
+  width: 50%;
+  margin-left: 5%;
 }
 
 .search.minimal .search-box > p {
-    margin-left: 5%;
-    font-weight: bold;
+  margin-left: 5%;
+  font-weight: bold;
 }

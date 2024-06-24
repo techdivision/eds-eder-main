@@ -19,32 +19,33 @@ export default function decorate(block) {
     const brandsContainer = document.createElement('div');
     brandsContainer.classList.add('brands-container');
 
-    innerRows.slice(1).forEach((brandColumn) => {
-      const brand = document.createElement('div');
-      brand.classList.add('brand-row');
+    innerRows.slice(1)
+      .forEach((brandColumn) => {
+        const brand = document.createElement('div');
+        brand.classList.add('brand-row');
 
-      const brandImage = brandColumn.querySelector('img');
-      const brandText = document.createElement('p');
-      brandText.textContent = brandColumn.querySelector('h3').textContent;
+        const brandImage = brandColumn.querySelector('img');
+        const brandText = document.createElement('p');
+        brandText.textContent = brandColumn.querySelector('h3').textContent;
 
-      brand.append(brandImage);
-      brand.append(brandText);
+        brand.append(brandImage);
+        brand.append(brandText);
 
-      const linkContainer = document.createElement('div');
-      linkContainer.classList.add('link-container');
-      [...brandColumn.querySelectorAll('a')].forEach((link) => {
-        link.classList.remove('button');
+        const linkContainer = document.createElement('div');
+        linkContainer.classList.add('link-container');
+        [...brandColumn.querySelectorAll('a')].forEach((link) => {
+          link.classList.remove('button');
 
-        if (link.textContent === 'weitere Infos') {
-          link.classList.add('info-link');
-        }
+          if (link.textContent === 'weitere Infos') {
+            link.classList.add('info-link');
+          }
 
-        linkContainer.append(link);
+          linkContainer.append(link);
+        });
+
+        brand.append(linkContainer);
+        brandsContainer.append(brand);
       });
-
-      brand.append(linkContainer);
-      brandsContainer.append(brand);
-    });
 
     brandTeaserImageContainer.append(brandTeaserImage);
     brandTeaserImageContainer.append(brandTeaserHeader);

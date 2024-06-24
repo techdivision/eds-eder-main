@@ -54,7 +54,10 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
 };
 
 export default {
-  transform: ({ document, params }) => {
+  transform: ({
+    document,
+    params,
+  }) => {
     const main = document.body;
 
     removeGenericContent(main, document);

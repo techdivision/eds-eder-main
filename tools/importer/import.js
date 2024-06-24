@@ -146,7 +146,10 @@ const handleLinks = (main, document, baseUrl) => {
 };
 
 export default {
-  transformDOM: ({ document, params }) => {
+  transformDOM: ({
+    document,
+    params,
+  }) => {
     const main = document.body;
 
     removeGenericContent(main);

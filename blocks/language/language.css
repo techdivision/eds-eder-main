@@ -1,24 +1,24 @@
 .language img {
-    width: 32px;
-    height: 20px;
-    padding-right: 5px;
+  width: 32px;
+  height: 20px;
+  padding-right: 5px;
 }
 
 .language p {
-    display: inline-block;
+  display: inline-block;
 }
 
 .language .language-list {
-    background-color: var(--background-color);
-    margin: 0;
-    padding: 5px 20px 5px 10px;
-    position: fixed;
+  background-color: var(--background-color);
+  margin: 0;
+  padding: 5px 20px 5px 10px;
+  position: fixed;
 }
 
 .language .language-list.hidden {
-    display: none;
+  display: none;
 }
 
 .language .language-list li {
-    list-style-type: none;
+  list-style-type: none;
 }

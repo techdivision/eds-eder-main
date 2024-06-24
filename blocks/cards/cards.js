@@ -13,8 +13,11 @@ export default function decorate(block) {
     copyAttributes(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
-      if (div.children.length === 1 && div.querySelector('picture')) div.className = 'cards-card-image';
-      else div.className = 'cards-card-body';
+      if (div.children.length === 1 && div.querySelector('picture')) {
+        div.className = 'cards-card-image';
+      } else {
+        div.className = 'cards-card-body';
+      }
     });
 
     li.addEventListener('click', () => {
@@ -22,13 +25,14 @@ export default function decorate(block) {
     });
     ul.append(li);
   });
-  ul.querySelectorAll('img').forEach((img) => {
-    const closestPicture = img.closest('picture');
+  ul.querySelectorAll('img')
+    .forEach((img) => {
+      const closestPicture = img.closest('picture');
 
-    if (closestPicture) {
-      closestPicture.replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
-    }
-  });
+      if (closestPicture) {
+        closestPicture.replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
+      }
+    });
   block.textContent = '';
   block.append(ul);
 }
