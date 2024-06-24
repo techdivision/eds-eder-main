@@ -164,6 +164,15 @@ header .pre-header {
   background: var(--color-gray-dark);
 }
 
+header .pre-header .section {
+  display: none;
+}
+
+header .pre-header .section:first-child {
+  display: inline-block;
+  margin-right: var(--spacing-double);
+}
+
 header .pre-header .default-content-wrapper {
   max-height: calc(100vh - (2 * var(--nav-height)));
   overflow-y: auto;
@@ -201,7 +210,7 @@ header .pre-header ul > li > ul > li > ul {
 }
 
 header .pre-header[aria-expanded='true'] {
-  display: block;
+  display: flex;
   visibility: visible;
   align-self: start;
 }
@@ -212,6 +221,16 @@ header .pre-header[aria-expanded='true'] .section {
 
 header .pre-header[aria-expanded='true'] .default-content-wrapper > ul > li > ul {
   display: block;
+}
+
+/* contact section */
+header .pre-header .section:not(.search-bar-container):last-child {
+  margin-left: auto;
+}
+
+header .pre-header .section:not(.search-bar-container):last-child p {
+  display: inline-block;
+  margin-left: var(--spacing-half);
 }
 
 /* sections */
@@ -374,7 +393,9 @@ header nav .mobile-menu li.is-visible > ul {
   /* pre-header */
   header .pre-header {
     grid-area: preheader;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: start;
     visibility: visible;
     box-sizing: border-box;
     width: var(--header-width);
@@ -527,9 +548,5 @@ header .breadcrumbs ol li:last-of-type {
 
   @media screen and (width >= 900px) {
     display: block;
-  }
-
-  .search-input {
-    padding: 10px;
   }
 }
