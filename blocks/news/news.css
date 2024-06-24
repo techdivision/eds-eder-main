@@ -2,7 +2,7 @@
   /* single news item */
 
   .news-list-item {
-    background: #e5e5e5;
+    background: var(--color-gray-light);
     border-radius: 20px;
     overflow: hidden;
     margin: 10px 0;

@@ -24,7 +24,7 @@
   --light-color: #eee;
   --dark-color: #ccc;
   --text-color: var(--color-black);
-  --text-color-reverse: #fff;
+  --text-color-reverse: var(--color-white);
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback;
@@ -295,9 +295,53 @@ main .section.highlight {
   display: none;
 }
 
+/* auto blocking */
+.sidebar-hero {
+  img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 6 / 1;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+@media (width >= 900px) {
+  main.has-sidebar {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    margin: 0 auto;
+    max-width: calc(var(--page-width) + 64px); /* page-width + 2x 32px padding */
+
+    /* section cell left */
+
+    > .section {
+      grid-column: 1;
+
+      /* section cell right */
+
+      &.sidebar {
+        grid-column: 2;
+        border-left: 1px dashed var(--color-gray-light);
+      }
+
+      /* section over both cells */
+
+      &.sidebar-hero {
+        grid-column: 1 / 3;
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
 /* header */
 header {
   height: var(--nav-height);
+
+  @media (width >= 900px) {
+    height: var(--header-height);
+  }
 }
 
 header .nav-logo picture + a {
@@ -378,7 +422,7 @@ header .nav-logo picture + a {
   *:not(:has(*)) {
     /* important is okay as we want to override everything */
     color: transparent !important;
-    background-color: #ccc !important;
+    background-color: var(--dark-color) !important;
     position: relative;
     display: inline-block;
     overflow: hidden;
@@ -400,22 +444,5 @@ header .nav-logo picture + a {
 @keyframes loading {
   100% {
     transform: translateX(100%);
-  }
-}
-
-@media (width >= 600px) {
-  main .section {
-    padding: 64px 32px;
-  }
-}
-
-@media (width >= 900px) {
-  header {
-    height: var(--header-height);
-  }
-
-  .section > div {
-    max-width: var(--page-width);
-    margin: auto;
   }
 }

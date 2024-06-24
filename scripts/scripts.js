@@ -8,6 +8,7 @@ import {
   loadCSS,
   loadFooter,
   loadHeader,
+  readBlockConfig,
   sampleRUM,
   waitForLCP,
 } from './aem.js';
@@ -26,7 +27,31 @@ async function loadFonts() {
   }
 }
 
-// noinspection JSUnusedLocalSymbols
+// When there is a sidebar, build a hero image
+function buildSidebar(main) {
+  // check for sidebar
+  const allSectionMetadata = main.querySelectorAll('.section-metadata');
+  const hasSidebar = [...allSectionMetadata]
+    .map((metadata) => readBlockConfig(metadata))
+    .map((metadata) => metadata.style === 'sidebar')
+    .reduce((prev, current) => prev || current, false);
+
+  // if we have a sidebar
+  if (hasSidebar) {
+    // add class to main
+    main.classList.add('has-sidebar');
+
+    // check for hero image
+    const picture = main.querySelector('picture');
+    if (picture) {
+      const section = document.createElement('div');
+      section.classList.add('section', 'sidebar-hero');
+      section.append(picture);
+      main.prepend(section);
+    }
+  }
+}
+
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
@@ -36,6 +61,7 @@ function buildAutoBlocks(main) {
   try {
     // BEGIN CHANGE TechDivision
     // Removed auto blocking for hero blocks
+    buildSidebar(main);
     // END CHANGE TechDivision
   } catch (error) {
     // eslint-disable-next-line no-console
