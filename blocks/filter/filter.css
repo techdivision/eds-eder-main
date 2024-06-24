@@ -8,6 +8,7 @@
   }
 
   /* a single filter */
+
   .filter-item {
     margin: 0 0 10px;
     flex: 1;
@@ -15,6 +16,7 @@
     min-height: 45px;
 
     /* slider filter */
+
     &.filter-type-slider {
       padding: 10px 20px;
       min-height: 55px;
@@ -26,10 +28,12 @@
     }
 
     /* dropdown filter */
+
     &.filter-type-dropdown {
       position: relative;
 
       /* arrow down */
+
       &::after {
         right: 20px;
       }
@@ -48,6 +52,7 @@
     }
 
     /* checkbox filter */
+
     &.filter-type-checkbox {
       display: flex;
 

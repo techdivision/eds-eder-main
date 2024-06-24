@@ -10,16 +10,19 @@
   min-height: 60px;
 
   /* library element */
+
   .swiper {
     margin: 0 50px;
     overflow: hidden;
 
     /* wrapper */
+
     .swiper-wrapper {
       display: flex;
     }
 
     /* one slide */
+
     .swiper-slide {
       flex-shrink: 0;
       align-self: center;
@@ -36,6 +39,7 @@
   }
 
   /* small slider */
+
   &.small {
     .swiper-slide > div {
       max-width: 150px;
@@ -43,6 +47,7 @@
   }
 
   /* gray-scaled slider */
+
   &.grayscale {
     .swiper .swiper-slide {
       opacity: 0.5;

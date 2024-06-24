@@ -165,7 +165,7 @@ header .pre-header {
 }
 
 header .pre-header .default-content-wrapper {
-  max-height: calc(100vh - (2* var(--nav-height)));
+  max-height: calc(100vh - (2 * var(--nav-height)));
   overflow-y: auto;
 }
 
@@ -239,7 +239,7 @@ header nav .nav-sections[aria-expanded='true'] {
 }
 
 header nav .nav-sections .default-content-wrapper > ul {
-  max-height: calc(100vh - (2* var(--nav-height)));
+  max-height: calc(100vh - (2 * var(--nav-height)));
   overflow-y: auto;
 }
 
@@ -383,7 +383,7 @@ header nav .mobile-menu li.is-visible > ul {
   }
 
   header .pre-header .section,
-  header .pre-header .section > div  {
+  header .pre-header .section > div {
     display: inline-block;
     width: auto;
   }

@@ -297,11 +297,11 @@ main .section.highlight {
 
 /* header */
 header {
-    height: var(--nav-height);
+  height: var(--nav-height);
 }
 
 header .nav-logo picture + a {
-    display: none;
+  display: none;
 }
 
 /* chevron */
@@ -404,18 +404,18 @@ header .nav-logo picture + a {
 }
 
 @media (width >= 600px) {
-    main .section {
-        padding: 64px 32px;
-    }
+  main .section {
+    padding: 64px 32px;
+  }
 }
 
 @media (width >= 900px) {
-    header {
-        height: var(--header-height);
-    }
+  header {
+    height: var(--header-height);
+  }
 
-    .section > div {
-        max-width: var(--page-width);
-        margin: auto;
-    }
+  .section > div {
+    max-width: var(--page-width);
+    margin: auto;
+  }
 }
