@@ -165,7 +165,7 @@ header .pre-header {
 }
 
 header .pre-header .default-content-wrapper {
-  max-height: calc(100vh - (2* var(--nav-height)));
+  max-height: calc(100vh - (2 * var(--nav-height)));
   overflow-y: auto;
 }
 
@@ -239,7 +239,7 @@ header nav .nav-sections[aria-expanded='true'] {
 }
 
 header nav .nav-sections .default-content-wrapper > ul {
-  max-height: calc(100vh - (2* var(--nav-height)));
+  max-height: calc(100vh - (2 * var(--nav-height)));
   overflow-y: auto;
 }
 
@@ -383,7 +383,7 @@ header nav .mobile-menu li.is-visible > ul {
   }
 
   header .pre-header .section,
-  header .pre-header .section > div  {
+  header .pre-header .section > div {
     display: inline-block;
     width: auto;
   }
@@ -479,14 +479,18 @@ header nav .mobile-menu li.is-visible > ul {
 /* breadcrumbs */
 header .breadcrumbs {
   display: none;
-  padding: 0;
   width: 100%;
-  max-width: var(--page-width);
+  padding: 0 32px;
+  max-width: calc(var(--page-width) + 64px); /* width + padding */
   height: var(--body-line-height-s);
   overflow: hidden;
   margin: 0 auto;
   font-size: var(--body-font-size-xs);
   background: none;
+
+  @media screen and (width >= 900px) {
+    display: block;
+  }
 }
 
 header .breadcrumbs ol {
@@ -515,12 +519,6 @@ header .breadcrumbs ol li a:any-link {
 
 header .breadcrumbs ol li:last-of-type {
   opacity: 1;
-}
-
-@media screen and (width >= 900px) {
-  header .breadcrumbs {
-    display: block;
-  }
 }
 
 /* search */
