@@ -1,4 +1,5 @@
 .search-bar input {
+  padding: 10px;
   background-color: var(--dark-color);
   color: var(--text-color-reverse);
   border: none;

@@ -234,8 +234,9 @@ main img {
 
 .icon {
   display: inline-block;
-  height: 24px;
-  width: 24px;
+  height: 18px;
+  width: auto;
+  margin-right: 8px;
 }
 
 .icon img {
@@ -344,7 +345,8 @@ header {
   }
 }
 
-header .nav-logo picture + a {
+header .nav-logo picture + a,
+header .nav-logo picture + br + a {
   display: none;
 }
 
