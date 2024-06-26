@@ -506,7 +506,7 @@ header .breadcrumbs {
   height: var(--body-line-height-s);
   overflow: hidden;
   margin: 0 auto;
-  font-size: var(--body-font-size-xs);
+  font-size: var(--body-font-size-s);
   background: none;
 
   @media screen and (width >= 900px) {
@@ -530,12 +530,20 @@ header .breadcrumbs ol li {
 }
 
 header .breadcrumbs ol li:not(:last-child)::after {
-  content: '>';
-  padding-left: 1ch;
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  border-radius: 0 1px 0 0;
+  border-style: solid;
+  border-color: currentcolor;
+  border-width: 2px 2px 0 0;
 }
 
 header .breadcrumbs ol li a:any-link {
   color: var(--text-color);
+  margin-right: 4px;
 }
 
 header .breadcrumbs ol li:last-of-type {
