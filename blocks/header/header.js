@@ -303,11 +303,11 @@ export default async function decorate(block) {
   // load brand nav as fragment and create structure
   const brandNavMeta = getMetadata('brand-nav');
   const brandNavPath = brandNavMeta ? new URL(brandNavMeta, getCurrentUrl()).pathname : '/brand-nav';
-  const brandNavFragment = await loadFragment(brandNavPath);
   const preHeader = document.createElement('div');
   preHeader.className = 'pre-header';
-  while (brandNavFragment.firstElementChild) preHeader.append(brandNavFragment.firstElementChild);
   nav.append(preHeader);
+  const brandNavFragment = await loadFragment(brandNavPath);
+  while (brandNavFragment.firstElementChild) preHeader.append(brandNavFragment.firstElementChild);
 
   // init brand nav flyout and mobile nav
   const brandNav = nav.querySelector('.pre-header .section');

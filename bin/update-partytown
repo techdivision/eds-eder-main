@@ -1,0 +1,3 @@
+#!/bin/bash
+npm update @builder.io/partytown
+node_modules/@builder.io/partytown/bin/partytown.cjs copylib scripts/vendor/partytown

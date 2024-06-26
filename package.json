@@ -27,5 +27,8 @@
     "eslint-plugin-import": "2.29.1",
     "stylelint": "16.6.1",
     "stylelint-config-standard": "36.0.0"
+  },
+  "dependencies": {
+    "@builder.io/partytown": "^0.10.2"
   }
 }
