@@ -10,7 +10,7 @@ import loadThirdPartyScript from '../../scripts/load-thirdparty-script.js';
  */
 function loadUsercentrics(id) {
   return loadThirdPartyScript(
-    'https://app.usercentrics.eu/browser-ui/latest/loader.js',
+    'https://app.usercentrics.eu/browser-ui/latest/bundle.js',
     {
       id: 'usercentrics-cmp',
       'data-settings-id': id,

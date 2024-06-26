@@ -39,7 +39,7 @@ function loadThirdPartyScript(script, attrs) {
       const attributes = {
         ...attrs,
         type: 'text/partytown',
-        async: '',
+        defer: '',
       };
 
       // load via partytown
