@@ -1,2 +1,1 @@
-scripts/vendor  linguist-generated=true
-styles/vendor   linguist-generated=true
+scripts/vendor/partytown/*.js  linguist-generated
