@@ -7,6 +7,7 @@ header .header.block {
 
 header .nav-wrapper {
   background-color: var(--background-color);
+  padding-bottom: 10px;
 }
 
 header nav {
@@ -464,6 +465,7 @@ header nav .mobile-menu li.is-visible > ul {
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
     background-color: var(--color-gray-light);
+    z-index: 99;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul > li > a,
@@ -494,6 +496,7 @@ header nav .mobile-menu li.is-visible > ul {
 
   header .pre-header .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
     background-color: var(--color-gray-dark);
+    z-index: 999;
   }
 }
 
@@ -527,6 +530,11 @@ header .breadcrumbs ol {
 header .breadcrumbs ol li {
   padding-inline-start: 0;
   opacity: 0.7;
+
+  a:any-link, span {
+    color: var(--text-color);
+    margin-right: 4px;
+  }
 }
 
 header .breadcrumbs ol li:not(:last-child)::after {
@@ -539,11 +547,6 @@ header .breadcrumbs ol li:not(:last-child)::after {
   border-style: solid;
   border-color: currentcolor;
   border-width: 2px 2px 0 0;
-}
-
-header .breadcrumbs ol li a:any-link {
-  color: var(--text-color);
-  margin-right: 4px;
 }
 
 header .breadcrumbs ol li:last-of-type {

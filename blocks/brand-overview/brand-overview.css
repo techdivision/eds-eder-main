@@ -1,0 +1,131 @@
+/* remove section paddings from brand overview container */
+main .section.brand-overview-container {
+  &:not(:last-child) {
+    padding-bottom: 0;
+  }
+
+  &:not(:first-child) {
+    padding-top: 0;
+  }
+}
+
+/* brand blocks under one wrapper should be in columns */
+.brand-overview-wrapper {
+  @media (width >= 900px) {
+    display: flex;
+  }
+}
+
+/* one brand overview block */
+.brand-overview {
+  flex: 1;
+  min-width: 0;
+
+  /* header */
+
+  .header {
+    position: relative;
+
+    p {
+      margin: 0;
+    }
+
+    /* "background" image */
+
+    img {
+      display: block;
+      width: 100vw;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    /* heading */
+
+    h2 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: var(--color-white);
+      font-size: var(--heading-font-size-xxl);
+      font-weight: bold;
+      line-height: 300px;
+    }
+  }
+
+  /* content */
+
+  .content {
+    font-size: var(--body-font-size-s);
+
+    @media (width >= 900px) {
+      display: flex;
+    }
+
+    /* content column */
+
+    > div {
+      padding: var(--spacing-half);
+
+      /* each 2nd element should have gray background */
+
+      &:nth-child(2n - 1):not(:only-child) {
+        background-color: var(--light-color);
+      }
+
+      /* flex with multiple columns */
+      @media (width >= 900px) {
+        &:not(:only-child) {
+          flex: 1;
+          min-width: 0;
+          padding: var(--spacing-half) 5%;
+        }
+      }
+
+      /* brand logo */
+
+      img {
+        display: block;
+        width: 100%;
+        height: 50px;
+        object-fit: contain;
+      }
+
+      /* content */
+
+      > p:nth-child(2) {
+        padding: 20px 0;
+        border-color: var(--color-gray-darker);
+        border-width: 1px 0;
+        border-style: solid;
+      }
+
+      /* button wrapper */
+
+      .button-wrapper {
+        gap: 30px;
+
+        @media (width >= 1200px) {
+          display: flex;
+        }
+
+        .button-container {
+          flex: 1;
+          min-width: 0;
+          text-align: right;
+          margin: 0;
+
+          &:first-child {
+            text-align: left;
+          }
+
+          a {
+            width: 100%;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
