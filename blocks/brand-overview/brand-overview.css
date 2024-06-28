@@ -11,7 +11,9 @@ main .section.brand-overview-container {
 
 /* brand blocks under one wrapper should be in columns */
 .brand-overview-wrapper {
-  display: flex;
+  @media (width >= 900px) {
+    display: flex;
+  }
 }
 
 /* one brand overview block */
@@ -102,8 +104,11 @@ main .section.brand-overview-container {
       /* button wrapper */
 
       .button-wrapper {
-        display: flex;
         gap: 30px;
+
+        @media (width >= 1200px) {
+          display: flex;
+        }
 
         .button-container {
           flex: 1;
@@ -117,6 +122,7 @@ main .section.brand-overview-container {
 
           a {
             width: 100%;
+            margin: 0;
           }
         }
       }
