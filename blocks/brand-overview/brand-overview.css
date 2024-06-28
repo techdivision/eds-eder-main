@@ -9,7 +9,7 @@ main .section.brand-overview-container {
   }
 }
 
-/* brand blocks under on wrapper should be in columns */
+/* brand blocks under one wrapper should be in columns */
 .brand-overview-wrapper {
   display: flex;
 }
@@ -94,7 +94,7 @@ main .section.brand-overview-container {
 
       > p:nth-child(2) {
         padding: 20px 0;
-        border-color: #333;
+        border-color: var(--color-gray-darker);
         border-width: 1px 0;
         border-style: solid;
       }
