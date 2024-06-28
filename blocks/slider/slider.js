@@ -31,9 +31,6 @@ export default async function decorate(block) {
   next.classList.add('swiper-button-next');
   block.append(next);
 
-  // add links to images
-  decorateLinkedPictures(block);
-
   // load swiper
   loadThirdPartyBundle('swiper-bundle.min', () => {
     // eslint-disable-next-line no-undef,no-new

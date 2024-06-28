@@ -335,9 +335,6 @@ export default async function decorate(block) {
   isDesktop.addEventListener('change', () => mobileMenu(nav.querySelector('.pre-header .section .default-content-wrapper > ul > li > ul')));
   isDesktop.addEventListener('change', () => mobileMenu(nav.querySelector('.nav-sections .default-content-wrapper > ul')));
 
-  // link for logo
-  decorateLinkedPictures(block);
-
   if (getMetadata('breadcrumbs')
     .toLowerCase() === 'true') {
     await loadPlaceholders();
