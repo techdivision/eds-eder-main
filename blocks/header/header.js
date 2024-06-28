@@ -1,6 +1,5 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { decorateLinkedPictures } from '../../scripts/scripts.js';
 import { loadPlaceholders, ts } from '../../scripts/i18n.js';
 import { getCurrentUrl } from '../../scripts/helpers.js';
 

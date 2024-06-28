@@ -1,7 +1,6 @@
 // noinspection JSUnusedGlobalSymbols,JSUnresolvedReference
 
 import { loadThirdPartyBundle } from '../../scripts/load-resource.js';
-import { decorateLinkedPictures } from '../../scripts/scripts.js';
 
 /**
  * Decorate slider block
