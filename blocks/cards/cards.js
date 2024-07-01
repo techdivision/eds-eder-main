@@ -13,10 +13,25 @@ export default function decorate(block) {
     copyAttributes(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
-      if (div.children.length === 1 && div.querySelector('picture')) {
+      if ((div.children.length === 1 && div.querySelector('picture')) || (div.children.length === 2 && div.querySelector(':scope > p > picture'))) {
         div.className = 'cards-card-image';
       } else {
         div.className = 'cards-card-body';
+
+        const images = div.querySelectorAll('picture');
+        if (images.length > 0) {
+          const imgWrapper = document.createElement('div');
+          imgWrapper.className = 'image-wrapper';
+
+          images.forEach((img) => {
+            const parent = img.closest('p');
+            if (parent) {
+              imgWrapper.append(parent);
+            }
+          });
+
+          div.append(imgWrapper);
+        }
       }
     });
 

@@ -1,7 +1,6 @@
 // noinspection JSUnusedGlobalSymbols,JSUnresolvedReference
 
 import { loadThirdPartyBundle } from '../../scripts/load-resource.js';
-import { decorateLinkedPictures } from '../../scripts/scripts.js';
 
 /**
  * Decorate slider block
@@ -30,9 +29,6 @@ export default async function decorate(block) {
   const next = document.createElement('div');
   next.classList.add('swiper-button-next');
   block.append(next);
-
-  // add links to images
-  decorateLinkedPictures(block);
 
   // load swiper
   loadThirdPartyBundle('swiper-bundle.min', () => {
