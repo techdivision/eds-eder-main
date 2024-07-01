@@ -349,6 +349,5 @@ export default async function decorate(block) {
     await loadPlaceholders();
     const main = document.getElementsByTagName('main')[0];
     main.prepend(buildBreadcrumbs());
-    //navWrapper.append(buildBreadcrumbs());
   }
 }
