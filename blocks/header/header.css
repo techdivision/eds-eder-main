@@ -7,7 +7,6 @@ header .header.block {
 
 header .nav-wrapper {
   background-color: var(--background-color);
-  padding-bottom: 10px;
 }
 
 header nav {
@@ -501,11 +500,11 @@ header nav .mobile-menu li.is-visible > ul {
 }
 
 /* breadcrumbs */
-header .breadcrumbs {
+.breadcrumbs {
   display: none;
   width: 100%;
   padding: 0 32px;
-  max-width: calc(var(--page-width) + 64px); /* width + padding */
+  max-width: calc(var(--page-width)); /* width + padding */
   height: var(--body-line-height-s);
   overflow: hidden;
   margin: 0 auto;
@@ -517,7 +516,7 @@ header .breadcrumbs {
   }
 }
 
-header .breadcrumbs ol {
+.breadcrumbs ol {
   display: flex;
   flex-flow: wrap;
   list-style: none;
@@ -527,7 +526,7 @@ header .breadcrumbs ol {
   gap: 1ch;
 }
 
-header .breadcrumbs ol li {
+.breadcrumbs ol li {
   padding-inline-start: 0;
   opacity: 0.7;
 
@@ -537,7 +536,7 @@ header .breadcrumbs ol li {
   }
 }
 
-header .breadcrumbs ol li:not(:last-child)::after {
+.breadcrumbs ol li:not(:last-child)::after {
   content: '';
   display: inline-block;
   width: 6px;
@@ -549,7 +548,7 @@ header .breadcrumbs ol li:not(:last-child)::after {
   border-width: 2px 2px 0 0;
 }
 
-header .breadcrumbs ol li:last-of-type {
+.breadcrumbs ol li:last-of-type {
   opacity: 1;
 }
 

@@ -347,6 +347,8 @@ export default async function decorate(block) {
   if (getMetadata('breadcrumbs')
     .toLowerCase() === 'true') {
     await loadPlaceholders();
-    navWrapper.append(buildBreadcrumbs());
+    const main = document.getElementsByTagName('main')[0];
+    main.prepend(buildBreadcrumbs());
+    //navWrapper.append(buildBreadcrumbs());
   }
 }
