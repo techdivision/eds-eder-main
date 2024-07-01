@@ -1,24 +1,25 @@
-.language img {
-  width: 32px;
-  height: 20px;
-  padding-right: 5px;
-}
+.language {
+  cursor: pointer;
 
-.language p {
-  display: inline-block;
-}
+  img {
+    width: 32px;
+    height: 20px;
+    padding-right: 5px;
+  }
 
-.language .language-list {
-  background-color: var(--background-color);
-  margin: 0;
-  padding: 5px 20px 5px 10px;
-  position: fixed;
-}
+  p {
+    display: inline-block;
+    margin: 0;
+  }
 
-.language .language-list.hidden {
-  display: none;
-}
+  .language-list {
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 5px 20px 5px 10px;
+    position: fixed;
 
-.language .language-list li {
-  list-style-type: none;
+    li {
+      list-style-type: none;
+    }
+  }
 }

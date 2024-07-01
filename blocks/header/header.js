@@ -144,6 +144,10 @@ function getDirectTextContent(menuItem) {
   if (menuLink) {
     return menuLink.textContent.trim();
   }
+  const menuSpan = menuItem.querySelector(':scope > span');
+  if (menuSpan) {
+    return menuSpan.textContent.trim();
+  }
   return Array.from(menuItem.childNodes)
     .filter((n) => n.nodeType === Node.TEXT_NODE)
     .map((n) => n.textContent)
@@ -152,7 +156,6 @@ function getDirectTextContent(menuItem) {
 
 function buildBreadcrumbsFromNavTree(nav, currentUrl) {
   const crumbs = [];
-
   const homeUrl = document.querySelector('.nav-logo a').href;
 
   let menuItem = Array.from(nav.querySelectorAll('a'))
@@ -164,6 +167,7 @@ function buildBreadcrumbsFromNavTree(nav, currentUrl) {
         title: getDirectTextContent(menuItem),
         url: link ? link.href : null,
       });
+
       menuItem = menuItem.closest('ul')
         ?.closest('li');
     } while (menuItem);
@@ -204,7 +208,9 @@ function buildBreadcrumbs() {
       a.textContent = item.title;
       li.append(a);
     } else {
-      li.textContent = item.title;
+      const span = document.createElement('span');
+      span.textContent = item.title;
+      li.append(span);
     }
     return li;
   }));
