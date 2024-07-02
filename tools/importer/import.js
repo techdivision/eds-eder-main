@@ -15,8 +15,33 @@ const removeGenericContent = (main) => {
     '.breadcrumb',
     '.visible-xs',
     '.visible-ma-button',
-    '.offcanvas',
   ]);
+};
+
+/**
+ * Returns whether the given link from Typo3 should be a link in EDS
+ * @param link
+ * @returns {boolean}
+ */
+const isButton = (link) => {
+  // check for buttons that are defined at link level
+  if (link.className.includes('btn-gray-ghost')) {
+    return true;
+  }
+
+  const parent = link.parentElement;
+
+  // no need to continue if there is no parent
+  if (!parent) {
+    return false;
+  }
+
+  if (parent.className.includes('coa-button') || parent.className.includes('offer-btn-wrapper')) {
+    return true;
+  }
+
+  // return false in all other cases
+  return false;
 };
 
 /**
@@ -70,6 +95,8 @@ const handleSidebar = (main, document) => {
     const table = WebImporter.DOMUtils.createTable(cells, document);
 
     sidebar.append(table);
+
+    sidebar.append(document.createElement('hr'));
   }
 };
 
@@ -136,10 +163,12 @@ const handleLinks = (main, document, baseUrl) => {
         link.setAttribute('href', href);
       }
 
-      // check if parent has class 'coa-button', thus is button in Typo3
-      const parent = link.parentElement;
+      // remove link from collapse links as they cause an error in Sharepoint
+      if (href.startsWith('#collapse')) {
+        link.outerHTML = link.innerText;
+      }
 
-      if (parent.className.includes('coa-button') || parent.className.includes('offer-btn-wrapper')) {
+      if (isButton(link)) {
         const linkText = link.innerText;
 
         // create a bold element to assign the original text to
@@ -153,6 +182,11 @@ const handleLinks = (main, document, baseUrl) => {
   }
 };
 
+/**
+ * Handle 3-column grids by converting them to EDS thord-width Card Blocks
+ * @param main
+ * @param document
+ */
 const handle3ColumnsGrid = (main, document) => {
   // get the column-element from Typo3 that matches the third-width card EDS-Block
   const thirdWidthCards = main.querySelectorAll('div.col-md-4');
@@ -194,6 +228,12 @@ const handle3ColumnsGrid = (main, document) => {
   }
 };
 
+/**
+ * Handle top-image by converting Typo3 hero-image into a regular image within the docx,
+ * and putting the headline thereafter
+ * @param main
+ * @param document
+ */
 const handleTopImage = (main, document) => {
   const contentHeader = main.querySelector('div.content-header');
 
@@ -224,6 +264,46 @@ const handleTopImage = (main, document) => {
   }
 };
 
+/**
+ * Handle videos by converting the embedded-iframe from Typo3 to the EDS Video-Block
+ * @param main
+ * @param document
+ */
+const handleVideos = (main, document) => {
+  const iframes = main.querySelectorAll('iframe');
+
+  if (iframes) {
+    iframes.forEach((iframe) => {
+      let src = iframe.getAttribute('src');
+
+      // if there is no src check for data-src
+      if (!src) {
+        src = iframe.getAttribute('data-src');
+      }
+
+      // check for Youtube-urls
+      if (src && src.startsWith('https://www.youtube.com/')) {
+        const videoId = src.substring(30, 41);
+
+        const url = `https://www.youtube.com/watch?v=${videoId}`;
+
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.innerText = url;
+
+        const cells = [
+          ['Video'],
+          [link.outerHTML],
+        ];
+
+        const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+        iframe.replaceWith(resultTable);
+      }
+    });
+  }
+};
+
 export default {
   transformDOM: ({
     document,
@@ -244,6 +324,7 @@ export default {
     handleSidebar(main, document);
     handleImages(main);
     handleIcons(main);
+    handleVideos(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 
