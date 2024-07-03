@@ -10,8 +10,11 @@
 .cards > ul > li {
   border: 1px solid var(--dark-color);
   background-color: var(--background-color);
-  cursor: pointer;
   position: relative;
+}
+
+.cards > ul > li.clickable {
+  cursor: pointer;
 }
 
 .cards .cards-card-image {

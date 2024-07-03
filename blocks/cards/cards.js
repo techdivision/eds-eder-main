@@ -35,9 +35,14 @@ export default function decorate(block) {
       }
     });
 
-    li.addEventListener('click', () => {
-      window.open(link.href, '_self');
-    });
+    if (li.querySelectorAll('a').length === 1) {
+      li.addEventListener('click', () => {
+        window.open(link.href, '_self');
+      });
+
+      li.className = 'clickable';
+    }
+
     ul.append(li);
   });
   ul.querySelectorAll('img')
