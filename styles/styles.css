@@ -99,7 +99,6 @@ body {
   color: var(--text-color);
   background-color: var(--background-color);
   display: none;
-  -webkit-hyphens: auto;
   hyphens: auto;
   word-wrap: break-word;
 }
