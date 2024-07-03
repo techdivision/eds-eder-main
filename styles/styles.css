@@ -99,6 +99,8 @@ body {
   color: var(--text-color);
   background-color: var(--background-color);
   display: none;
+  hyphens: auto;
+  word-wrap: break-word;
 }
 
 body.appear {
@@ -294,6 +296,10 @@ main .section.highlight {
 .block.library-metadata,
 .block.metadata {
   display: none;
+}
+
+main .section [class$="-wrapper"] {
+  margin-bottom: var(--spacing-simple);
 }
 
 /* auto blocking */
