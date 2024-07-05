@@ -1,3 +1,11 @@
+.columns [data-valign="middle"] {
+  align-self: center;
+}
+
+.columns [data-valign="bottom"] {
+  align-self: flex-end;
+}
+
 .columns > div {
   display: flex;
   flex-direction: column;
