@@ -449,6 +449,44 @@ header .nav-logo picture + br + a {
   }
 }
 
+/* element positions */
+@media (width >= 900px) {
+  /* section side by side */
+  .section.side-by-side {
+    max-width: var(--page-width);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-simple);
+    margin: 0 auto;
+  }
+
+  .section.side-by-side > div {
+    margin: 0;
+  }
+
+  /* sections with inline images */
+  .section.images-inline-right .default-content-wrapper,
+  .section.images-inline-left .default-content-wrapper {
+    clear: both;
+  }
+
+  .section.images-inline-right .default-content-wrapper p:first-child picture,
+  .section.images-inline-left .default-content-wrapper p:first-child picture {
+    display: block;
+    margin-bottom: var(--spacing-half);
+  }
+
+  .section.images-inline-right .default-content-wrapper p:first-child {
+    float: right;
+    margin: 0 0 0 var(--spacing-half);
+  }
+
+  .section.images-inline-left .default-content-wrapper p:first-child {
+    float: left;
+    margin: 0 var(--spacing-half) 0 0;
+  }
+}
+
 @keyframes loading {
   100% {
     transform: translateX(100%);
