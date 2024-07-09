@@ -109,10 +109,6 @@
   grid-gap: var(--spacing-simple);
 }
 
-.cards.half-width > ul {
-  grid-template-columns: 1fr 1fr;
-}
-
 @media (width > 600px) {
   .cards > ul > li > .cards-card-body > .button-container {
     position: absolute;
@@ -121,5 +117,9 @@
   .cards > ul > li {
     position: relative;
     padding-bottom: 130px;
+  }
+
+  .cards.half-width > ul {
+    grid-template-columns: 1fr 1fr;
   }
 }
