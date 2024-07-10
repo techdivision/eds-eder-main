@@ -30,6 +30,7 @@ function loadGoogleAnalytics(id) {
   window.dataLayer = window.dataLayer || [];
 
   function gtag() {
+    // eslint-disable-next-line prefer-rest-params
     window.dataLayer.push(arguments);
   }
 
@@ -49,7 +50,7 @@ function loadAdobeAnalytics(url) {
   // check for multiple URLs
   if (url.includes(',') || url.includes('\n')) {
     const adobeUrls = url.split(url.includes(',') ? ',' : '\n')
-      .map(str => str.replace(/\s+/g, ''));
+      .map((str) => str.replace(/\s+/g, ''));
     const currentUrl = getCurrentUrl();
     let loadScriptPromise = null;
 
@@ -63,17 +64,16 @@ function loadAdobeAnalytics(url) {
         if (currentUrl.includes('hlx.page')) {
           loadScriptPromise = loadAdobeAnalytics(adobeUrl);
         }
-      } else {
-        if (!currentUrl.includes('localhost') &&
-          !currentUrl.includes('hlx.page')) {
-          loadScriptPromise = loadAdobeAnalytics(adobeUrl);
-        }
+      } else if (!currentUrl.includes('localhost')
+        && !currentUrl.includes('hlx.page')) {
+        loadScriptPromise = loadAdobeAnalytics(adobeUrl);
       }
     });
 
     if (loadScriptPromise) {
       return loadScriptPromise;
     }
+    // eslint-disable-next-line no-console
     console.error('No valid Adobe Analytics URL found for environment', adobeUrls, currentUrl);
     return Promise.resolve();
   }
@@ -103,7 +103,7 @@ export default function decorate(block) {
       platform: 'text',
       config: 'text',
     },
-    block
+    block,
   );
   block.innerHTML = '';
 
