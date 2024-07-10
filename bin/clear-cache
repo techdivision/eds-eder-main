@@ -27,7 +27,7 @@ if [[ $input_url =~ $pattern ]]; then
 
   # clear page cache
   if [[ -n $path ]]; then
-    transformed_url="https://admin.hlx.${env}/cache/${org}/${branch}/${site}${path}"
+    transformed_url="https://admin.hlx.${env}/cache/${org}/${branch}/${site}/${path}"
     echo -e "Clearing page cache via ${CYAN}curl --request POST --url ${transformed_url}${NC}"
     curl --request POST --url "$transformed_url"
   fi
