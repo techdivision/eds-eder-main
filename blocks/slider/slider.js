@@ -32,9 +32,24 @@ export default async function decorate(block) {
 
   // load swiper
   loadThirdPartyBundle('swiper-bundle.min', () => {
+    // set default values
+    let slideNumberDesktop = 5;
+    let slideNumberMobile = 3;
+
+    block.classList.forEach((className) => {
+      // handle class names like 'desktop-5-mobile-3', that define the number of slides displayed
+      if (className.startsWith('desktop-')) {
+        const slideNumbers = className.split('-mobile-');
+
+        slideNumberDesktop = (slideNumbers[0]).replace('desktop-', '');
+
+        slideNumberMobile = (slideNumbers[1]).trim();
+      }
+    });
+
     // eslint-disable-next-line no-undef,no-new
     new Swiper(swiper, {
-      slidesPerView: 3,
+      slidesPerView: slideNumberMobile,
       loop: true,
       autoplay: {
         enabled: block.classList.contains('autostart'),
@@ -45,7 +60,7 @@ export default async function decorate(block) {
       },
       breakpoints: {
         900: {
-          slidesPerView: 5,
+          slidesPerView: slideNumberDesktop,
         },
       },
     });
