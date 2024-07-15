@@ -344,6 +344,12 @@ export default async function decorate(block) {
     .toLowerCase() === 'true') {
     await loadPlaceholders();
     const main = document.getElementsByTagName('main')[0];
-    main.prepend(buildBreadcrumbs());
+    const firstSection = main.querySelector('.section');
+
+    if (firstSection) {
+      firstSection.prepend(buildBreadcrumbs());
+    } else {
+      main.prepend(buildBreadcrumbs());
+    }
   }
 }
