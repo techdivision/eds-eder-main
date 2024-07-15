@@ -249,12 +249,13 @@ main img {
 
 /* sections */
 main .section {
-  padding: 64px 16px;
+  position: relative;
+  padding: var(--spacing-double) var(--spacing-half);
 }
 
 @media (width >= 600px) {
   main .section {
-    padding: 64px 32px;
+    padding: var(--spacing-double) var(--spacing-simple);
   }
 }
 
