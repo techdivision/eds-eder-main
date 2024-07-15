@@ -41,15 +41,6 @@ function buildSidebar(main) {
   if (hasSidebar) {
     // add class to main
     main.classList.add('has-sidebar');
-
-    // check for hero image
-    const picture = main.querySelector('picture');
-    if (picture) {
-      const section = document.createElement('div');
-      section.classList.add('section', 'sidebar-hero');
-      section.append(picture);
-      main.prepend(section);
-    }
   }
 }
 
