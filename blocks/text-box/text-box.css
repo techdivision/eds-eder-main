@@ -3,3 +3,7 @@
   color: var(--color-white);
   background-color: var(--color-red);
 }
+
+.text-box.red a {
+  color: var(--color-white);
+}
