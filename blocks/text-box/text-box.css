@@ -1,5 +1,5 @@
 .text-box.red {
-  padding: var(--spacing-half) 0;
+  padding: var(--spacing-half) var(--spacing-simple);
   color: var(--color-white);
   background-color: var(--color-red);
 }
