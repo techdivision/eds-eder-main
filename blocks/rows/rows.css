@@ -1,0 +1,90 @@
+.rows > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rows > ul > li {
+  margin-bottom: var(--spacing-simple);
+  background-color: var(--color-white);
+}
+
+.rows .image {
+  grid-area: image;
+}
+
+.rows .image img {
+  width: 100%;
+}
+
+.rows .recommendation {
+  grid-area: recommendation;
+  box-sizing: border-box;
+  padding: var(--spacing-half);
+  font-size: var(--body-font-size-s);
+  color: var(--color-green);
+  background-color: var(--color-green-light);
+}
+
+.rows .recommendation p:first-child {
+  position: relative;
+  padding-left: 40px;
+}
+
+.rows .recommendation p:first-child::before {
+  content: url('../../icons/temp.svg');
+  position: absolute;
+  left: 0;
+  width: 25px;
+}
+
+.rows .recommendation ul {
+  padding-left: var(--spacing-simple);
+}
+
+/* @todo use correct svg icon */
+.rows .recommendation li {
+  list-style-image: url('../../icons/temp.svg');
+}
+
+.rows .recommendation li::marker {
+  font-size: 25px;
+}
+
+.rows .content {
+  grid-area: content;
+  position: relative;
+  margin-top: var(--spacing-simple);
+  padding: 0 var(--spacing-simple);
+}
+
+.rows .content .logo {
+  position: absolute;
+  right: var(--spacing-simple);
+  top: 0;
+}
+
+.rows .content .button-container {
+  display: inline-block;
+}
+
+@media (width > 900px) {
+  .rows > ul > li {
+    display: grid;
+    gap: var(--spacing-simple);
+    grid-template:
+    'image content recommendation' / 1fr 2fr 1fr;
+  }
+
+  .rows .image img {
+    width: auto;
+  }
+
+  .rows .content {
+    padding: 0;
+  }
+
+  .rows .content .logo {
+    right: 0;
+  }
+}
