@@ -12,6 +12,7 @@ import {
   handleIframes,
   handleAccordions,
   handleGallerySlider,
+  handleTextBoxes,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -53,6 +54,7 @@ export default {
     handleIframes(main, document);
     handleAccordions(main, document);
     handleGallerySlider(main, document, baseUrl);
+    handleTextBoxes(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 

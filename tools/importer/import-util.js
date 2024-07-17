@@ -29,7 +29,7 @@ export const determineEdsBaseUrl = (params) => {
  */
 export const isButton = (link) => {
   // check for buttons that are defined at link level
-  if (link.className.includes('btn-gray-ghost')) {
+  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray')) {
     return true;
   }
 
@@ -84,9 +84,12 @@ export const handleTable = (main, document) => {
  * @param document
  */
 export const handleSidebar = (main, document) => {
-  const sidebar = main.querySelector('div.news-sidebar');
+  const originalSidebar = main.querySelector('div.news-sidebar');
 
-  if (sidebar) {
+  if (originalSidebar) {
+    // create a copy of the original sidebar-block to work with later on
+    const sidebar = originalSidebar.cloneNode(true);
+
     // add separator before the sidebar-content
     sidebar.prepend(document.createElement('hr'));
 
@@ -100,7 +103,9 @@ export const handleSidebar = (main, document) => {
 
     sidebar.append(table);
 
-    sidebar.append(document.createElement('hr'));
+    // remove the original sidebar and add the new one at the very last position
+    originalSidebar.remove();
+    main.append(sidebar);
   }
 };
 
@@ -155,6 +160,12 @@ export const handleLinks = (main, document, baseUrl) => {
       // make link absolute
       let href = link.getAttribute('href');
 
+      // if the link does not have a target: replace it with the text of the link
+      if (!href) {
+        link.outerHTML = link.innerText;
+        return;
+      }
+
       // replace relative urls
       if (href.charAt(0) === '/') {
         link.setAttribute('href', baseUrl + href);
@@ -187,7 +198,7 @@ export const handleLinks = (main, document, baseUrl) => {
 };
 
 /**
- * Handle 3-column grids by converting them to EDS thord-width Card Blocks
+ * Handle 3-column grids by converting them to EDS third-width Card Blocks
  * @param main
  * @param document
  */
@@ -208,22 +219,41 @@ export const handle3ColumnsGrid = (main, document) => {
       const imageDiv = document.createElement('div');
 
       // copy image to its own entry
-      const image = thirdWidthCard.querySelector('img').cloneNode(true);
+      const image = thirdWidthCard.querySelector('img');
 
-      const heroText = thirdWidthCard.querySelector('div.category-heroimage');
+      // check if there is any image present
+      if (image) {
+        // create a clone of the image-node to work with later-on
+        const imageClone = image.cloneNode(true);
 
-      imageDiv.append(image);
+        // check whether image is within a link
+        const imageParent = image.parentElement;
 
-      if (heroText) {
-        imageDiv.append(heroText);
+        if (imageParent.tagName === 'A') {
+          // remove the parent, that includes the link
+          imageParent.remove();
+        } else {
+          // remove only the image itself
+          image.remove();
+        }
+
+        const heroText = thirdWidthCard.querySelector('div.category-heroimage');
+
+        imageDiv.append(imageClone);
+
+        if (heroText) {
+          imageDiv.append(heroText);
+        }
+
+        cells.push(
+          [imageDiv, thirdWidthCard],
+        );
+      } else {
+        // Card with no image
+        cells.push(
+          [thirdWidthCard],
+        );
       }
-
-      // remove the image from the other content
-      thirdWidthCard.querySelector('img').remove();
-
-      cells.push(
-        [imageDiv, thirdWidthCard],
-      );
     });
 
     const resultTable = WebImporter.DOMUtils.createTable(cells, document);
@@ -361,7 +391,7 @@ export const handleGallerySlider = (main, document, baseUrl) => {
 
   if (gallerySlider) {
     const cells = [
-      ['Slider'],
+      ['Slider (Autostart, Desktop-1-Mobile-1)'],
     ];
     const slides = gallerySlider.querySelectorAll('li.item');
 
@@ -384,5 +414,22 @@ export const handleGallerySlider = (main, document, baseUrl) => {
     const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
     gallerySlider.replaceWith(resultTable);
+  }
+};
+
+export const handleTextBoxes = (main, document) => {
+  const textBoxes = main.querySelectorAll('div.alert-danger');
+
+  if (textBoxes) {
+    textBoxes.forEach((textBox) => {
+      const cells = [
+        ['Text-Box (red)'],
+        [textBox.innerHTML],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      textBox.replaceWith(resultTable);
+    });
   }
 };
