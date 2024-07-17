@@ -17,5 +17,13 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
+  // Search for cookie a tag
+  footer.querySelectorAll('a').forEach((link) => {
+    // Add onclick function to cookie link
+    if (link.href.includes('#cookielink')) {
+      link.setAttribute('onclick', 'UC_UI.showSecondLayer();');
+    }
+  });
+
   block.append(footer);
 }
