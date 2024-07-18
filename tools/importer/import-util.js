@@ -9,6 +9,7 @@ export const determineEdsBaseUrl = (params) => {
   const urlMapping = {
     'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
     'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
+    'https://www.agratec-salching.de': 'https://main--eds-agratec-salching--techdivision.hlx.page',
   };
 
   const originalUrl = new URL(params.originalURL);
