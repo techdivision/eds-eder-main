@@ -57,10 +57,6 @@
   width: 30px;
 }
 
-.rows .recommendation li::marker {
-  /*font-size: 25px;*/
-}
-
 .rows .content {
   grid-area: content;
   position: relative;
