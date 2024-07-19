@@ -8,11 +8,29 @@
 
 import { betterLoadScript } from '../../scripts/load-resource.js';
 
-const getDefaultEmbed = (url) => `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-    <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen=""
+const getDefaultEmbed = (url, block) => {
+  // Set default height and width
+  let iFrameHeight = '100%';
+  let containerHeight = 0;
+  let width = '100%';
+
+  // Get iFrame and Container size from class
+  block.classList.forEach((className) => {
+    if (className.startsWith('height')) {
+      iFrameHeight = `${className.substring(7)}px`;
+      containerHeight = iFrameHeight;
+    }
+    if (className.startsWith('width')) {
+      width = `${className.substring(6)}px`;
+    }
+  });
+  return `<div style="left: 0; width: ${width}; height: ${containerHeight}; position: relative; padding-bottom: 56.25%;">
+    <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: ${width}; height: ${iFrameHeight};
+    position: absolute;" allowfullscreen=""
       scrolling="no" allow="encrypted-media" title="Content from ${url.hostname}" loading="lazy">
     </iframe>
   </div>`;
+};
 
 const embedYoutube = (url, autoplay) => {
   const usp = new URLSearchParams(url.search);
@@ -71,7 +89,7 @@ const loadEmbed = (block, link, autoplay) => {
     block.innerHTML = config.embed(url, autoplay);
     block.classList = `block embed embed-${config.match[0]}`;
   } else {
-    block.innerHTML = getDefaultEmbed(url);
+    block.innerHTML = getDefaultEmbed(url, block);
     block.classList = 'block embed';
   }
   block.classList.add('embed-is-loaded');
