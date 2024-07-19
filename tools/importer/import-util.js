@@ -55,9 +55,9 @@ export const isButton = (link) => {
  * @param document
  */
 export const handleTable = (main, document) => {
-  const table = main.querySelector('table');
+  const tables = main.querySelectorAll('table');
 
-  if (table) {
+  tables.forEach((table) => {
     // determine proper EDS table-type
     let tableHeadline = 'Table (no header, no border)';
 
@@ -76,7 +76,7 @@ export const handleTable = (main, document) => {
     headlineRow.append(headlineData);
 
     table.prepend(headlineRow);
-  }
+  });
 };
 
 /**
@@ -432,5 +432,136 @@ export const handleTextBoxes = (main, document) => {
 
       textBox.replaceWith(resultTable);
     });
+  }
+};
+
+export const handleFilterAndRows = (main, document) => {
+  // get filter-block and product-rows, ids are used as there is no other possibility
+  const filter = main.querySelector('div.element-dce_dceuid14');
+
+  // use id here, as the elements do not have another way to identify them
+  const rows = main.querySelectorAll('div.element-dce_dceuid12');
+
+  let parent;
+
+  const result = document.createElement('div');
+
+  if (filter) {
+    parent = filter.parentElement;
+
+    // handle filter-block
+    const images = filter.querySelectorAll('img.filter-img');
+
+    const imagesParagraph = document.createElement('p');
+
+    images.forEach((image) => {
+      imagesParagraph.append(image);
+    });
+
+    const filterCells = [
+      ['Filter'],
+      ['PS', 'slider', 'power_min,power_max', '%minSliderValue - %maxSliderValue PS (%minSliderValueKW - %maxSliderValueKW KW)'],
+      ['Marke', 'checkbox', 'brand', imagesParagraph],
+    ];
+
+    const filterResultTable = WebImporter.DOMUtils.createTable(filterCells, document);
+
+    result.append(filterResultTable);
+  }
+
+  // handle rows with product data
+  if (rows.length > 0) {
+    const rowCells = [
+      ['Rows'],
+      ['', '', '', '', 'power_min', 'power_max', 'brand'],
+    ];
+
+    rows.forEach((row) => {
+      // store parent
+      parent = row.parentElement;
+
+      // get the original-data from Typo3
+      const originalImageDiv = row.querySelector('div.image');
+      const originalContentDiv = row.querySelector('div.content');
+      const originalRecommendDiv = row.querySelector('div.recommend');
+
+      // perform modifications to original image-data
+      const originalImages = originalImageDiv.querySelectorAll('img');
+
+      // use the second image, if there is one (= the bigger mobile-image)
+      const originalImage = originalImages[originalImages.length - 1];
+
+      // create a new image tag in order to use the original jpg-value
+      const resultImage = document.createElement('img');
+
+      resultImage.src = originalImage.getAttribute('data-regular');
+
+      // perform modifications to original content data
+      const content = originalContentDiv;
+
+      // extract logo
+      const originalLogo = originalContentDiv.querySelector('img');
+
+      // extract data-value from logo
+      const brand = originalLogo.getAttribute('data-value');
+
+      // build-up new logo in order to use 'data-regular' of the image
+      const resultLogo = document.createElement('img');
+
+      resultLogo.src = originalLogo.getAttribute('data-regular');
+      resultLogo.alt = brand;
+
+      // remove original logo from the content
+      originalLogo.remove();
+
+      // extract power-data
+      let powerMin = originalContentDiv.querySelector('span[data-value=power-min]');
+
+      if (powerMin) {
+        powerMin = parseInt(powerMin.innerText, 10);
+      } else {
+        powerMin = '';
+      }
+
+      let powerMax = originalContentDiv.querySelector('span[data-value=power-max]');
+
+      if (powerMax) {
+        powerMax = parseInt(powerMax.innerText, 10);
+      } else {
+        powerMax = '';
+      }
+
+      // create own paragraph, add italic element around text of info-button
+      const infoButton = originalContentDiv.querySelector('a.info-btn');
+
+      const italicElement = document.createElement('em');
+      italicElement.append(infoButton.innerHTML);
+
+      const infoButtonParagraph = document.createElement('p');
+      infoButtonParagraph.append(italicElement);
+
+      infoButton.innerHTML = infoButtonParagraph.outerHTML;
+
+      // create own paragraph, add bold element around to text of contact-button
+      const contactButton = originalContentDiv.querySelector('a.contact-btn');
+
+      const boldElement = document.createElement('strong');
+      boldElement.append(contactButton.innerHTML);
+
+      const contactButtonParagraph = document.createElement('p');
+      contactButtonParagraph.append(boldElement);
+
+      contactButton.innerHTML = contactButtonParagraph.outerHTML;
+
+      // store modified data
+      rowCells.push(
+        [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
+      );
+    });
+    const rowResultTable = WebImporter.DOMUtils.createTable(rowCells, document);
+
+    result.append(rowResultTable);
+
+    parent.replaceWith(result);
   }
 };
