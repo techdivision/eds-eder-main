@@ -11,7 +11,7 @@ function definePartytownConfig() {
     lib: '/scripts/vendor/partytown/',
     forward: [
       ['dataLayer.push', { preserveBehavior: true }],
-    ]
+    ],
   };
 }
 
