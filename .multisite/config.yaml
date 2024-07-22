@@ -5,3 +5,6 @@ sites:
   eder-landtechnik:
     origin: https://github.com/techdivision/eds-eder-landtechnik
     port: 3002
+  agratec-salching:
+    origin: https://github.com/techdivision/eds-agratec-salching
+    port: 3003

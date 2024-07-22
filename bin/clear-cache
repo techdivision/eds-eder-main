@@ -1,0 +1,37 @@
+#!/bin/bash
+CYAN='\033[0;36m'
+NC='\033[0m' # no color
+
+# get url from argument
+if [ -z "$1" ]; then
+  echo "Usage: $0 <URL>"
+  exit 1
+fi
+
+# extract parts from the input URL
+input_url=$1
+pattern='https:\/\/([a-zA-Z0-9-]+)--([a-zA-Z0-9-]+)--([a-zA-Z0-9-]+)\.hlx\.([a-zA-Z]+)/(.*)'
+
+# check if URL matches the pattern
+if [[ $input_url =~ $pattern ]]; then
+  site="${BASH_REMATCH[1]}"
+  branch="${BASH_REMATCH[2]}"
+  org="${BASH_REMATCH[3]}"
+  env="page" # "${BASH_REMATCH[4]}"
+  path="${BASH_REMATCH[5]}"
+
+  # clear site cache
+  transformed_url="https://admin.hlx.${env}/cache/${org}/${branch}/${site}"
+  echo -e "Clearing site cache via ${CYAN}curl --request POST --url ${transformed_url}${NC}"
+  curl --request POST --url "$transformed_url"
+
+  # clear page cache
+  if [[ -n $path ]]; then
+    transformed_url="https://admin.hlx.${env}/cache/${org}/${branch}/${site}/${path}"
+    echo -e "Clearing page cache via ${CYAN}curl --request POST --url ${transformed_url}${NC}"
+    curl --request POST --url "$transformed_url"
+  fi
+else
+  echo "URL format is not recognized."
+  exit 1
+fi

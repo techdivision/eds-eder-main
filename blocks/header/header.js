@@ -343,6 +343,13 @@ export default async function decorate(block) {
   if (getMetadata('breadcrumbs')
     .toLowerCase() === 'true') {
     await loadPlaceholders();
-    navWrapper.append(buildBreadcrumbs());
+    const main = document.getElementsByTagName('main')[0];
+    const firstSection = main.querySelector('.section');
+
+    if (firstSection) {
+      firstSection.prepend(buildBreadcrumbs());
+    } else {
+      main.prepend(buildBreadcrumbs());
+    }
   }
 }

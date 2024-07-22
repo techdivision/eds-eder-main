@@ -9,6 +9,7 @@ export const determineEdsBaseUrl = (params) => {
   const urlMapping = {
     'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
     'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
+    'https://www.agratec-salching.de': 'https://main--eds-agratec-salching--techdivision.hlx.page',
   };
 
   const originalUrl = new URL(params.originalURL);
@@ -29,7 +30,7 @@ export const determineEdsBaseUrl = (params) => {
  */
 export const isButton = (link) => {
   // check for buttons that are defined at link level
-  if (link.className.includes('btn-gray-ghost')) {
+  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray')) {
     return true;
   }
 
@@ -54,9 +55,9 @@ export const isButton = (link) => {
  * @param document
  */
 export const handleTable = (main, document) => {
-  const table = main.querySelector('table');
+  const tables = main.querySelectorAll('table');
 
-  if (table) {
+  tables.forEach((table) => {
     // determine proper EDS table-type
     let tableHeadline = 'Table (no header, no border)';
 
@@ -75,7 +76,7 @@ export const handleTable = (main, document) => {
     headlineRow.append(headlineData);
 
     table.prepend(headlineRow);
-  }
+  });
 };
 
 /**
@@ -84,9 +85,12 @@ export const handleTable = (main, document) => {
  * @param document
  */
 export const handleSidebar = (main, document) => {
-  const sidebar = main.querySelector('div.news-sidebar');
+  const originalSidebar = main.querySelector('div.news-sidebar');
 
-  if (sidebar) {
+  if (originalSidebar) {
+    // create a copy of the original sidebar-block to work with later on
+    const sidebar = originalSidebar.cloneNode(true);
+
     // add separator before the sidebar-content
     sidebar.prepend(document.createElement('hr'));
 
@@ -100,7 +104,9 @@ export const handleSidebar = (main, document) => {
 
     sidebar.append(table);
 
-    sidebar.append(document.createElement('hr'));
+    // remove the original sidebar and add the new one at the very last position
+    originalSidebar.remove();
+    main.append(sidebar);
   }
 };
 
@@ -155,6 +161,12 @@ export const handleLinks = (main, document, baseUrl) => {
       // make link absolute
       let href = link.getAttribute('href');
 
+      // if the link does not have a target: replace it with the text of the link
+      if (!href) {
+        link.outerHTML = link.innerText;
+        return;
+      }
+
       // replace relative urls
       if (href.charAt(0) === '/') {
         link.setAttribute('href', baseUrl + href);
@@ -187,7 +199,7 @@ export const handleLinks = (main, document, baseUrl) => {
 };
 
 /**
- * Handle 3-column grids by converting them to EDS thord-width Card Blocks
+ * Handle 3-column grids by converting them to EDS third-width Card Blocks
  * @param main
  * @param document
  */
@@ -208,22 +220,41 @@ export const handle3ColumnsGrid = (main, document) => {
       const imageDiv = document.createElement('div');
 
       // copy image to its own entry
-      const image = thirdWidthCard.querySelector('img').cloneNode(true);
+      const image = thirdWidthCard.querySelector('img');
 
-      const heroText = thirdWidthCard.querySelector('div.category-heroimage');
+      // check if there is any image present
+      if (image) {
+        // create a clone of the image-node to work with later-on
+        const imageClone = image.cloneNode(true);
 
-      imageDiv.append(image);
+        // check whether image is within a link
+        const imageParent = image.parentElement;
 
-      if (heroText) {
-        imageDiv.append(heroText);
+        if (imageParent.tagName === 'A') {
+          // remove the parent, that includes the link
+          imageParent.remove();
+        } else {
+          // remove only the image itself
+          image.remove();
+        }
+
+        const heroText = thirdWidthCard.querySelector('div.category-heroimage');
+
+        imageDiv.append(imageClone);
+
+        if (heroText) {
+          imageDiv.append(heroText);
+        }
+
+        cells.push(
+          [imageDiv, thirdWidthCard],
+        );
+      } else {
+        // Card with no image
+        cells.push(
+          [thirdWidthCard],
+        );
       }
-
-      // remove the image from the other content
-      thirdWidthCard.querySelector('img').remove();
-
-      cells.push(
-        [imageDiv, thirdWidthCard],
-      );
     });
 
     const resultTable = WebImporter.DOMUtils.createTable(cells, document);
@@ -361,7 +392,7 @@ export const handleGallerySlider = (main, document, baseUrl) => {
 
   if (gallerySlider) {
     const cells = [
-      ['Slider'],
+      ['Slider (Autostart, Desktop-1-Mobile-1)'],
     ];
     const slides = gallerySlider.querySelectorAll('li.item');
 
@@ -384,5 +415,153 @@ export const handleGallerySlider = (main, document, baseUrl) => {
     const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
     gallerySlider.replaceWith(resultTable);
+  }
+};
+
+export const handleTextBoxes = (main, document) => {
+  const textBoxes = main.querySelectorAll('div.alert-danger');
+
+  if (textBoxes) {
+    textBoxes.forEach((textBox) => {
+      const cells = [
+        ['Text-Box (red)'],
+        [textBox.innerHTML],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      textBox.replaceWith(resultTable);
+    });
+  }
+};
+
+export const handleFilterAndRows = (main, document) => {
+  // get filter-block and product-rows, ids are used as there is no other possibility
+  const filter = main.querySelector('div.element-dce_dceuid14');
+
+  // use id here, as the elements do not have another way to identify them
+  const rows = main.querySelectorAll('div.element-dce_dceuid12');
+
+  let parent;
+
+  const result = document.createElement('div');
+
+  if (filter) {
+    parent = filter.parentElement;
+
+    // handle filter-block
+    const images = filter.querySelectorAll('img.filter-img');
+
+    const imagesParagraph = document.createElement('p');
+
+    images.forEach((image) => {
+      imagesParagraph.append(image);
+    });
+
+    const filterCells = [
+      ['Filter'],
+      ['PS', 'slider', 'power_min,power_max', '%minSliderValue - %maxSliderValue PS (%minSliderValueKW - %maxSliderValueKW KW)'],
+      ['Marke', 'checkbox', 'brand', imagesParagraph],
+    ];
+
+    const filterResultTable = WebImporter.DOMUtils.createTable(filterCells, document);
+
+    result.append(filterResultTable);
+  }
+
+  // handle rows with product data
+  if (rows.length > 0) {
+    const rowCells = [
+      ['Rows'],
+      ['', '', '', '', 'power_min', 'power_max', 'brand'],
+    ];
+
+    rows.forEach((row) => {
+      // store parent
+      parent = row.parentElement;
+
+      // get the original-data from Typo3
+      const originalImageDiv = row.querySelector('div.image');
+      const originalContentDiv = row.querySelector('div.content');
+      const originalRecommendDiv = row.querySelector('div.recommend');
+
+      // perform modifications to original image-data
+      const originalImages = originalImageDiv.querySelectorAll('img');
+
+      // use the second image, if there is one (= the bigger mobile-image)
+      const originalImage = originalImages[originalImages.length - 1];
+
+      // create a new image tag in order to use the original jpg-value
+      const resultImage = document.createElement('img');
+
+      resultImage.src = originalImage.getAttribute('data-regular');
+
+      // perform modifications to original content data
+      const content = originalContentDiv;
+
+      // extract logo
+      const originalLogo = originalContentDiv.querySelector('img');
+
+      // extract data-value from logo
+      const brand = originalLogo.getAttribute('data-value');
+
+      // build-up new logo in order to use 'data-regular' of the image
+      const resultLogo = document.createElement('img');
+
+      resultLogo.src = originalLogo.getAttribute('data-regular');
+      resultLogo.alt = brand;
+
+      // remove original logo from the content
+      originalLogo.remove();
+
+      // extract power-data
+      let powerMin = originalContentDiv.querySelector('span[data-value=power-min]');
+
+      if (powerMin) {
+        powerMin = parseInt(powerMin.innerText, 10);
+      } else {
+        powerMin = '';
+      }
+
+      let powerMax = originalContentDiv.querySelector('span[data-value=power-max]');
+
+      if (powerMax) {
+        powerMax = parseInt(powerMax.innerText, 10);
+      } else {
+        powerMax = '';
+      }
+
+      // create own paragraph, add italic element around text of info-button
+      const infoButton = originalContentDiv.querySelector('a.info-btn');
+
+      const italicElement = document.createElement('em');
+      italicElement.append(infoButton.innerHTML);
+
+      const infoButtonParagraph = document.createElement('p');
+      infoButtonParagraph.append(italicElement);
+
+      infoButton.innerHTML = infoButtonParagraph.outerHTML;
+
+      // create own paragraph, add bold element around to text of contact-button
+      const contactButton = originalContentDiv.querySelector('a.contact-btn');
+
+      const boldElement = document.createElement('strong');
+      boldElement.append(contactButton.innerHTML);
+
+      const contactButtonParagraph = document.createElement('p');
+      contactButtonParagraph.append(boldElement);
+
+      contactButton.innerHTML = contactButtonParagraph.outerHTML;
+
+      // store modified data
+      rowCells.push(
+        [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
+      );
+    });
+    const rowResultTable = WebImporter.DOMUtils.createTable(rowCells, document);
+
+    result.append(rowResultTable);
+
+    parent.replaceWith(result);
   }
 };

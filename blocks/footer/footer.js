@@ -17,5 +17,12 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
+  // usercentrics settings button
+  const cookieLink = footer.querySelector('a[href$="#cookielink"]');
+  cookieLink.setAttribute('onClick', 'UC_UI.showSecondLayer();');
+  cookieLink.addEventListener('click', (event) => {
+    event.preventDefault();
+  });
+
   block.append(footer);
 }

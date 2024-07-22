@@ -12,7 +12,7 @@ import { betterLoadScript } from '../../scripts/load-resource.js';
  */
 function loadUsercentrics(id) {
   return loadThirdPartyScript(
-    'https://app.usercentrics.eu/browser-ui/latest/bundle.js',
+    'https://app.usercentrics.eu/browser-ui/latest/loader.js',
     {
       id: 'usercentrics-cmp',
       'data-settings-id': id,

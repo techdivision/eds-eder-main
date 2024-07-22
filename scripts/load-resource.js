@@ -83,7 +83,7 @@ function loadThirdPartyModule(name, callback) {
   Promise.all(
     [
       betterLoadCSS(`/styles/vendor/${name}.css`),
-      import(`../../../scripts/vendor/${name}.js`),
+      import(`/scripts/vendor/${name}.js`),
     ],
   )
     .then(callback);
@@ -99,7 +99,7 @@ function loadThirdPartyBundle(name, callback) {
   Promise.all(
     [
       betterLoadCSS(`/styles/vendor/${name}.css`),
-      betterLoadScript(`../../../scripts/vendor/${name}.js`),
+      betterLoadScript(`/scripts/vendor/${name}.js`),
     ],
   )
     .then(callback);
