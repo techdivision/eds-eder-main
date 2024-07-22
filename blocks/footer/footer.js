@@ -19,10 +19,12 @@ export default async function decorate(block) {
 
   // usercentrics settings button
   const cookieLink = footer.querySelector('a[href$="#cookielink"]');
-  cookieLink.setAttribute('onClick', 'UC_UI.showSecondLayer();');
-  cookieLink.addEventListener('click', (event) => {
-    event.preventDefault();
-  });
+  if (cookieLink) {
+    cookieLink.setAttribute('onClick', 'UC_UI.showSecondLayer();');
+    cookieLink.addEventListener('click', (event) => {
+      event.preventDefault();
+    });
+  }
 
   block.append(footer);
 }
