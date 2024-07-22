@@ -18,19 +18,11 @@ export default async function decorate(block) {
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
   // usercentrics settings button
-  footer.querySelector('a[href$="#cookielink"]')
-    .addEventListener('click', (event) => {
-      event.preventDefault();
-
-      // noinspection JSUnresolvedReference
-      if (typeof (window.UC_CI) === 'undefined') {
-        // eslint-disable-next-line no-console
-        console.error('Usercentrics has not been loaded!');
-      } else {
-        // noinspection JSUnresolvedReference
-        window.UC_UI.showSecondLayer();
-      }
-    });
+  const cookieLink = footer.querySelector('a[href$="#cookielink"]');
+  cookieLink.setAttribute('onClick', 'UC_UI.showSecondLayer();');
+  cookieLink.addEventListener('click', (event) => {
+    event.preventDefault();
+  });
 
   block.append(footer);
 }
