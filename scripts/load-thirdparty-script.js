@@ -9,6 +9,9 @@ function definePartytownConfig() {
     debug: getCurrentUrl()
       .includes('localhost'),
     lib: '/scripts/vendor/partytown/',
+    forward: [
+      ['dataLayer.push', { preserveBehavior: true }],
+    ]
   };
 }
 

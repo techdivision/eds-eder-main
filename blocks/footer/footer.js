@@ -17,13 +17,20 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
-  // Search for cookie a tag
-  footer.querySelectorAll('a').forEach((link) => {
-    // Add onclick function to cookie link
-    if (link.href.includes('#cookielink')) {
-      link.setAttribute('onclick', 'UC_UI.showSecondLayer();');
-    }
-  });
+  // usercentrics settings button
+  footer.querySelector('a[href$="#cookielink"]')
+    .addEventListener('click', (event) => {
+      event.preventDefault();
+
+      // noinspection JSUnresolvedReference
+      if (typeof (window.UC_CI) === 'undefined') {
+        // eslint-disable-next-line no-console
+        console.error('Usercentrics has not been loaded!');
+      } else {
+        // noinspection JSUnresolvedReference
+        window.UC_UI.showSecondLayer();
+      }
+    });
 
   block.append(footer);
 }
