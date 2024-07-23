@@ -1,4 +1,5 @@
 import { loadScript } from '../../scripts/aem.js';
+import { betterLoadScript } from '../../scripts/load-resource.js';
 
 const dataAlfidclUrl = 'https://app.alfright.eu/hosted/dps/alfidcl.js';
 
@@ -8,14 +9,9 @@ const dataAlfidclUrl = 'https://app.alfright.eu/hosted/dps/alfidcl.js';
  * @param {HTMLElement} block
  */
 export default async function decorate(block) {
-  const dataAlfidclKey = block.querySelector('p').innerHTML;
-  loadScript(dataAlfidclUrl, {}).then(() => {
+  const dataAlfidclKey = block.querySelector('p').textContent;
+  betterLoadScript(dataAlfidclUrl, { defer: true, 'alfidcl-script': true }).then(() => {
     const event = new Event('DOMContentLoaded');
-    document.head.insertAdjacentHTML(
-      'beforeend',
-      `<script src="${dataAlfidclUrl}" defer alfidcl-script></script>`,
-    );
-
     block.innerHTML = '<div data-alfidcl-type="dps" '
       + 'data-alfidcl-tenant="intrasys_scan" data-alfidcl-lang="de-de" '
       + `data-alfidcl-key="${dataAlfidclKey}"></div>`;
