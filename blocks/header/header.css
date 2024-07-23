@@ -513,6 +513,10 @@ header nav .mobile-menu li.is-visible > ul {
 
   @media screen and (width >= 900px) {
     display: block;
+    position: absolute;
+    top: var(--spacing-simple);
+    left: 0;
+    right: 0;
   }
 }
 
@@ -550,6 +554,10 @@ header nav .mobile-menu li.is-visible > ul {
 
 .breadcrumbs ol li:last-of-type {
   opacity: 1;
+}
+
+.section > .breadcrumbs +  .default-content-wrapper {
+  padding-top: var(--spacing-simple);
 }
 
 /* search */

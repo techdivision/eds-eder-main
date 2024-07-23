@@ -13,6 +13,8 @@
 :root {
   /* colors */
   --color-red: #ed1c24;
+  --color-green: #869d67;
+  --color-green-light: #f3f6ef;
   --color-gray-light: #e5e5e5;
   --color-gray: #999;
   --color-gray-dark: #4c4c4c;
@@ -194,7 +196,7 @@ button {
   display: inline-block;
   box-sizing: border-box;
   text-decoration: none;
-  padding: 10px 15px;
+  padding: 8px 15px;
   text-align: center;
   font-style: normal;
   font-weight: 600;
@@ -206,6 +208,7 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 0;
+  border: 2px solid var(--color-gray-darker);;
 }
 
 a.button:hover,
@@ -224,7 +227,6 @@ button:disabled:hover {
 a.button.secondary,
 button.secondary {
   background-color: unset;
-  border: 2px solid currentcolor;
   color: var(--text-color)
 }
 
@@ -249,12 +251,13 @@ main img {
 
 /* sections */
 main .section {
-  padding: 64px 16px;
+  position: relative;
+  padding: var(--spacing-double) var(--spacing-half);
 }
 
 @media (width >= 600px) {
   main .section {
-    padding: 64px 32px;
+    padding: var(--spacing-double) var(--spacing-simple);
   }
 }
 
