@@ -1,4 +1,3 @@
-import { loadScript } from '../../scripts/aem.js';
 import { betterLoadScript } from '../../scripts/load-resource.js';
 
 const dataAlfidclUrl = 'https://app.alfright.eu/hosted/dps/alfidcl.js';
