@@ -9,7 +9,7 @@ const dataAlfidclUrl = 'https://app.alfright.eu/hosted/dps/alfidcl.js';
  */
 export default async function decorate(block) {
   const dataAlfidclKey = block.querySelector('p').textContent;
-  betterLoadScript(dataAlfidclUrl, { defer: true, 'alfidcl-script': true }).then(() => {
+  betterLoadScript(dataAlfidclUrl, { defer: '', 'alfidcl-script': '' }).then(() => {
     const event = new Event('DOMContentLoaded');
     block.innerHTML = '<div data-alfidcl-type="dps" '
       + 'data-alfidcl-tenant="intrasys_scan" data-alfidcl-lang="de-de" '
