@@ -54,6 +54,13 @@
   background-color: var(--background-color);
   font-size: var(--body-font-size-xs);
   text-align: center;
+  padding-bottom: 32px;
+}
+
+.brands-container {
+  .brand-row:last-child {
+    padding-bottom: 8px;
+  }
 }
 
 .brands-container .brand-row:nth-child(2n) {
@@ -136,6 +143,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-bottom: 0;
   }
 }
 
