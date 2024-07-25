@@ -36,23 +36,27 @@ export default async function decorate(block) {
 
   // load without partytown, as CORS headers have not been set up correctly:
   /*
-    Access to fetch at 'https://app.alfright.eu/ext/dps/intrasys_scan/xxx' from origin 'xxx' has been blocked by CORS policy:
-    The 'Access-Control-Allow-Origin' header contains multiple values 'frame-ancestors 'self' http://www.xxx.de https://www.xxx.de http://*.xxx.de https://*.xxx.de', but only one is allowed.
-    Have the server send the header with a valid value, or, if an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
-  */
+    Access to fetch at 'https://app.alfright.eu/ext/dps/intrasys_scan/xxx' from origin 'xxx'
+      has been blocked by CORS policy:
+    The 'Access-Control-Allow-Origin' header contains multiple values 'frame-ancestors 'self'
+      http://www.xxx.de https://www.xxx.de http://*.xxx.de https://*.xxx.de',
+      but only one is allowed.
+    Have the server send the header with a valid value, or, if an opaque response serves your
+      needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+   */
   setTimeout(
     () => {
       betterLoadScript(
         'https://app.alfright.eu/hosted/dps/alfidcl.js',
         {
           defer: '',
-          'alfidcl-script': ''
-        }
+          'alfidcl-script': '',
+        },
       )
         .then(() => {
           document.dispatchEvent(new Event('InitAlficdl'));
         });
     },
-    500
+    500,
   );
 }
