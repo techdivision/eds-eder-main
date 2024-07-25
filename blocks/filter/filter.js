@@ -111,6 +111,7 @@ function retrieveFilterItems(filters) {
   const allFilterFields = filters.flatMap((filter) => filter.filterFields);
 
   const fields = allFilterFields.map((field) => {
+    // remove whitespaces from field
     const cleanField = field.replace(/\s/g, '');
     return `[data-${cleanField}]`;
   }).join(', ');
