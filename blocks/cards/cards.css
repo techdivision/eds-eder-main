@@ -109,6 +109,17 @@
   grid-gap: var(--spacing-simple);
 }
 
+/* styling half-width cards with brand logo */
+.cards.half-width .cards-card-image + .cards-card-image {
+  position: absolute;
+  right: var(--spacing-simple);
+  margin-top: var(--spacing-simple);
+}
+
+.cards.half-width .cards-card-image + .cards-card-image + .cards-card-body {
+  padding-top: var(--spacing-double);
+}
+
 @media (width > 600px) {
   .cards > ul > li > .cards-card-body > .button-container {
     position: absolute;

@@ -28,27 +28,33 @@
 
 .rows .recommendation p:first-child {
   position: relative;
-  padding-left: 40px;
+  padding-left: 45px;
 }
 
 .rows .recommendation p:first-child::before {
-  content: url('../../icons/temp.svg');
+  content: url('../../icons/award-green.svg');
   position: absolute;
   left: 0;
-  width: 25px;
+  top: -10px;
+  width: 45px;
 }
 
 .rows .recommendation ul {
-  padding-left: var(--spacing-simple);
+  padding-left: 0;
 }
 
-/* @todo use correct svg icon */
 .rows .recommendation li {
-  list-style-image: url('../../icons/temp.svg');
+  list-style-type: none;
+  position: relative;
+  padding-left: 45px;
 }
 
-.rows .recommendation li::marker {
-  font-size: 25px;
+.rows .recommendation li::before {
+  content: url('../../icons/checkmark-green.svg');
+  position: absolute;
+  left: 5px;
+  top: -2px;
+  width: 30px;
 }
 
 .rows .content {

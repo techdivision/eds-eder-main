@@ -45,10 +45,13 @@ function buildSidebar(main) {
     // check for hero image
     const picture = main.querySelector('picture');
     if (picture) {
-      const section = document.createElement('div');
-      section.classList.add('section', 'sidebar-hero');
-      section.append(picture);
-      main.prepend(section);
+      // if the first element contains the picture, it is a hero image across both sections
+      if (main.children[0].contains(picture)) {
+        const section = document.createElement('div');
+        section.classList.add('section', 'sidebar-hero');
+        section.append(picture);
+        main.prepend(section);
+      }
     }
   }
 }
