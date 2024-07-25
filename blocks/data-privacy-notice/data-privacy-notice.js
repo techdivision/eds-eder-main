@@ -1,5 +1,5 @@
 import { getCurrentLanguage } from '../../scripts/i18n.js';
-import loadThirdpartyScript from '../../scripts/load-thirdparty-script';
+import { betterLoadScript } from '../../scripts/load-resource.js';
 
 /**
  * Get language
@@ -32,6 +32,12 @@ export default async function decorate(block) {
   block.innerHTML = '';
   block.appendChild(privacyDiv);
 
-  loadThirdpartyScript('https://app.alfright.eu/hosted/dps/alfidcl.js')
+  betterLoadScript(
+    'https://app.alfright.eu/hosted/dps/alfidcl.js',
+    {
+      defer: '',
+      'alfidcl-script': ''
+    }
+  )
     .then();
 }
