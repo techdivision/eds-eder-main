@@ -10,7 +10,8 @@ function getLanguage() {
   const language = getCurrentLanguage();
   if (language === 'fr') {
     return 'fr-fr';
-  } else if (language === 'en') {
+  }
+  if (language === 'en') {
     return 'en-en';
   }
   return 'de-de';
