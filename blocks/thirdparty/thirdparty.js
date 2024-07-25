@@ -59,19 +59,23 @@ function loadAdobeAnalytics(url) {
     let loadScriptPromise = null;
 
     // find current URL for environment
-    adobeUrls.forEach((adobeUrl) => {
+    adobeUrls.some((adobeUrl) => {
       if (adobeUrl.includes('development')) {
         if (currentUrl.includes('localhost')) {
           loadScriptPromise = loadAdobeAnalytics(adobeUrl);
+          return true;
         }
       } else if (adobeUrl.includes('staging')) {
         if (currentUrl.includes('hlx.page')) {
           loadScriptPromise = loadAdobeAnalytics(adobeUrl);
+          return true;
         }
       } else if (!currentUrl.includes('localhost')
         && !currentUrl.includes('hlx.page')) {
         loadScriptPromise = loadAdobeAnalytics(adobeUrl);
+        return true;
       }
+      return false;
     });
 
     if (loadScriptPromise) {
@@ -79,7 +83,7 @@ function loadAdobeAnalytics(url) {
     }
     // eslint-disable-next-line no-console
     console.error('No valid Adobe Analytics URL found for environment', adobeUrls, currentUrl);
-    return Promise.resolve();
+    return Promise.reject();
   }
 
   // check if URL is valid
@@ -87,7 +91,7 @@ function loadAdobeAnalytics(url) {
   if (!regex.test(url)) {
     // eslint-disable-next-line no-console
     console.error('URL is not a valid Adobe Analytics URL', url);
-    return Promise.resolve();
+    return Promise.reject();
   }
 
   // load URL
