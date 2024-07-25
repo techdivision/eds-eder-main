@@ -22,7 +22,7 @@ export default async function decorate(block) {
   if (cookieLink) {
     cookieLink.setAttribute(
       'onClick',
-      'typeof(UC_UI) !== \'undefined\' && UC_UI.showSecondLayer()'
+      'typeof(UC_UI) !== \'undefined\' && UC_UI.showSecondLayer()',
     );
     cookieLink.addEventListener('click', (event) => {
       event.preventDefault();
