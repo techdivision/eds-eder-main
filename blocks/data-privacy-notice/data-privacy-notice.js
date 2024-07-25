@@ -53,6 +53,6 @@ export default async function decorate(block) {
           document.dispatchEvent(new Event('InitAlficdl'));
         });
     },
-    200
+    500
   );
 }
