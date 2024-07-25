@@ -39,5 +39,7 @@ export default async function decorate(block) {
       'alfidcl-script': ''
     }
   )
-    .then();
+    .then(() => {
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
 }
