@@ -40,6 +40,6 @@ export default async function decorate(block) {
     }
   )
     .then(() => {
-      document.dispatchEvent(new Event('DOMContentLoaded'));
+      document.dispatchEvent(new Event('InitAlficdl'));
     });
 }
