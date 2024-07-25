@@ -11,8 +11,12 @@ import { betterLoadScript } from '../../scripts/load-resource.js';
  * @returns {Promise}
  */
 function loadUsercentrics(id) {
+  /*
+    FIXME loader.js works for settings button, bundle.js doesn't, but loader.js
+    will lead to lighthouse score issues
+   */
   return loadThirdPartyScript(
-    'https://app.usercentrics.eu/browser-ui/latest/loader.js',
+    'https://app.usercentrics.eu/browser-ui/latest/bundle.js',
     {
       id: 'usercentrics-cmp',
       'data-settings-id': id,
