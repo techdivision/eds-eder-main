@@ -209,7 +209,7 @@ function getItemsForCurrentPage(items, itemsPerPage) {
  * @returns {Array}
  */
 function sortItems(items) {
-  items.sort((a, b) => a.lastModified - b.lastModified);
+  items.sort((a, b) => b.lastModified - a.lastModified);
   return items;
 }
 
