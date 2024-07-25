@@ -52,7 +52,9 @@ function transformToMetadata(block) {
     [...row.children].forEach((column, columnIndex) => {
       const isMetadataColumn = metadataAttributeNames[columnIndex] !== null;
       if (isMetadataColumn) {
-        row.setAttribute(`data-${metadataAttributeNames[columnIndex]}`, column.textContent);
+        // remove whitespaces from attribute name
+        const cleanName = metadataAttributeNames[columnIndex].replace(/\s/g, '');
+        row.setAttribute(`data-${cleanName}`, column.textContent);
         column.remove();
       }
     });
@@ -88,7 +90,6 @@ function transformRowsToData(keys, block) {
       if (key === null) {
         return;
       }
-
       // set data
       let content = column.textContent.trim();
       if (keyConfiguration[key] === 'options') {
