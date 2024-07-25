@@ -94,7 +94,8 @@ function transformRowsToData(keys, block) {
       let content = column.textContent.trim();
       if (keyConfiguration[key] === 'options') {
         content = column.textContent.trim()
-          .split(',');
+          .split(',')
+          .map((contentItem) => contentItem.replace(/\s/g, ''));
       } else if (keyConfiguration[key] === 'htmlOptions') {
         content = Array.from(column.querySelectorAll('*:not(:has(*)):not(img,source), picture'));
       }
