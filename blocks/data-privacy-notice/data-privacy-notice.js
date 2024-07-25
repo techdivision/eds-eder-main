@@ -1,5 +1,5 @@
 import { getCurrentLanguage } from '../../scripts/i18n.js';
-import loadThirdpartyScript from '../../scripts/load-thirdparty-script.js';
+import { betterLoadScript } from '../../scripts/load-resource.js';
 
 /**
  * Get language
@@ -22,8 +22,10 @@ function getLanguage() {
  * @param {HTMLElement} block
  */
 export default async function decorate(block) {
+  // get key
   const privacyKey = block.querySelector('p').textContent;
 
+  // construct div
   const privacyDiv = document.createElement('div');
   privacyDiv.setAttribute('data-alfidcl-type', 'dps');
   privacyDiv.setAttribute('data-alfidcl-tenant', 'intrasys_scan');
@@ -32,14 +34,25 @@ export default async function decorate(block) {
   block.innerHTML = '';
   block.appendChild(privacyDiv);
 
-  loadThirdpartyScript(
-    'https://app.alfright.eu/hosted/dps/alfidcl.js',
-    {
-      defer: '',
-      'alfidcl-script': ''
-    }
-  )
-    .then(() => {
-      document.dispatchEvent(new Event('InitAlficdl'));
-    });
+  // load without partytown, as CORS headers have not been set up correctly:
+  /*
+    Access to fetch at 'https://app.alfright.eu/ext/dps/intrasys_scan/xxx' from origin 'xxx' has been blocked by CORS policy:
+    The 'Access-Control-Allow-Origin' header contains multiple values 'frame-ancestors 'self' http://www.xxx.de https://www.xxx.de http://*.xxx.de https://*.xxx.de', but only one is allowed.
+    Have the server send the header with a valid value, or, if an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+  */
+  setTimeout(
+    () => {
+      betterLoadScript(
+        'https://app.alfright.eu/hosted/dps/alfidcl.js',
+        {
+          defer: '',
+          'alfidcl-script': ''
+        }
+      )
+        .then(() => {
+          document.dispatchEvent(new Event('InitAlficdl'));
+        });
+    },
+    200
+  );
 }
