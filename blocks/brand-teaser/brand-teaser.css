@@ -141,7 +141,7 @@
 
 @media (width >= 900px) {
   .brand-teaser-header {
-    top: 30%
+    top: 30%;
   }
 
   .brand-teaser-header::after {

@@ -64,7 +64,7 @@ function buildSidebar(main) {
 function buildAutoBlocks(main) {
   try {
     // BEGIN CHANGE TechDivision
-    // Removed auto blocking for hero blocks
+    // removed auto blocking for hero blocks
     buildSidebar(main);
     // END CHANGE TechDivision
   } catch (error) {

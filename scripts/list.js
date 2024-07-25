@@ -1,6 +1,7 @@
 import ffetch from './vendor/ffetch.js';
 import { getCurrentUrl, getUrlParam, setUrlParam } from './helpers.js';
 import { loadPlaceholders, ts } from './i18n.js';
+import { getTenantUrl } from './tenants.js';
 
 /**
  * Get current page
@@ -27,10 +28,19 @@ function setCurrentPage(page) {
 /**
  * Get filter block
  *
+ * @param {HTMLElement} block
  * @returns {Element}
  */
-function getFilterBlock() {
-  return document.querySelector('.filter.block');
+function getFilterBlock(block) {
+  // define scope
+  let scope = document;
+  const currentSection = block.closest('.section');
+  if (currentSection) {
+    scope = currentSection;
+  }
+
+  // get filter block
+  return scope.querySelector('.filter.block');
 }
 
 /**
@@ -79,20 +89,18 @@ function createPaginationListItem(page, label) {
 /**
  * Render pagination
  *
+ * @param {HTMLElement} block
  * @param {Array} items
  * @param {Number|String} page
  * @param {Number|String} limit
- * @returns {Promise<HTMLElement>}
+ * @returns {Promise}
  */
-async function renderPagination(items, page, limit) {
+async function renderPagination(block, items, page, limit) {
   // ensure placeholders have been loaded
   await loadPlaceholders();
 
   // find filter block
-  const filterBlock = getFilterBlock();
-  if (!filterBlock) {
-    return null;
-  }
+  const filterBlock = getFilterBlock(block);
 
   // get filtered items
   const filteredItems = getFilteredItems(items);
@@ -103,7 +111,7 @@ async function renderPagination(items, page, limit) {
 
   // check limit
   if (!limit || filteredItems.length <= limit) {
-    return listPagination;
+    return null;
   }
 
   // calculate page number
@@ -163,7 +171,11 @@ async function renderPagination(items, page, limit) {
     const dataPage = event.target.getAttribute('data-page');
     if (dataPage) {
       setCurrentPage(dataPage);
-      filterBlock.dispatchEvent(new Event('renderFilters'));
+      if (filterBlock) {
+        filterBlock.dispatchEvent(new Event('renderFilters'));
+      } else {
+        block.dispatchEvent(new Event('pageChanged'));
+      }
       event.preventDefault();
     }
   });
@@ -191,15 +203,69 @@ function getItemsForCurrentPage(items, itemsPerPage) {
 }
 
 /**
+ * Sort items
+ *
+ * @param {Array} items
+ * @returns {Array}
+ */
+function sortItems(items) {
+  items.sort((a, b) => a.lastModified - b.lastModified);
+  return items;
+}
+
+/**
  * Fetch list items
  *
  * @param {String} listType
+ * @param {String} [baseUrl]
+ * @returns {Promise}
+ */
+async function fetchListItems(listType, baseUrl) {
+  return ffetch(`${baseUrl || '/'}query-index.json`)
+    .sheet(listType)
+    .all()
+    // do not add calculation errors
+    .then((items) => items.filter((item) => item.path && item.path !== '#CALC!'))
+    .then(sortItems);
+}
+
+/**
+ * Fetch list items for tenant
+ *
+ * @param {String} listType
+ * @param {String} tenant
+ * @returns {Promise}
+ */
+async function fetchListItemsForTenant(listType, tenant) {
+  // add base url
+  return fetchListItems(listType, getTenantUrl(tenant))
+    .then((tenantItems) => tenantItems.map((item) => ({
+      ...item,
+      path: getTenantUrl(tenant, item.path),
+      image: getTenantUrl(tenant, item.image),
+    })));
+}
+
+/**
+ * Fetch list items from given tenants
+ *
+ * @param {String} listType
+ * @param {Array} tenants
+ * @param {Array} [preloadedItems]
  * @returns {Promise<Array>}
  */
-async function fetchListItems(listType) {
-  return ffetch('/query-index.json')
-    .sheet(listType)
-    .all();
+async function fetchTenantsListItems(listType, tenants, preloadedItems) {
+  let items = preloadedItems || [];
+  const tenantPromises = tenants
+    .map((tenant) => fetchListItemsForTenant(listType, tenant)
+      .then((tenantItems) => {
+        // add to list
+        items = items.concat(tenantItems);
+      }));
+
+  // sort accumulated items by lastModified
+  return Promise.allSettled(tenantPromises)
+    .then(() => sortItems(items));
 }
 
 /**
@@ -231,7 +297,7 @@ function renderPlaceholders(block, renderer, limit) {
  */
 async function renderList(block, renderer, items, limit) {
   // get pagination
-  const pagination = await renderPagination(items, getCurrentPage(), limit);
+  const pagination = await renderPagination(block, items, getCurrentPage(), limit);
 
   // get items for current page
   let relevantItems = items;
@@ -261,8 +327,8 @@ export {
   setCurrentPage,
   getItemsForCurrentPage,
   fetchListItems,
+  fetchTenantsListItems,
   getFilterBlock,
-  renderPagination,
   renderPlaceholders,
   renderList,
 };
