@@ -2,7 +2,7 @@ indices:
   # events
   events:
     include:
-      - /news/**
+      - /events/**
       - /newstermine/veranstaltungen/**
       - /aktuelles/landtechnik-aktuell/termine/**
     target: /query-index.xlsx
