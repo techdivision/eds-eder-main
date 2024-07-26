@@ -154,8 +154,15 @@ function getDirectTextContent(menuItem) {
     .join(' ');
 }
 
-function buildBreadcrumbsFromNavTree(nav, currentUrl) {
+/**
+ * Build breadcrumbs from nav tree
+ *
+ * @param {HTMLElement} nav
+ * @returns {*[]}
+ */
+function buildBreadcrumbsFromNavTree(nav) {
   const crumbs = [];
+  const currentUrl = getCurrentUrl();
   const homeUrl = document.querySelector('.nav-logo a').href;
 
   let menuItem = Array.from(nav.querySelectorAll('a'))
@@ -192,11 +199,14 @@ function buildBreadcrumbsFromNavTree(nav, currentUrl) {
   return crumbs;
 }
 
-function buildBreadcrumbs() {
-  const breadcrumbs = document.createElement('nav');
-  breadcrumbs.className = 'breadcrumbs';
-
-  const crumbs = buildBreadcrumbsFromNavTree(document.querySelector('.nav-sections'), document.location.href);
+/**
+ * Build breadcrumbs
+ *
+ * @param {HTMLElement} breadcrumbsElement
+ * @returns {void}
+ */
+function buildBreadcrumbs(breadcrumbsElement) {
+  const crumbs = buildBreadcrumbsFromNavTree(document.querySelector('.nav-sections'));
 
   const ol = document.createElement('ol');
   ol.append(...crumbs.map((item) => {
@@ -215,8 +225,7 @@ function buildBreadcrumbs() {
     return li;
   }));
 
-  breadcrumbs.append(ol);
-  return breadcrumbs;
+  breadcrumbsElement.append(ol);
 }
 
 /**
@@ -259,6 +268,21 @@ function mobileMenu(navContainer) {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
+  // append empty breadcrumb element to reserve space (CLS)
+  const breadcrumbElement = document.createElement('nav');
+  breadcrumbElement.classList.add('breadcrumbs');
+  if (getMetadata('breadcrumbs')
+    .toLowerCase() === 'true') {
+    const main = document.getElementsByTagName('main')[0];
+    const firstSection = main.querySelector('.section');
+
+    if (firstSection) {
+      firstSection.prepend(breadcrumbElement);
+    } else {
+      main.prepend(breadcrumbElement);
+    }
+  }
+
   // load nav as fragment
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, getCurrentUrl()).pathname : '/nav';
@@ -340,16 +364,10 @@ export default async function decorate(block) {
   isDesktop.addEventListener('change', () => mobileMenu(nav.querySelector('.pre-header .section .default-content-wrapper > ul > li > ul')));
   isDesktop.addEventListener('change', () => mobileMenu(nav.querySelector('.nav-sections .default-content-wrapper > ul')));
 
+  // load breadcrumbs
   if (getMetadata('breadcrumbs')
     .toLowerCase() === 'true') {
-    await loadPlaceholders();
-    const main = document.getElementsByTagName('main')[0];
-    const firstSection = main.querySelector('.section');
-
-    if (firstSection) {
-      firstSection.prepend(buildBreadcrumbs());
-    } else {
-      main.prepend(buildBreadcrumbs());
-    }
+    loadPlaceholders()
+      .then(() => buildBreadcrumbs(breadcrumbElement));
   }
 }
