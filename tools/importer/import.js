@@ -14,6 +14,10 @@ import {
   handleGallerySlider,
   handleTextBoxes,
   handleFilterAndRows,
+  handleImagesInText,
+  handleTextPic,
+  handleBrs,
+  handleContacts,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -46,6 +50,9 @@ export default {
     // handle tables first in order to avoid re-adding table-markup to migrated blocks
     handleTable(main, document);
 
+    // handle image-slider before modifying image-urls in general
+    handleGallerySlider(main, document, baseUrl);
+
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
     handle3ColumnsGrid(main, document);
@@ -54,9 +61,12 @@ export default {
     handleIcons(main);
     handleIframes(main, document);
     handleAccordions(main, document);
-    handleGallerySlider(main, document, baseUrl);
     handleTextBoxes(main, document);
     handleFilterAndRows(main, document);
+    handleImagesInText(main, document);
+    handleTextPic(main, document);
+    handleBrs(main, document);
+    handleContacts(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 
