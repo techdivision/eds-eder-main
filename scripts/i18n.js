@@ -33,7 +33,7 @@ async function loadPlaceholders() {
     [
       fetchPlaceholders(),
       fetchPlaceholders(getCurrentPlaceholderLanguage()),
-    ]
+    ],
   );
 }
 
