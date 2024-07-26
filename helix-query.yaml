@@ -5,7 +5,7 @@ indices:
       - /news/**
       - /newstermine/veranstaltungen/**
       - /aktuelles/landtechnik-aktuell/termine/**
-    target: /query-index.json
+    target: /query-index.xlsx
     properties:
       startDate:
         select: main .dates > div:nth-of-type(1) > div:nth-of-type(1)
