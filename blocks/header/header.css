@@ -503,7 +503,6 @@ header nav .mobile-menu li.is-visible > ul {
 .breadcrumbs {
   width: 100%;
   max-width: var(--page-width);
-  height: var(--body-line-height-s);
   overflow: hidden;
   margin: 0 auto;
   font-size: var(--body-font-size-s);
