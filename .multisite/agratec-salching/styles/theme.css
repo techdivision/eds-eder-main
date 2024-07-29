@@ -1,0 +1,38 @@
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+:root {
+  /* colors */
+  --color-red: #ed1c24;
+  --color-green: #869d67;
+  --color-green-light: #f3f6ef;
+  --color-gray-light: #e5e5e5;
+  --color-gray: #999;
+  --color-gray-dark: #4c4c4c;
+  --color-gray-darker: #303030;
+  --color-black: #000;
+  --color-white: #fff;
+  --color-blue-agratec: #00529c;
+  --background-color: var(--color-white);
+  --light-color: #eee;
+  --dark-color: #ccc;
+  --text-color: var(--color-black);
+  --text-color-reverse: var(--color-white);
+
+  /* theme vars */
+  --link-color: var(--color-blue-agratec);
+  --button-color: var(--text-color-reverse);
+  --button-color-hover: var(--color-blue-agratec);
+  --button-background: var(--color-blue-agratec);
+  --button-background-hover: var(--color-white);
+  --button-border: var(--color-blue-agratec);
+}
