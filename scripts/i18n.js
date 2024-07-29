@@ -26,11 +26,15 @@ function getCurrentPlaceholderLanguage() {
 /**
  * Load placeholders
  *
- * @returns {Promise<void>}
+ * @returns {Promise}
  */
 async function loadPlaceholders() {
-  await fetchPlaceholders();
-  await fetchPlaceholders(getCurrentPlaceholderLanguage());
+  return Promise.all(
+    [
+      fetchPlaceholders(),
+      fetchPlaceholders(getCurrentPlaceholderLanguage()),
+    ],
+  );
 }
 
 /**

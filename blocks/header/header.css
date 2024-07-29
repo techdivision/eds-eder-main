@@ -501,18 +501,15 @@ header nav .mobile-menu li.is-visible > ul {
 
 /* breadcrumbs */
 .breadcrumbs {
-  display: none;
   width: 100%;
-  padding: 0 32px;
   max-width: var(--page-width);
-  height: var(--body-line-height-s);
   overflow: hidden;
   margin: 0 auto;
   font-size: var(--body-font-size-s);
   background: none;
 
   @media screen and (width >= 900px) {
-    display: block;
+    padding: 0 32px;
     position: absolute;
     top: var(--spacing-simple);
     left: 0;
@@ -556,7 +553,7 @@ header nav .mobile-menu li.is-visible > ul {
   opacity: 1;
 }
 
-.section > .breadcrumbs +  .default-content-wrapper {
+.section > .breadcrumbs + .default-content-wrapper {
   padding-top: var(--spacing-simple);
 }
 

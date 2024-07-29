@@ -360,6 +360,15 @@ header .nav-logo picture + br + a {
   display: none;
 }
 
+/* breadcrumbs */
+.breadcrumbs {
+  height: var(--body-line-height-s);
+
+  @media screen and (width >= 900px) {
+    position: absolute;
+  }
+}
+
 /* chevron */
 .has-chevron {
   position: relative;
