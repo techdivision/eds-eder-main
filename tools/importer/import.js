@@ -5,6 +5,7 @@ import {
   handleTable,
   handleTopImage,
   handleLinks,
+  handle2ColumnsGrid,
   handle3ColumnsGrid,
   handleSidebar,
   handleImages,
@@ -55,6 +56,7 @@ export default {
 
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
+    handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
     handleSidebar(main, document);
     handleImages(main);

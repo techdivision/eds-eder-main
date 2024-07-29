@@ -246,6 +246,73 @@ export const handleLinks = (main, document, baseUrl) => {
 };
 
 /**
+ * Handle 2-column grids by converting them to EDS half-width Cards
+ * @param main
+ * @param document
+ */
+export const handle2ColumnsGrid = (main, document) => {
+  // get parent-element
+  const parent = main.querySelector('div.products-new-mainpage');
+
+  if (parent) {
+    const result = document.createElement('div');
+
+    // add headline to result, if there is any
+    const headline = parent.querySelector('h2');
+
+    if (headline) {
+      result.append(headline);
+    }
+
+    // handle the product-entries itself
+    const originalLinks = parent.querySelectorAll('a');
+
+    if (originalLinks.length > 0) {
+      const cells = [
+        ['Cards (half-width)'],
+      ];
+
+      originalLinks.forEach((originalLink) => {
+        // handle image
+        const image = originalLink.querySelector('img');
+
+        // handle content
+        const originalContent = originalLink.querySelector('div.attributes');
+
+        const newContent = document.createElement('div');
+
+        const logo = originalContent.querySelector('img');
+        const productHeadline = originalContent.querySelector('h3');
+        const productDescription = originalContent.querySelector('p.description');
+
+        /*
+        In Typo3 the link is set on the entire container, instead it should go on "price",
+        which is displayed as a link in Typo3
+        */
+        const productPrice = originalContent.querySelector('span.price');
+
+        const newLink = document.createElement('a');
+        newLink.href = originalLink.href;
+        newLink.append(productPrice);
+
+        newContent.append(productHeadline);
+        newContent.append(productDescription);
+        newContent.append(newLink);
+
+        cells.push(
+          [image, logo, newContent],
+        );
+      });
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      result.append(resultTable);
+    }
+    parent.replaceWith(result);
+  }
+};
+
+/**
  * Handle 3-column grids by converting them to EDS third-width Card Blocks
  * @param main
  * @param document
