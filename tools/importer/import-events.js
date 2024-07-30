@@ -14,7 +14,6 @@ import {
   handleAccordions,
   handleGallerySlider,
   handleContacts,
-  handleTextBoxes,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -30,24 +29,22 @@ const removeGenericContent = (main) => {
     '.breadcrumb',
     '.visible-xs',
     '.visible-ma-button',
-    'p.text-muted',
-    'div.news-backlink-wrap',
   ]);
 };
 
 const initAdditionalData = () => {
-  // cache news metadata sheet for news imports
+  // cache events metadata sheet for events imports
   const request = new XMLHttpRequest();
   request.open(
     'GET',
-    'https://main--eds-eder-main--techdivision.hlx.page/migration/news-metadata.json',
+    'https://main--eds-eder-main--techdivision.hlx.page/migration/events-metadata.json',
     false,
   );
   request.overrideMimeType('text/json; UTF-8');
   request.send(null);
 
   if (request.status === 200) {
-    window.newsList = JSON.parse(request.responseText).data;
+    window.eventsList = JSON.parse(request.responseText).data;
   }
 };
 
@@ -55,62 +52,50 @@ const initAdditionalData = () => {
  * Handles metadata, by migrating the default entries and extracting the news-specific entries.
  * @param main
  * @param document
- * @param news
- * @param html
+ * @param event
  */
-const handleMetadata = (main, document, news, html) => {
+const handleMetadata = (main, document, event) => {
   // get regular metadata as its original done in WebImporter.rules.createMetadata
   const meta = WebImporter.Blocks.getMetadata(document);
 
-  /*
-   * Extend metadata with custom entries
-   * The original HTML is used here as EDS already cleanup the HTML-markup in 'document'
-   */
-  const parser = new DOMParser();
-
-  const originalHtmlObject = parser.parseFromString(html, 'text/html');
-
-  const originalStructuredDataSection = originalHtmlObject.querySelector('script[type="application/ld+json"]');
-
-  const structuredDataJson = JSON.parse(originalStructuredDataSection.innerHTML);
-
-  // extract preview-image
-  if (structuredDataJson && structuredDataJson.image && structuredDataJson.image.url) {
+  // prefix url from typo3-dump
+  if (event.preview_image) {
+    // prefix url from typo3-dump
+    const previewImage = `/fileadmin${event.preview_image}`;
     // create img-tag in order to allow administration of image, and not only the url
     const image = document.createElement('img');
-
-    const previewImageUrl = new URL(structuredDataJson.image.url);
-
-    image.setAttribute('src', previewImageUrl.pathname);
+    image.setAttribute('src', previewImage);
 
     meta.preview_image = image;
   }
 
-  // extract publication-date
-  if (structuredDataJson && structuredDataJson.datePublished) {
-    const publicationDateObject = new Date(structuredDataJson.datePublished);
-
-    const month = (publicationDateObject.getMonth() + 1).toLocaleString(
-      'en-US',
-      { minimumIntegerDigits: 2, useGrouping: false },
-    );
-    const day = publicationDateObject.getDate().toLocaleString(
-      'en-US',
-      { minimumIntegerDigits: 2, useGrouping: false },
-    );
-
-    meta.date_published = `${day}.${month}.${publicationDateObject.getFullYear()}`;
-  }
-
-  meta.section = news.section || '';
-
-  meta.location = news.location || '';
+  meta.section = event.section || '';
 
   // create table for metadata and append it like it's done in WebImporter.rules.createMetadata
   if (Object.keys(meta).length > 0) {
     const block = WebImporter.Blocks.getMetadataBlock(document, meta);
     main.append(block);
   }
+};
+
+/**
+ * Removes the link back to the event overview-page,
+ * as it should come from the implementation not the content.
+ * @param main
+ */
+const removeEventsOverviewLink = (main) => {
+  const sidebar = main.querySelector('div.news-sidebar');
+
+  const buttons = sidebar.querySelectorAll('div.coa-button');
+
+  buttons.forEach((button) => {
+    // check for text within the button - unfortunately there is no other way
+    const buttonText = button.innerText;
+
+    if (buttonText.includes('Weitere Events')) {
+      button.remove();
+    }
+  });
 };
 
 /**
@@ -129,6 +114,44 @@ const generateDocumentPath = (url) => {
     .replace(/[^a-z0-9/]/gm, '-');
 };
 
+const handleDates = (main, document) => {
+  const datesWrapper = main.querySelector('div.dates-wrapper');
+
+  if (datesWrapper) {
+    // extract date from original String
+    const firstDate = datesWrapper.querySelector('div.first-date');
+    const firstDateSections = firstDate.innerHTML.split(',');
+    const extractedFirstDate = firstDateSections[1].trim();
+
+    const firstTime = datesWrapper.querySelector('div.first-time');
+    const firstTimeSections = firstTime.innerHTML.split(' ');
+    const extractedFirstTime = firstTimeSections[1].trim();
+
+    const secondDate = datesWrapper.querySelector('div.second-date');
+    const secondDateSections = secondDate.innerHTML.split(',');
+    const extractedSecondDate = secondDateSections[1].trim();
+
+    const secondTime = datesWrapper.querySelector('div.second-time');
+    const secondTimeSections = secondTime.innerHTML.split(' ');
+    const extractedSecondTime = secondTimeSections[1].trim();
+
+    const cells = [
+      ['Dates'],
+      [`${extractedFirstDate} ${extractedFirstTime}`],
+    ];
+
+    if (extractedSecondDate && extractedSecondTime) {
+      cells.push(
+        [`${extractedSecondDate} ${extractedSecondTime}`],
+      );
+    }
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    datesWrapper.replaceWith(resultTable);
+  }
+};
+
 export default {
   transform: ({
     url,
@@ -137,7 +160,7 @@ export default {
     html,
   }) => {
     // load additional data (the data that is not present in the HTML-markup)
-    if (!window.newsList) {
+    if (!window.eventsList) {
       initAdditionalData();
     }
 
@@ -148,31 +171,32 @@ export default {
 
     const pathSegment = originalUrlSections[originalUrlSections.length - 2];
 
-    const news = window.newsList.find((entry) => entry.path_segment === pathSegment);
+    const event = window.eventsList.find((entry) => entry.path_segment === pathSegment);
 
     // make sure additional data is present
-    if (!news) {
+    if (!event) {
       /* eslint-disable no-console */
-      console.log(`No import can take place as no additional data was found for the news with path-segment '${pathSegment}'`);
+      console.log(`No import can take place as no additional data was found for the event with path-segment '${pathSegment}'`);
       /* eslint-enable no-console */
       return [];
     }
 
-    // determine whether the news should be imported
-    if (!shouldBeImported(news, originalUrl)) {
+    // do not import if the section of the news does not match the section of the import
+    if (!shouldBeImported(event, originalUrl)) {
       return [];
     }
 
     const main = document.body;
 
     removeGenericContent(main);
+    removeEventsOverviewLink(main);
 
     const baseUrl = determineEdsBaseUrl(params);
 
     // handle tables first in order to avoid re-adding table-markup to migrated blocks
     handleTable(main, document);
 
-    // handle image-slider before modidying image-urls in general
+    // handle image-slider before modifying image-urls in general
     handleGallerySlider(main, document, baseUrl);
 
     handleTopImage(main, document);
@@ -183,12 +207,13 @@ export default {
     handleIcons(main);
     handleIframes(main, document);
     handleAccordions(main, document);
-
-    handleTextBoxes(main, document);
     handleContacts(main, document);
 
+    // handel events' custom block: dates
+    handleDates(main, document);
+
     // handle both custom and default metadata
-    handleMetadata(main, document, news, html);
+    handleMetadata(main, document, event, html);
 
     // get target document-path like it is done during the 1:1 import
     const path = generateDocumentPath(url);

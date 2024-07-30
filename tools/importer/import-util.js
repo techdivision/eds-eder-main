@@ -50,6 +50,42 @@ export const isButton = (link) => {
 };
 
 /**
+ * Determines whether the given news or events entry should be imported for the given domain
+ * @param entry
+ * @param originalUrl
+ * @returns {boolean}
+ */
+export const shouldBeImported = (entry, originalUrl) => {
+  // mapping between the Typo3-urls and the section-names
+  const urlMapping = {
+    'https://www.eder-gmbh.de': ['Überall', 'Profitechnik'],
+    'https://www.eder-landtechnik.de': 'Landtechnik',
+    'https://www.agratec-salching.de': 'Agratec',
+  };
+
+  const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
+
+  const targetSection = urlMapping[urlToCheck];
+
+  // handling multiple assignment - set "Überall"
+  const sectionList = entry.section.split(',');
+
+  if (sectionList.length > 1) {
+    entry.section = 'Überall';
+  }
+
+  // do not import if the section of the news does not match the section of the import
+  if (entry.section !== targetSection && !targetSection.includes(entry.section)) {
+    /* eslint-disable no-console */
+    console.log(`This entry will not be imported, as its section '${entry.section}' does not match the section '${targetSection}' of the current import`);
+    /* eslint-enable no-console */
+    return false;
+  }
+
+  return true;
+};
+
+/**
  * Handle HTML-Table by adding the respective headline in order to mark them as an EDS table block
  * @param main
  * @param document
@@ -138,11 +174,22 @@ export const handleIcons = (main) => {
 export const handleImages = (main) => {
   const images = main.querySelectorAll('img');
 
+  let parent;
+
   images.forEach((image) => {
+    // use data-regular (= the original image) instead of src (= converted webp)
     const srcRegular = image.getAttribute('data-regular');
 
     if (srcRegular) {
       image.src = srcRegular;
+    }
+
+    // remove link around the image, as it would link to the Typo3 url-structure
+    parent = image.parentElement;
+
+    if (parent.tagName === 'A') {
+      // eliminate the link's Markup
+      parent.outerHTML = image.outerHTML;
     }
   });
 };
@@ -195,6 +242,73 @@ export const handleLinks = (main, document, baseUrl) => {
         link.innerHTML = boldElement.outerHTML;
       }
     });
+  }
+};
+
+/**
+ * Handle 2-column grids by converting them to EDS half-width Cards
+ * @param main
+ * @param document
+ */
+export const handle2ColumnsGrid = (main, document) => {
+  // get parent-element
+  const parent = main.querySelector('div.products-new-mainpage');
+
+  if (parent) {
+    const result = document.createElement('div');
+
+    // add headline to result, if there is any
+    const headline = parent.querySelector('h2');
+
+    if (headline) {
+      result.append(headline);
+    }
+
+    // handle the product-entries itself
+    const originalLinks = parent.querySelectorAll('a');
+
+    if (originalLinks.length > 0) {
+      const cells = [
+        ['Cards (half-width)'],
+      ];
+
+      originalLinks.forEach((originalLink) => {
+        // handle image
+        const image = originalLink.querySelector('img');
+
+        // handle content
+        const originalContent = originalLink.querySelector('div.attributes');
+
+        const newContent = document.createElement('div');
+
+        const logo = originalContent.querySelector('img');
+        const productHeadline = originalContent.querySelector('h3');
+        const productDescription = originalContent.querySelector('p.description');
+
+        /*
+        In Typo3 the link is set on the entire container, instead it should go on "price",
+        which is displayed as a link in Typo3
+        */
+        const productPrice = originalContent.querySelector('span.price');
+
+        const newLink = document.createElement('a');
+        newLink.href = originalLink.href;
+        newLink.append(productPrice);
+
+        newContent.append(productHeadline);
+        newContent.append(productDescription);
+        newContent.append(newLink);
+
+        cells.push(
+          [image, logo, newContent],
+        );
+      });
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      result.append(resultTable);
+    }
+    parent.replaceWith(result);
   }
 };
 
@@ -339,13 +453,40 @@ export const handleIframes = (main, document) => {
           [link],
         ];
         // check for yumpu-url
-      } else if (src.startsWith('https://www.yumpu.com/')) {
+      } else if (src.startsWith('https://www.yumpu.com/') || src.startsWith('https://forms.office.com')) {
+        const blockClasses = [];
+
+        // handle height of iframe
+        let height = iframe.getAttribute('height');
+
+        if (height) {
+          height = height.replace('px', '');
+
+          blockClasses.push(`height-${height}`);
+        }
+
+        // handle width of iframe
+        let width = iframe.getAttribute('width');
+
+        if (width) {
+          width = width.replace('px', '');
+          blockClasses.push(`width-${width}`);
+        }
+
+        // build-up block name, including possible headlines
+        let blockname = 'Embed';
+
+        if (blockClasses.length > 0) {
+          blockname = `${blockname}(${blockClasses.join(', ')})`;
+        }
+
+        // build-up link
         const link = document.createElement('a');
         link.innerText = src;
         link.setAttribute('href', src);
 
         cells = [
-          ['Embed'],
+          [blockname],
           [link],
         ];
       }
@@ -563,5 +704,154 @@ export const handleFilterAndRows = (main, document) => {
     result.append(rowResultTable);
 
     parent.replaceWith(result);
+  }
+};
+
+/**
+ * Handle inline-images in text by creating the appropriate section-structure
+ * @param main
+ */
+export const handleImagesInText = (main) => {
+  // handle images right, text left
+  const imageDivs = main.querySelectorAll('div.pull-right, div.pull-left');
+
+  imageDivs.forEach((imageDiv) => {
+    const parent = imageDiv.parentElement;
+
+    const textDiv = parent.querySelector('div.intext-text');
+
+    if (imageDiv && textDiv) {
+      // convert classname
+      const originalClassname = imageDiv.className;
+
+      // EDS-classname - default value
+      let edsClassname = 'images-inline-right';
+
+      if (originalClassname && originalClassname.includes('pull-left')) {
+        edsClassname = 'images-inline-left';
+      }
+
+      const sectionMarkupCells = [
+        ['Section Metadata'],
+        ['style', edsClassname],
+      ];
+
+      // build-up new image div, with only the images
+      const resultImageDiv = document.createElement('div');
+
+      const images = imageDiv.querySelectorAll('img');
+
+      images.forEach((image) => {
+        resultImageDiv.append(image);
+      });
+
+      const sectionMarkupTable = WebImporter.DOMUtils.createTable(sectionMarkupCells, document);
+
+      // build-up new structure
+      const result = document.createElement('div');
+      result.append(document.createElement('hr'));
+      result.append(resultImageDiv);
+      result.append(textDiv);
+      result.append(sectionMarkupTable);
+      result.append(document.createElement('hr'));
+
+      parent.replaceWith(result);
+    }
+  });
+};
+
+/**
+ * Handle "textpic"-elements from Typo3, migrate them to EDS Columns-Block
+ * @param main
+ * @param document
+ */
+export const handleTextPic = (main, document) => {
+  const textPicElements = main.querySelectorAll('div.element-textpic');
+
+  textPicElements.forEach((textPicElement) => {
+    const columns = textPicElement.querySelectorAll('div.col-sm-6');
+
+    // avoid cases where there is only one column
+    if (columns.length > 1) {
+      const resultColumns = [];
+
+      columns.forEach((column) => {
+        resultColumns.push(column);
+      });
+
+      const resultCells = [
+        ['Columns'],
+        resultColumns,
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(resultCells, document);
+
+      textPicElement.append(resultTable);
+    }
+  });
+};
+
+/**
+ * Handle <br>-Tag, required because the EDS-import can not handle them properly out-of-the-box
+ * @param main
+ * @param document
+ */
+export const handleBrs = (main, document) => {
+  const brs = main.querySelectorAll('br');
+
+  brs.forEach((br) => {
+    const pagraph = document.createElement('p');
+
+    // set a non-breaking space as the only content of the paragraph
+    pagraph.append('\xa0');
+
+    br.outerHTML = pagraph.outerHTML;
+  });
+};
+
+/**
+ * Handle Contact-data by replacing it by the EDS Contacts-Block
+ * @param main
+ * @param document
+ */
+export const handleContacts = (main, document) => {
+  // remove "Kontakt"-headline from Sidebar
+  const sidebar = main.querySelector('div.news-sidebar');
+
+  if (sidebar) {
+    // unfortunately there are different Markups
+    let contactHeadline = sidebar.querySelector('div.bodytext');
+
+    if (!contactHeadline) {
+      contactHeadline = sidebar.querySelector('h1');
+    }
+
+    // remove if a headline was found
+    if (contactHeadline) {
+      contactHeadline.remove();
+    }
+  }
+
+  // use id here, as there is no other way of identification
+  const contactBlocks = main.querySelectorAll('div.element-dce_dceuid2');
+
+  let parent;
+
+  if (contactBlocks.length > 0) {
+    const contactCells = [
+      ['Contacts'],
+    ];
+
+    contactBlocks.forEach((contactBlock) => {
+      parent = contactBlock.parentElement;
+
+      const name = contactBlock.querySelector('p.staff-headline').innerText;
+
+      contactCells.push([name]);
+    });
+
+    const contactsResultTable = WebImporter.DOMUtils.createTable(contactCells, document);
+
+    parent.replaceWith(contactsResultTable);
   }
 };
