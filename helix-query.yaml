@@ -43,11 +43,11 @@ indices:
       startDate:
         select: main .dates > div:nth-of-type(1) > div:nth-of-type(1)
         value: |
-          dateValue(attribute(el, 'content'), 'DD.MM.YYYY hh:mm')
+          dateValue(textContent(el), 'DD.MM.YYYY hh:mm')
       endDate:
         select: main .dates > div:nth-of-type(2) > div:nth-of-type(1)
         value: |
-          dateValue(attribute(el, 'content'), 'DD.MM.YYYY hh:mm')
+          dateValue(textContent(el), 'DD.MM.YYYY hh:mm')
   # news
   newstermine:
     include:
@@ -83,7 +83,7 @@ indices:
       publishDate:
         select: head > meta[name="date_published"]
         value: |
-          dateValue(attribute(el, 'content'), 'DD.MM.YYYY, hh:mm')
+          dateValue(attribute(el, 'content'), 'DD.MM.YYYY')
       lastModified:
         select: none
         value: |
