@@ -2,10 +2,16 @@ indices:
   # events
   events:
     include:
-      - /termine/**
       - /events/**
-      - /newstermine/veranstaltungen/**
+      - /events/**/**
+      - /newstermine/veranstaltungen/detail/**
+      - /newstermine/veranstaltungen/detail/**/**
+      - /aktuelles/agratec-aktuell/termine/**
+      - /aktuelles/agratec-aktuell/termine/detail/**
+      - /aktuelles/agratec-aktuell/termine/detail/**/**
       - /aktuelles/landtechnik-aktuell/termine/**
+      - /aktuelles/landtechnik-aktuell/termine/detail/**
+      - /aktuelles/landtechnik-aktuell/termine/detail/**/**
     target: /query-index-events.json
     properties:
       title:
@@ -52,8 +58,15 @@ indices:
   newstermine:
     include:
       - /news/**
-      - /newstermine/pressemeldungen/**
+      - /news/**/**
+      - /newstermine/pressemeldungen/detail/**
+      - /newstermine/pressemeldungen/detail/**/**
+      - /aktuelles/agratec-aktuell/news/**
+      - /aktuelles/agratec-aktuell/news/artikel/**
+      - /aktuelles/agratec-aktuell/news/artikel/**/**
       - /aktuelles/landtechnik-aktuell/news/**
+      - /aktuelles/landtechnik-aktuell/news/artikel/**
+      - /aktuelles/landtechnik-aktuell/news/artikel/**/**
     target: /query-index-news.json
     properties:
       title:
