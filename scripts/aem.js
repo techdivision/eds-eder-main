@@ -234,6 +234,10 @@ async function loadCSS(href) {
  * @param {Object} [attrs] additional optional attributes
  */
 async function loadScript(src, attrs) {
+  // BEGIN CHANGE TechDivision
+  // eslint-disable-next-line no-alert
+  alert('Please use betterLoadScript instead of loadScript!');
+  // END CHANGE TechDivision
   return new Promise((resolve, reject) => {
     if (!document.querySelector(`head > script[src="${src}"]`)) {
       const script = document.createElement('script');

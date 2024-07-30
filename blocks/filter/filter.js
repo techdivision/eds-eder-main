@@ -109,10 +109,14 @@ function renderFilters(block, filters) {
 function retrieveFilterItems(filters) {
   // retrieve by filter fields
   const allFilterFields = filters.flatMap((filter) => filter.filterFields);
-  return document.querySelectorAll(
-    allFilterFields.map((field) => `[data-${field}]`)
-      .join(', '),
-  );
+
+  const fields = allFilterFields.map((field) => {
+    // remove whitespaces from field
+    const cleanField = field.replace(/\s/g, '');
+    return `[data-${cleanField}]`;
+  }).join(', ');
+
+  return document.querySelectorAll(fields);
 }
 
 /**
