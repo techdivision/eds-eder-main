@@ -2,8 +2,10 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { copyAttributes, transformToMetadata } from '../../scripts/helpers.js';
 
 export default function decorate(block) {
-  // transform to metadata
-  transformToMetadata(block);
+  // transform to metadata when class filterable is set
+  if (block.classList.contains('filterable')) {
+    transformToMetadata(block);
+  }
 
   /* change to ul, li */
   const ul = document.createElement('ul');
