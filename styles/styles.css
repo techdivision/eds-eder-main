@@ -209,12 +209,6 @@ button:disabled:hover {
   cursor: unset;
 }
 
-a.button.secondary,
-button.secondary {
-  background-color: unset;
-  color: var(--text-color)
-}
-
 main img {
   max-width: 100%;
   width: auto;

@@ -388,7 +388,7 @@ function decorateButtons(element) {
       if (!a.querySelector('img')) {
         if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
           /* TD Changes Start Here */
-          a.className = 'link'; // default
+          a.className = 'has-chevron'; // default
           /* TD Changes End Here */
         }
         if (
