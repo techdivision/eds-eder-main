@@ -1,9 +1,17 @@
-.text-box.red {
+.text-box {
   padding: var(--spacing-half) var(--spacing-simple);
   color: var(--color-white);
+}
+
+.text-box.red a,
+.text-box.blue a {
+  color: var(--color-white);
+}
+
+.text-box.red {
   background-color: var(--color-red);
 }
 
-.text-box.red a {
-  color: var(--color-white);
+.text-box.blue {
+  background-color: var(--color-blue);
 }
