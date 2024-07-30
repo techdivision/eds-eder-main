@@ -1,11 +1,6 @@
 // noinspection JSUnresolvedReference
 
-import {
-  getUrlParam,
-  isEmpty,
-  setUrlParam,
-  transformRowsToData,
-} from '../../scripts/helpers.js';
+import { getUrlParam, isEmpty, setUrlParam, transformRowsToData, } from '../../scripts/helpers.js';
 import { build as decorateSliderFilter } from './types/slider.js';
 import { build as decorateDropdownFilter } from './types/dropdown.js';
 import { build as decorateCheckboxFilter } from './types/checkbox.js';
@@ -118,10 +113,13 @@ function retrieveFilterItems(block, filters) {
 
   // retrieve by filter fields
   const allFilterFields = filters.flatMap((filter) => filter.filterFields);
-  return scope.querySelectorAll(
-    allFilterFields.map((field) => `[data-${field}]`)
-      .join(', '),
-  );
+  const fields = allFilterFields.map((field) => {
+    // remove whitespaces from field
+    const cleanField = field.replace(/\s/g, '');
+    return `[data-${cleanField}]`;
+  })
+    .join(', ');
+  return scope.querySelectorAll(fields);
 }
 
 /**
