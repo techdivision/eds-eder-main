@@ -11,23 +11,6 @@
  */
 
 :root {
-  /* colors */
-  --color-red: #ed1c24;
-  --color-green: #869d67;
-  --color-green-light: #f3f6ef;
-  --color-gray-light: #e5e5e5;
-  --color-gray: #999;
-  --color-gray-dark: #4c4c4c;
-  --color-gray-darker: #303030;
-  --color-black: #000;
-  --color-white: #fff;
-  --link-color: var(--color-red);
-  --background-color: var(--color-white);
-  --light-color: #eee;
-  --dark-color: #ccc;
-  --text-color: var(--color-black);
-  --text-color-reverse: var(--color-white);
-
   /* fonts */
   --body-font-family: roboto, roboto-fallback;
   --heading-font-family: var(--body-font-family);
@@ -56,7 +39,7 @@
   --body-line-height-s: 20px;
   --body-line-height-xs: 16px;
 
-  /* gerneral */
+  /* general */
   --page-width: 1200px;
 
   /* nav and header sizes */
@@ -190,6 +173,7 @@ a:hover {
 }
 
 /* buttons */
+
 a.button:any-link,
 button {
   font-family: var(--body-font-family);
@@ -201,14 +185,14 @@ button {
   font-style: normal;
   font-weight: 600;
   cursor: pointer;
-  color: var(--text-color-reverse);
-  background-color: var(--color-gray-darker);
+  color: var(--button-color);
+  background-color: var(--button-background);
   margin: 16px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 0;
-  border: 2px solid var(--color-gray-darker);;
+  border: 2px solid var(--button-border);
   user-select: none;
 }
 
@@ -217,6 +201,8 @@ a.button:focus,
 button:hover,
 button:focus {
   cursor: pointer;
+  background-color: var(--button-background-hover);
+  color: var(--button-color-hover);
 }
 
 button:disabled,

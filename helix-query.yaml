@@ -2,14 +2,87 @@ indices:
   # events
   events:
     include:
+      - /termine/**
       - /events/**
       - /newstermine/veranstaltungen/**
       - /aktuelles/landtechnik-aktuell/termine/**
-    target: /query-index.xlsx
+    target: /query-index-events.json
     properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
+      lang:
+        select: head > meta[name="lang"]
+        value: |
+          attribute(el, "content")
+      key:
+        select: head > meta[name="key"]
+        value: |
+          attribute(el, "content")
+      location:
+        select: head > meta[name="location"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^\/]+(\/.*)')
+      publishDate:
+        select: head > meta[name="date_published"]
+        value: |
+          dateValue(attribute(el, 'content'), 'DD.MM.YYYY')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
       startDate:
         select: main .dates > div:nth-of-type(1) > div:nth-of-type(1)
         value: textContent(el)
       endDate:
         select: main .dates > div:nth-of-type(2) > div:nth-of-type(1)
         value: textContent(el)
+  # news
+  newstermine:
+    include:
+      - /news/**
+      - /newstermine/pressemeldungen/**
+      - /aktuelles/landtechnik-aktuell/news/**
+    target: /query-index-news.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
+      lang:
+        select: head > meta[name="lang"]
+        value: |
+          attribute(el, "content")
+      key:
+        select: head > meta[name="key"]
+        value: |
+          attribute(el, "content")
+      location:
+        select: head > meta[name="location"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
+      publishDate:
+        select: head > meta[name="date_published"]
+        value: |
+          dateValue(attribute(el, 'content'), 'DD.MM.YYYY, hh:mm')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
