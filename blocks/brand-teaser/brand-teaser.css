@@ -25,6 +25,7 @@
 .brand-teaser-image {
   width: 100vw;
   display: block;
+  aspect-ratio: 3/2;
 }
 
 .brand-teaser-header {
