@@ -1,4 +1,32 @@
 indices:
+  # default
+  default:
+    target: /query-index.xlsx
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^\/]+(\/.*)')
+      lang:
+        select: head > meta[name="lang"]
+        value: |
+          attribute(el, "content")
+      key:
+        select: head > meta[name="key"]
+        value: |
+          attribute(el, "content")
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
   # search
   search:
     target: /query-index-search.xlsx
