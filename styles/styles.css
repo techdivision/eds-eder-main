@@ -192,6 +192,7 @@ button {
   text-overflow: ellipsis;
   border-radius: 0;
   border: 2px solid var(--button-border);
+  user-select: none;
 }
 
 a.button:hover,
@@ -212,9 +213,19 @@ button:disabled:hover {
 a.button.secondary,
 button.secondary {
   background-color: unset;
-  color: var(--text-color)
+  color: var(--text-color);
 }
 
+/* buttons */
+a.button.no-button,
+button.no-button {
+  background-color: unset;
+  color: var(--link-color);
+  padding: 0;
+  border: 0 none;
+}
+
+/* images and icons */
 main img {
   max-width: 100%;
   width: auto;
@@ -260,11 +271,11 @@ main .section.highlight {
 }
 
 /* basic text alignment */
-[data-align="center"] {
+[data-align='center'] {
   text-align: center;
 }
 
-[data-align="right"] {
+[data-align='right'] {
   text-align: right;
 }
 
@@ -287,7 +298,7 @@ main .section.highlight {
   display: none;
 }
 
-main .section [class$="-wrapper"] {
+main .section [class$='-wrapper']:not(.image-wrapper) {
   margin-bottom: var(--spacing-simple);
 }
 
@@ -380,7 +391,7 @@ header .nav-logo picture + br + a {
   }
 
   &.chevron-down::after {
-    border-width: 0 2px 2px 0
+    border-width: 0 2px 2px 0;
   }
 }
 
@@ -434,7 +445,7 @@ header .nav-logo picture + br + a {
     overflow: hidden;
 
     &::after {
-      content: "";
+      content: '';
       display: block;
       position: absolute;
       top: 0;

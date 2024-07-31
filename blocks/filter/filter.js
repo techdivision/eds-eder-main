@@ -104,9 +104,18 @@ function renderFilters(block, filters) {
 /**
  * Retrieve filter elements
  *
+ * @param {HTMLElement} block
+ * @param {Array} filters
  * @returns {Array|NodeList}
  */
-function retrieveFilterItems(filters) {
+function retrieveFilterItems(block, filters) {
+  // define scope
+  let scope = document;
+  const currentSection = block.closest('.section');
+  if (currentSection) {
+    scope = currentSection;
+  }
+
   // retrieve by filter fields
   const allFilterFields = filters.flatMap((filter) => filter.filterFields);
 
@@ -115,8 +124,7 @@ function retrieveFilterItems(filters) {
     const cleanField = field.replace(/\s/g, '');
     return `[data-${cleanField}]`;
   }).join(', ');
-
-  return document.querySelectorAll(fields);
+  return scope.querySelectorAll(fields);
 }
 
 /**
@@ -170,7 +178,7 @@ function saveState(filters) {
  */
 function initializeBlock(block, filters) {
   if (!block.filterItems || !block.filterItems.length) {
-    const filterItems = retrieveFilterItems(filters);
+    const filterItems = retrieveFilterItems(block, filters);
     if (filterItems) {
       block.filterItems = filterItems;
     }
