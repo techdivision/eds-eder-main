@@ -1,7 +1,7 @@
 indices:
   # search
   search:
-    target: /query-index-search.json
+    target: /query-index-search.xlsx
     properties:
       title:
         select: head > meta[property="og:title"]
@@ -43,7 +43,7 @@ indices:
       - /aktuelles/landtechnik-aktuell/termine/**
       - /aktuelles/landtechnik-aktuell/termine/detail/**
       - /aktuelles/landtechnik-aktuell/termine/detail/**/**
-    target: /query-index-events.json
+    target: /query-index-events.xlsx
     properties:
       title:
         select: head > meta[property="og:title"]
@@ -98,7 +98,7 @@ indices:
       - /aktuelles/landtechnik-aktuell/news/**
       - /aktuelles/landtechnik-aktuell/news/artikel/**
       - /aktuelles/landtechnik-aktuell/news/artikel/**/**
-    target: /query-index-news.json
+    target: /query-index-news.xlsx
     properties:
       title:
         select: head > meta[property="og:title"]
