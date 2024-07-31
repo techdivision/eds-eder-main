@@ -2,7 +2,11 @@
   "extends": [
     "stylelint-config-standard"
   ],
+  "plugins": [
+    "stylelint-plugin-license-header"
+  ],
   "rules": {
-    "no-descending-specificity": null
+    "no-descending-specificity": null,
+    "plugin/license-header": [true, { "license": "./dev/license-header.js" }]
   }
 }
