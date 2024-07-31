@@ -24,6 +24,6 @@ function getSearchForm() {
 
 export default async function decorate(block) {
   block.innerHTML = '';
-  await loadPlaceholders();
-  block.append(getSearchForm());
+  loadPlaceholders()
+    .then(() => block.append(getSearchForm()));
 }

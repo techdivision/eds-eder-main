@@ -1,0 +1,134 @@
+indices:
+  # search
+  search:
+    target: /query-index-search.xlsx
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
+      content:
+        select: main
+        value: textContent(el)
+      lang:
+        select: head > meta[name="lang"]
+        value: |
+          attribute(el, "content")
+      key:
+        select: head > meta[name="key"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^\/]+(\/.*)')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+  # events
+  events:
+    include:
+      - /events/**
+      - /events/**/**
+      - /newstermine/veranstaltungen/detail/**
+      - /newstermine/veranstaltungen/detail/**/**
+      - /aktuelles/agratec-aktuell/termine/**
+      - /aktuelles/agratec-aktuell/termine/detail/**
+      - /aktuelles/agratec-aktuell/termine/detail/**/**
+      - /aktuelles/landtechnik-aktuell/termine/**
+      - /aktuelles/landtechnik-aktuell/termine/detail/**
+      - /aktuelles/landtechnik-aktuell/termine/detail/**/**
+    target: /query-index-events.xlsx
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
+      lang:
+        select: head > meta[name="lang"]
+        value: |
+          attribute(el, "content")
+      key:
+        select: head > meta[name="key"]
+        value: |
+          attribute(el, "content")
+      location:
+        select: head > meta[name="location"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^\/]+(\/.*)')
+      publishDate:
+        select: head > meta[name="date_published"]
+        value: |
+          parseTimestamp(attribute(el, 'content'), 'DD.MM.YYYY')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+      startDate:
+        select: main .dates > div:nth-of-type(1) > div:nth-of-type(1)
+        value: |
+          parseTimestamp(textContent(el), 'DD.MM.YYYY hh:mm')
+      endDate:
+        select: main .dates > div:nth-of-type(2) > div:nth-of-type(1)
+        value: |
+          parseTimestamp(textContent(el), 'DD.MM.YYYY hh:mm')
+  # news
+  newstermine:
+    include:
+      - /news/**
+      - /news/**/**
+      - /newstermine/pressemeldungen/detail/**
+      - /newstermine/pressemeldungen/detail/**/**
+      - /aktuelles/agratec-aktuell/news/**
+      - /aktuelles/agratec-aktuell/news/artikel/**
+      - /aktuelles/agratec-aktuell/news/artikel/**/**
+      - /aktuelles/landtechnik-aktuell/news/**
+      - /aktuelles/landtechnik-aktuell/news/artikel/**
+      - /aktuelles/landtechnik-aktuell/news/artikel/**/**
+    target: /query-index-news.xlsx
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
+      lang:
+        select: head > meta[name="lang"]
+        value: |
+          attribute(el, "content")
+      key:
+        select: head > meta[name="key"]
+        value: |
+          attribute(el, "content")
+      location:
+        select: head > meta[name="location"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
+      publishDate:
+        select: head > meta[name="date_published"]
+        value: |
+          parseTimestamp(attribute(el, 'content'), 'DD.MM.YYYY')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')

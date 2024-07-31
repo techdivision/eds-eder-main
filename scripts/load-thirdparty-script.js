@@ -32,7 +32,7 @@ function loadPartytown() {
  * Load third party script
  *
  * @param {String} script
- * @param {Object} attrs
+ * @param {Object} [attrs]
  * @returns {Promise}
  */
 function loadThirdPartyScript(script, attrs) {
@@ -40,7 +40,7 @@ function loadThirdPartyScript(script, attrs) {
     .then(() => {
       // add partytown attributes to attrs
       const attributes = {
-        ...attrs,
+        ...(attrs || {}),
         type: 'text/partytown',
         defer: '',
       };
