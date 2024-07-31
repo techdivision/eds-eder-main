@@ -213,7 +213,7 @@ async function handleSearch(e, block, config) {
     .filter((term) => !!term);
 
   const data = await fetchData(config.source);
-  const filteredData = filterData(searchTerms, data ? data : []);
+  const filteredData = filterData(searchTerms, data || []);
   await renderResults(block, config, filteredData, searchTerms);
 }
 
