@@ -392,7 +392,7 @@ function decorateButtons(element) {
       if (!a.querySelector('img')) {
         if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
           // BEGIN CHANGE TechDivision
-          a.className = 'link'; // default
+          a.className = 'has-chevron'; // default
           // END CHANGE TechDivision
         }
         if (
