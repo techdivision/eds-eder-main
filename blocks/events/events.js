@@ -4,6 +4,7 @@ import { decorateList } from '../../scripts/list.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { convertDate, getCurrentUrl, getReadableDate } from '../../scripts/helpers.js';
 import { ts } from '../../scripts/i18n.js';
+import { defaultDateTimeLocale } from '../../scripts/defaults.js';
 
 /**
  * Check if event is relevant
@@ -24,9 +25,9 @@ function getDateRange(item) {
   const startDate = getReadableDate(convertDate(item.startDate));
   const endDate = getReadableDate(convertDate(item.endDate));
   const startTime = convertDate(item.startDate)
-    .toLocaleTimeString('de-DE', { timeStyle: 'short' });
+    .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
   const endTime = convertDate(item.endDate)
-    .toLocaleTimeString('de-DE', { timeStyle: 'short' });
+    .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
 
   if (startDate === endDate) {
     return `${startDate} ${startTime} - ${endTime}`;

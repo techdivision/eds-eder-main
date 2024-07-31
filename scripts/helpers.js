@@ -1,3 +1,5 @@
+import { defaultDateTimeLocale } from './defaults.js';
+
 /**
  * Get metadata attribute names from metadata row
  *
@@ -205,7 +207,7 @@ function convertDate(excelDate) {
 function getReadableDate(inputDate, format) {
   const date = new Date(inputDate)
     .toLocaleDateString(
-      'de-DE',
+      defaultDateTimeLocale,
       format || {
         dateStyle: 'medium',
       },
