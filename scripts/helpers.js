@@ -195,6 +195,27 @@ function convertDate(excelDate) {
   return new Date(Number(excelDate) * 1000);
 }
 
+/**
+ * Get readable date
+ *
+ * @param {String|Date} inputDate
+ * @param {Object} [format]
+ * @returns {string|null}
+ */
+function getReadableDate(inputDate, format) {
+  const date = new Date(inputDate)
+    .toLocaleDateString(
+      'de-DE',
+      format || {
+        dateStyle: 'medium',
+      },
+    );
+  if (date === 'Invalid Date') {
+    return null;
+  }
+  return date;
+}
+
 // export
 export {
   isEmpty,
@@ -203,6 +224,7 @@ export {
   transformToMetadata,
   getUrlParam,
   setUrlParam,
-  convertDate,
   getCurrentUrl,
+  convertDate,
+  getReadableDate,
 };

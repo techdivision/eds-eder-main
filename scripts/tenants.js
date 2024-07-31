@@ -7,7 +7,7 @@ import { defaultTenant } from './defaults.js';
  * @type {Object}
  */
 const tenants = {
-  // @TODO remove next line, just for testing
+  // FIXME remove next line, just for testing
   'eder-main': 'https://main--eds-eder-main--techdivision.hlx.live/',
   [defaultTenant]: 'https://main--eds-eder-gmbh--techdivision.hlx.live/',
   'eder-landtechnik': 'https://main--eds-eder-landtechnik--techdivision.hlx.live/',
