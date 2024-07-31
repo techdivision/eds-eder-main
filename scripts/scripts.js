@@ -11,8 +11,9 @@ import {
   readBlockConfig,
   sampleRUM,
   waitForLCP,
+  getMetadata,
 } from './aem.js';
-import { getCurrentLanguage } from './i18n.js';
+import { loadPlaceholders, ts, getCurrentLanguage } from './i18n.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -115,6 +116,41 @@ function linkPicture(picture) {
   }
 }
 
+/**
+ * Add publishing date and news link to news articles
+ * @param {Element} main The container element
+ */
+function decorateNews(main) {
+  const datePublished = getMetadata('date_published');
+  const date = document.createElement('p');
+  if (datePublished) {
+    date.classList.add('publish-date');
+
+    const sidebar = main.querySelector('.sidebar');
+    if (sidebar) {
+      sidebar.prepend(date);
+    }
+  }
+
+  const newsLink = getMetadata('news_link');
+  if (newsLink) {
+    const link = document.createElement('a');
+    link.href = newsLink;
+
+    const newsContent = main.querySelector('.news-content');
+    if (newsContent) {
+      newsContent.append(link);
+    }
+
+    loadPlaceholders().then(() => {
+      link.innerHTML = ts('More news');
+      if (datePublished) {
+        date.innerHTML = `${ts('published on')} ${datePublished}`;
+      }
+    });
+  }
+}
+
 export function decorateLinkedPictures(block) {
   block.querySelectorAll('picture')
     .forEach((picture) => {
@@ -135,6 +171,9 @@ export function decorateMain(main) {
   decorateSections(main);
   decorateBlocks(main);
   decorateLinkedPictures(main);
+  if (getMetadata('template') === 'news') {
+    decorateNews(main);
+  }
 }
 
 /**

@@ -496,3 +496,7 @@ header .nav-logo picture + br + a {
     transform: translateX(100%);
   }
 }
+
+.publish-date {
+  color: var(--color-gray);
+}
