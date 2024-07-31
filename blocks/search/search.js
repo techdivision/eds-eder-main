@@ -178,7 +178,7 @@ function filterData(searchTerms, data) {
       return;
     }
 
-    const metaContents = `${result.title} ${result.description} ${result.path.split('/')
+    const metaContents = `${result.content} ${result.title} ${result.description} ${result.path.split('/')
       .pop()}`.toLowerCase();
     searchTerms.forEach((term) => {
       const idx = metaContents.indexOf(term);
@@ -213,7 +213,7 @@ async function handleSearch(e, block, config) {
     .filter((term) => !!term);
 
   const data = await fetchData(config.source);
-  const filteredData = filterData(searchTerms, data);
+  const filteredData = filterData(searchTerms, data || []);
   await renderResults(block, config, filteredData, searchTerms);
 }
 
@@ -261,7 +261,7 @@ function searchBox(block, config) {
   );
 
   const searchResultText = document.createElement('p');
-  searchResultText.textContent = 'Suchergebnisse';
+  searchResultText.textContent = ts('Search results');
   box.append(searchResultText);
 
   return box;
@@ -269,7 +269,9 @@ function searchBox(block, config) {
 
 export default async function decorate(block) {
   await loadPlaceholders();
-  const source = block.querySelector('a[href]') ? block.querySelector('a[href]').href : '/query-index.json';
+  const source = block.querySelector('a[href]')
+    ? block.querySelector('a[href]').href
+    : '/query-index-search.json';
   block.innerHTML = '';
   block.append(
     searchBox(block, { source }),

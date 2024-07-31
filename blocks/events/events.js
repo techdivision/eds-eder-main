@@ -1,7 +1,39 @@
+// noinspection JSUnresolvedReference
+
 import { decorateList } from '../../scripts/list.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { convertDate, getCurrentUrl, getReadableDate } from '../../scripts/helpers.js';
 import { ts } from '../../scripts/i18n.js';
+import { defaultDateTimeLocale } from '../../scripts/defaults.js';
+
+/**
+ * Check if event is relevant
+ *
+ * @param {Object} item
+ */
+function isCurrentEvent(item) {
+  return !item.endDate || convertDate(item.endDate) >= new Date();
+}
+
+/**
+ * Get date range
+ *
+ * @param {Object} item
+ * @returns {string}
+ */
+function getDateRange(item) {
+  const startDate = getReadableDate(convertDate(item.startDate));
+  const endDate = getReadableDate(convertDate(item.endDate));
+  const startTime = convertDate(item.startDate)
+    .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
+  const endTime = convertDate(item.endDate)
+    .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
+
+  if (startDate === endDate) {
+    return `${startDate} ${startTime} - ${endTime}`;
+  }
+  return `${startDate} - ${endDate}`;
+}
 
 /**
  * Manipulate items
@@ -10,18 +42,14 @@ import { ts } from '../../scripts/i18n.js';
  * @returns {Array}
  */
 function manipulateItems(items) {
-  items.forEach((item) => {
-    // filter date
-    item.filterDate = getReadableDate(
-      convertDate(item.lastModified),
-      {
-        year: 'numeric',
-        month: 'long',
-      },
-    );
+  return items.filter((item) => {
+    // check if event has ended
+    if (!isCurrentEvent(item)) {
+      return false;
+    }
 
-    // formatted date
-    item.formattedDate = getReadableDate(convertDate(item.lastModified));
+    // format date
+    item.dateRange = getDateRange(item);
 
     // optimized image
     item.picture = createOptimizedPicture(
@@ -30,8 +58,8 @@ function manipulateItems(items) {
       true,
       [{ width: '500' }],
     ).outerHTML;
+    return true;
   });
-  return items;
 }
 
 /**
@@ -41,7 +69,7 @@ function manipulateItems(items) {
  * @returns {HTMLElement}
  */
 function renderItem(item) {
-  const detailsText = ts('Go to article');
+  const detailsText = ts('Show more');
 
   let urlTarget = '_self';
   if (item.path
@@ -51,10 +79,10 @@ function renderItem(item) {
   }
 
   const article = document.createElement('article');
-  article.classList.add('news-list-item');
+  article.classList.add('events-list-item');
   article.innerHTML = `
     <div class="details-wrapper">
-        <div class="date">${item.formattedDate}</div>
+        <div class="date">${item.dateRange}</div>
         <div class="title">
             <h3><a title="${item.title}" href="${item.path}">${item.title}</a></h3>
         </div>
@@ -75,11 +103,11 @@ function renderItem(item) {
 }
 
 /**
- * Decorate news block
+ * Decorate events block
  *
  * @param {HTMLElement} block
  */
 export default async function decorate(block) {
-  decorateList(block, 'news', renderItem, manipulateItems)
+  decorateList(block, 'events', renderItem, manipulateItems)
     .then();
 }

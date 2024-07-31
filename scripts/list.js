@@ -1,7 +1,9 @@
 import ffetch from './vendor/ffetch.js';
 import { getCurrentUrl, getUrlParam, setUrlParam } from './helpers.js';
 import { loadPlaceholders, ts } from './i18n.js';
-import { getTenantUrl } from './tenants.js';
+import { getTenants, getTenantUrl } from './tenants.js';
+import { readBlockConfig } from './aem.js';
+import { defaultTenant } from './defaults.js';
 
 /**
  * Get current page
@@ -221,8 +223,7 @@ function sortItems(items) {
  * @returns {Promise}
  */
 async function fetchListItems(listType, baseUrl) {
-  return ffetch(`${baseUrl || '/'}query-index.json`)
-    .sheet(listType)
+  return ffetch(`${baseUrl || '/'}query-index-${listType}.json`)
     .all()
     // do not add calculation errors
     .then((items) => items.filter((item) => item.path && item.path !== '#CALC!'))
@@ -322,6 +323,71 @@ async function renderList(block, renderer, items, limit) {
   });
 }
 
+/**
+ * Decorate list
+ *
+ * @param {HTMLElement} block
+ * @param {string} listType
+ * @param {Function} renderer
+ * @param {Function} [itemManipulator]
+ * @returns {Promise<void>}
+ */
+async function decorateList(block, listType, renderer, itemManipulator) {
+  // get config
+  const config = readBlockConfig(block);
+  const amount = Number.parseInt(config.amount, 10) || 0;
+  const limit = Number.parseInt(config.limit, 10) || 10;
+
+  // render placeholders to prevent layout shifts
+  renderPlaceholders(block, renderer, limit);
+
+  // ensure placeholders have been loaded
+  await loadPlaceholders();
+
+  // get items
+  let items = [];
+  if (block.classList.contains('all')) {
+    items = await fetchTenantsListItems(listType, getTenants());
+  } else if (block.classList.contains('with-global')) {
+    items = await fetchTenantsListItems(
+      listType,
+      [defaultTenant],
+      await fetchListItems(listType),
+    );
+  } else {
+    items = await fetchListItems(listType);
+  }
+
+  // manipulate items
+  if (itemManipulator) {
+    items = itemManipulator(items);
+  }
+
+  // set maximum amount
+  if (amount >= 1) {
+    items = items.slice(0, amount);
+  }
+
+  // set filter items
+  const filterBlock = getFilterBlock(block);
+  if (filterBlock) {
+    // set items to be filtered
+    filterBlock.filterItems = items;
+
+    // when we process filters, the items and pagination need to be re-drawn
+    filterBlock.addEventListener('filtersProcessed', async () => {
+      await renderList(block, renderer, items, limit);
+    });
+    filterBlock.dispatchEvent(new Event('renderFilters'));
+  } else {
+    // when we change the page, the list should be updated even if no filters are present
+    block.addEventListener('pageChanged', async () => {
+      await renderList(block, renderer, items, limit);
+    });
+    block.dispatchEvent(new Event('pageChanged'));
+  }
+}
+
 export {
   getCurrentPage,
   setCurrentPage,
@@ -331,4 +397,5 @@ export {
   getFilterBlock,
   renderPlaceholders,
   renderList,
+  decorateList,
 };
