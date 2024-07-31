@@ -1,8 +1,8 @@
-.columns [data-valign="middle"] {
+.columns [data-valign='middle'] {
   align-self: center;
 }
 
-.columns [data-valign="bottom"] {
+.columns [data-valign='bottom'] {
   align-self: flex-end;
 }
 

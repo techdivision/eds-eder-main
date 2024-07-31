@@ -56,7 +56,6 @@ footer .section:nth-child(3) p {
   margin-bottom: 20px;
 }
 
-
 footer .section:nth-child(3) p a {
   font-weight: var(--font-weight-bold);
   color: var(--color-white);

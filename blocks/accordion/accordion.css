@@ -46,7 +46,7 @@
 
 .accordion details[open] summary::after {
   transform: translateY(-50%) rotate(-45deg);
-  top: 50%
+  top: 50%;
 }
 
 .accordion details[open] .accordion-item-body {

@@ -285,9 +285,13 @@ function createOptimizedPicture(
   eager = false,
   breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
 ) {
+  // BEGIN CHANGE TechDivision
+  // use fixed current URL to ensure compatibility with sidekick library
   const url = new URL(src, getCurrentUrl());
+  // use full pathname to support multiple tenants
+  const pathname = url.origin + url.pathname;
+  // END CHANGE TechDivision
   const picture = document.createElement('picture');
-  const { pathname } = url;
   const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
 
   // webp
@@ -387,9 +391,9 @@ function decorateButtons(element) {
       const twoup = a.parentElement.parentElement;
       if (!a.querySelector('img')) {
         if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
-          /* TD Changes Start Here */
+          // BEGIN CHANGE TechDivision
           a.className = 'has-chevron'; // default
-          /* TD Changes End Here */
+          // END CHANGE TechDivision
         }
         if (
           up.childNodes.length === 1
@@ -512,6 +516,7 @@ async function fetchPlaceholders(prefix = 'default') {
             .filter((placeholder) => placeholder.Key)
             .forEach((placeholder) => {
               // BEGIN CHANGE TechDivision
+              // use key as it is
               placeholders[placeholder.Key] = placeholder.Text;
               // END CHANGE TechDivision
             });
@@ -591,6 +596,7 @@ async function loadBlock(block) {
   const status = block.dataset.blockStatus;
   if (status !== 'loading' && status !== 'loaded') {
     // BEGIN CHANGE TechDivision
+    // do not load metadata blocks
     if (['metadata', 'section-metadata', 'library-metadata'].includes(block.dataset.blockName)) {
       block.dataset.blockStatus = 'loaded';
       return block;
