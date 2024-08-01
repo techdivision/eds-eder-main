@@ -120,6 +120,7 @@
   grid-gap: var(--spacing-simple);
 }
 
+/* styling half-width cards with brand logo */
 .cards.half-width .cards-card-image + .cards-card-image {
   position: absolute;
   right: var(--spacing-simple);
