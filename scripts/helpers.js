@@ -229,6 +229,15 @@ function getReadableDate(inputDate, format) {
   return date;
 }
 
+/**
+ * Add body class
+ *
+ * @param {String} classes
+ */
+function addBodyClass(...classes) {
+  document.body.classList.add(...classes);
+}
+
 // export
 export {
   isEmpty,
@@ -240,4 +249,5 @@ export {
   getCurrentUrl,
   convertDate,
   getReadableDate,
+  addBodyClass,
 };
