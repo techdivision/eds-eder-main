@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import {copyAttributes, transformToMetadata, isFilterable, wrapImages} from '../../scripts/helpers.js';
+import { copyAttributes, transformToMetadata, isFilterable, wrapImages } from '../../scripts/helpers.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
 /**

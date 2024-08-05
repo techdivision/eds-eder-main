@@ -248,6 +248,7 @@ function isFilterable(block) {
 }
 
 /**
+ * Wrap all images with one div
  *
  * @param scope
  */
