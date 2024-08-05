@@ -26,6 +26,7 @@ import {
   handleGallerySlider,
   handleContacts,
   handleTextBoxes,
+  handlePdfs,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -155,9 +156,11 @@ export default {
     // determine whether the current news should be imported
     const originalUrl = new URL(params.originalURL);
 
-    const originalUrlSections = url.split('/');
+    const originalUrlPathname = originalUrl.pathname;
 
-    const pathSegment = originalUrlSections[originalUrlSections.length - 2];
+    const originalUrlSections = originalUrlPathname.split('/');
+
+    const pathSegment = originalUrlSections[originalUrlSections.length - 1];
 
     const news = window.newsList.find((entry) => entry.path_segment === pathSegment);
 
@@ -174,11 +177,18 @@ export default {
       return [];
     }
 
+    const baseUrl = determineEdsBaseUrl(params);
+
     const main = document.body;
 
-    removeGenericContent(main);
+    // list of resulting documents in EDS, might be multiple if downloadable PDFs are present
+    const results = [];
 
-    const baseUrl = determineEdsBaseUrl(params);
+    // handle possible internal links to PDF-documents
+    handlePdfs (main, url, baseUrl, results);
+
+    // handle content of the document itself
+    removeGenericContent(main);
 
     // handle tables first in order to avoid re-adding table-markup to migrated blocks
     handleTable(main, document);
@@ -204,9 +214,11 @@ export default {
     // get target document-path like it is done during the 1:1 import
     const path = generateDocumentPath(url);
 
-    return [{
+    results.push ({
       element: main,
       path,
-    }];
+    });
+
+    return results;
   },
 };

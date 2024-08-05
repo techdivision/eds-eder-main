@@ -30,6 +30,7 @@ import {
   handleTextPic,
   handleBrs,
   handleContacts,
+  handlePdfs,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -49,15 +50,23 @@ const removeGenericContent = (main) => {
 };
 
 export default {
-  transformDOM: ({
+  transform: ({
     document,
+    url,
     params,
   }) => {
     const main = document.body;
 
-    removeGenericContent(main);
-
     const baseUrl = determineEdsBaseUrl(params);
+
+    // list of resulting documents in EDS, might be multiple if downloadable PDFs are present
+    const results = [];
+
+    // handle possible internal links to PDF-documents
+    handlePdfs (main, url, baseUrl, results);
+
+    // handle content of the document itself
+    removeGenericContent(main);
 
     // handle tables first in order to avoid re-adding table-markup to migrated blocks
     handleTable(main, document);
@@ -65,12 +74,14 @@ export default {
     // handle image-slider before modifying image-urls in general
     handleGallerySlider(main, document, baseUrl);
 
+    // handle images for all other imports that follow
+    handleImages(main);
+
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
     handleSidebar(main, document);
-    handleImages(main);
     handleIcons(main);
     handleIframes(main, document);
     handleAccordions(main, document);
@@ -83,6 +94,11 @@ export default {
 
     WebImporter.rules.createMetadata(main, document);
 
-    return main;
+    results.push({
+      element: main,
+      path: new URL(url).pathname
+    });
+
+    return results;
   },
 };
