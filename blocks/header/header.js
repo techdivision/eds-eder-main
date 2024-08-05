@@ -12,7 +12,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { loadPlaceholders, ts } from '../../scripts/i18n.js';
-import { getCurrentUrl } from '../../scripts/helpers.js';
+import { addBodyClass, getCurrentUrl } from '../../scripts/helpers.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -285,13 +285,11 @@ export default async function decorate(block) {
   if (getMetadata('breadcrumbs')
     .toLowerCase() === 'true') {
     const main = document.getElementsByTagName('main')[0];
-    const firstSection = main.querySelector('.section');
-
-    if (firstSection) {
-      firstSection.prepend(breadcrumbElement);
-    } else {
-      main.prepend(breadcrumbElement);
-    }
+    const breadcrumbSection = document.createElement('div');
+    breadcrumbSection.classList.add('section', 'section-breadcrumbs');
+    breadcrumbSection.append(breadcrumbElement);
+    main.prepend(breadcrumbSection);
+    addBodyClass('has-breadcrumbs');
   }
 
   // load nav as fragment

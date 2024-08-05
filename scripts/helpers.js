@@ -230,6 +230,15 @@ function getReadableDate(inputDate, format) {
 }
 
 /**
+ * Add body class
+ *
+ * @param {String} classes
+ */
+function addBodyClass(...classes) {
+  document.body.classList.add(...classes);
+}
+
+/**
  * Check if block is filterable
  *
  * @returns {boolean}
@@ -270,6 +279,7 @@ export {
   getCurrentUrl,
   convertDate,
   getReadableDate,
+  addBodyClass,
   isFilterable,
   wrapImages
 };

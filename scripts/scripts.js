@@ -15,6 +15,7 @@ import {
   decorateIcons,
   decorateSections,
   decorateTemplateAndTheme,
+  getMetadata,
   loadBlocks,
   loadCSS,
   loadFooter,
@@ -22,9 +23,9 @@ import {
   readBlockConfig,
   sampleRUM,
   waitForLCP,
-  getMetadata,
 } from './aem.js';
-import { loadPlaceholders, ts, getCurrentLanguage } from './i18n.js';
+import { getCurrentLanguage, loadPlaceholders, ts } from './i18n.js';
+import { addBodyClass } from './helpers.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -51,8 +52,7 @@ function buildSidebar(main) {
 
   // if we have a sidebar
   if (hasSidebar) {
-    // add class to main
-    main.classList.add('has-sidebar');
+    addBodyClass('has-sidebar');
 
     // check for hero image
     const picture = main.querySelector('picture');
@@ -63,6 +63,7 @@ function buildSidebar(main) {
         section.classList.add('section', 'sidebar-hero');
         section.append(picture);
         main.prepend(section);
+        addBodyClass('has-sidebar-hero');
       }
     }
   }
@@ -153,12 +154,13 @@ function decorateNews(main) {
       newsContent.append(link);
     }
 
-    loadPlaceholders().then(() => {
-      link.innerHTML = ts('More news');
-      if (datePublished) {
-        date.innerHTML = `${ts('published on')} ${datePublished}`;
-      }
-    });
+    loadPlaceholders()
+      .then(() => {
+        link.innerHTML = ts('More news');
+        if (datePublished) {
+          date.innerHTML = `${ts('published on')} ${datePublished}`;
+        }
+      });
   }
 }
 
