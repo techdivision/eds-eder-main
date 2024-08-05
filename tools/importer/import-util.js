@@ -227,7 +227,7 @@ export const handleLinks = (main, document, baseUrl) => {
 
       // replace relative urls
       if (href.charAt(0) === '/') {
-        href = baseUrl + href
+        href = baseUrl + href;
       }
 
       // replace http- by https-urls
@@ -900,7 +900,8 @@ export const handleContacts = (main, document) => {
 };
 
 /**
- * Handle internal PDF download-links on the page by downloading the target and replacing the download-link
+ * Handle internal PDF download-links on the page by downloading the target
+ * and replacing the download-link
  * Taken from https://github.com/adobe/helix-importer-ui/blob/main/docs/download-pdf.md
  * @param main
  * @param url
@@ -913,7 +914,6 @@ export const handlePdfs = (main, url, baseUrl, results) => {
     if (href && href.endsWith('.pdf')) {
       const u = new URL(href, url);
       const newPath = WebImporter.FileUtils.sanitizePath(u.pathname);
-      // no "element", the "from" property is provided instead - importer will download the "from" resource as "path"
       results.push({
         path: newPath,
         from: u.toString(),
@@ -921,7 +921,6 @@ export const handlePdfs = (main, url, baseUrl, results) => {
 
       // update the link to new path on the target host
       // this is required to be able to follow the links in Word
-      const newHref = new URL(newPath, baseUrl).toString();
       a.setAttribute('href', newPath);
     }
   });

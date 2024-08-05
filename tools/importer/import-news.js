@@ -185,7 +185,7 @@ export default {
     const results = [];
 
     // handle possible internal links to PDF-documents
-    handlePdfs (main, url, baseUrl, results);
+    handlePdfs(main, url, baseUrl, results);
 
     // handle content of the document itself
     removeGenericContent(main);
