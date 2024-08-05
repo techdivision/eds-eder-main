@@ -10,7 +10,12 @@
  */
 
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { copyAttributes, transformToMetadata, isFilterable, wrapImages } from '../../scripts/helpers.js';
+import {
+  copyAttributes,
+  transformToMetadata,
+  isFilterable,
+  wrapImages,
+} from '../../scripts/helpers.js';
 
 export default function decorate(block) {
   // transform to metadata when class filterable is set
