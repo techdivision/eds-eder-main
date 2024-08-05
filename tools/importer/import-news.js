@@ -214,7 +214,7 @@ export default {
     // get target document-path like it is done during the 1:1 import
     const path = generateDocumentPath(url);
 
-    results.push ({
+    results.push({
       element: main,
       path,
     });

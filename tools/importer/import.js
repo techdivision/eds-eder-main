@@ -96,7 +96,7 @@ export default {
 
     results.push({
       element: main,
-      path: new URL(url).pathname
+      path: new URL(url).pathname,
     });
 
     return results;
