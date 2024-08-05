@@ -282,5 +282,5 @@ export {
   getReadableDate,
   addBodyClass,
   isFilterable,
-  wrapImages
+  wrapImages,
 };
