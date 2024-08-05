@@ -49,6 +49,31 @@ const removeGenericContent = (main) => {
   ]);
 };
 
+/**
+ * Handle blockquotes by converting them to an EDS Video block
+ * @param main
+ * @param document
+ */
+export const handleBlockquotes = (main, document) => {
+  const blockquotes = main.querySelectorAll('blockquote');
+
+  blockquotes.forEach((blockquote) => {
+    // handle TikTok-videos - use cite as the video-url
+    const cite = blockquote.getAttribute('cite');
+
+    if (cite && cite.startsWith('https://www.tiktok.com/')) {
+      const cells = [
+        ['Video'],
+        [cite],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      blockquote.replaceWith(resultTable);
+    }
+  });
+};
+
 export default {
   transform: ({
     document,
@@ -91,6 +116,7 @@ export default {
     handleTextPic(main, document);
     handleBrs(main, document);
     handleContacts(main, document);
+    handleBlockquotes(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 
