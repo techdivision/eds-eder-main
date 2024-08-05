@@ -20,7 +20,6 @@
 .columns > div {
   display: flex;
   flex-direction: column;
-  flex-flow: row wrap;
 }
 
 .columns img {
