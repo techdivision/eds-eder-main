@@ -229,6 +229,36 @@ function getReadableDate(inputDate, format) {
   return date;
 }
 
+/**
+ * Check if block is filterable
+ *
+ * @returns {boolean}
+ */
+function isFilterable(block) {
+  return block.classList.contains('filterable');
+}
+
+/**
+ *
+ * @param scope
+ */
+function wrapImages(scope) {
+  const images = scope.querySelectorAll('picture');
+  if (images.length > 0) {
+    const imgWrapper = document.createElement('div');
+    imgWrapper.className = 'image-wrapper';
+
+    images.forEach((img) => {
+      const parent = img.closest('p');
+      if (parent) {
+        imgWrapper.append(parent);
+      }
+    });
+
+    scope.append(imgWrapper);
+  }
+}
+
 // export
 export {
   isEmpty,
@@ -240,4 +270,6 @@ export {
   getCurrentUrl,
   convertDate,
   getReadableDate,
+  isFilterable,
+  wrapImages
 };
