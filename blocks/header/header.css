@@ -563,10 +563,6 @@ header nav .mobile-menu li.is-visible > ul {
   opacity: 1;
 }
 
-.section > .breadcrumbs + .default-content-wrapper {
-  padding-top: var(--spacing-simple);
-}
-
 /* search */
 .header .search-bar-container {
   display: none;
