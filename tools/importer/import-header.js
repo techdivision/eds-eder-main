@@ -47,7 +47,7 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
   }
 
   // extract link from entry
-  const href = linkEntry.getAttribute('href');
+  let href = linkEntry.getAttribute('href');
 
   // check for '#' as link target
   if (href === '#') {
@@ -57,10 +57,15 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
 
   // check if the target of the link is relative: add EDS base-url
   if (href.charAt(0) === '/') {
-    linkEntry.setAttribute('href', baseUrl + href);
+    href = baseUrl + href;
   }
 
-  // return link element
+  // remove trailing slash
+  href = href.replace(/\/$/, '');
+
+  linkEntry.setAttribute('href', href);
+
+  // remove trailing slash and return link element
   return linkEntry;
 };
 

@@ -30,6 +30,7 @@ import {
   handleTextPic,
   handleBrs,
   handleContacts,
+  handlePdfs,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -48,16 +49,49 @@ const removeGenericContent = (main) => {
   ]);
 };
 
+/**
+ * Handle blockquotes by converting them to an EDS Video block
+ * @param main
+ * @param document
+ */
+export const handleBlockquotes = (main, document) => {
+  const blockquotes = main.querySelectorAll('blockquote');
+
+  blockquotes.forEach((blockquote) => {
+    // handle TikTok-videos - use cite as the video-url
+    const cite = blockquote.getAttribute('cite');
+
+    if (cite && cite.startsWith('https://www.tiktok.com/')) {
+      const cells = [
+        ['Video'],
+        [cite],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      blockquote.replaceWith(resultTable);
+    }
+  });
+};
+
 export default {
-  transformDOM: ({
+  transform: ({
     document,
+    url,
     params,
   }) => {
     const main = document.body;
 
-    removeGenericContent(main);
-
     const baseUrl = determineEdsBaseUrl(params);
+
+    // list of resulting documents in EDS, might be multiple if downloadable PDFs are present
+    const results = [];
+
+    // handle possible internal links to PDF-documents
+    handlePdfs(main, url, baseUrl, results);
+
+    // handle content of the document itself
+    removeGenericContent(main);
 
     // handle tables first in order to avoid re-adding table-markup to migrated blocks
     handleTable(main, document);
@@ -65,12 +99,14 @@ export default {
     // handle image-slider before modifying image-urls in general
     handleGallerySlider(main, document, baseUrl);
 
+    // handle images for all other imports that follow
+    handleImages(main);
+
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
     handleSidebar(main, document);
-    handleImages(main);
     handleIcons(main);
     handleIframes(main, document);
     handleAccordions(main, document);
@@ -80,9 +116,15 @@ export default {
     handleTextPic(main, document);
     handleBrs(main, document);
     handleContacts(main, document);
+    handleBlockquotes(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 
-    return main;
+    results.push({
+      element: main,
+      path: new URL(url).pathname,
+    });
+
+    return results;
   },
 };
