@@ -9,8 +9,6 @@
  * license@techdivision.com
  */
 
-// noinspection JSUnresolvedReference
-
 import { getNumericFilterValueForElement } from '../filter-library.js';
 import { loadPlaceholders, ts } from '../../../scripts/i18n.js';
 import { loadThirdPartyModule } from '../../../scripts/load-resource.js';
@@ -30,7 +28,6 @@ const psToKwRatio = 0.73549875;
  * @param {Array} values
  */
 function renderDecoration(container, filter, values) {
-  // noinspection JSUnresolvedReference
   if (filter.decoration.length) {
     [...container.getElementsByClassName('filter-decoration')].forEach((filterDecoration) => {
       filterDecoration.remove();
@@ -38,7 +35,6 @@ function renderDecoration(container, filter, values) {
     const decoration = document.createElement('div');
     decoration.classList.add('filter-decoration');
     container.append(decoration);
-    // noinspection JSUnresolvedReference
     filter.decoration.forEach((decorationElement) => {
       const decorationElementClone = decorationElement.cloneNode(true);
       // check if the node contains only text
@@ -103,6 +99,8 @@ function build(block, container, filter) {
   const startValues = filter.value || [minSliderOption, maxSliderOption];
 
   // create slider
+  // noinspection JSValidateTypes
+  /** @type {HTMLDivElement & {noUiSlider: Object}} */
   const slider = document.createElement('div');
   container.append(slider);
   loadThirdPartyModule('nouislider.min', async () => {
@@ -110,6 +108,7 @@ function build(block, container, filter) {
     await loadPlaceholders();
 
     // create slider
+    // noinspection JSUnresolvedReference
     window.noUiSlider.create(slider, {
       start: startValues,
       connect: true,

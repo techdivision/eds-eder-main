@@ -9,8 +9,6 @@
  * license@techdivision.com
  */
 
-// noinspection JSUnresolvedReference
-
 /*
  * Copyright 2024 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -26,6 +24,7 @@
 /* eslint-env browser */
 
 import { getCurrentUrl } from './helpers.js';
+import { cachedFetch } from './load-resource.js';
 
 /**
  * log RUM if part of the sample.
@@ -79,6 +78,12 @@ function sampleRUM(checkpoint, data = {}) {
 
     const { weight, id, firstReadTime } = window.hlx.rum;
     if (window.hlx && window.hlx.rum && window.hlx.rum.isSelected) {
+      // BEGIN CHANGE TechDivision
+      // disable RUM because we don't have access to the results
+      return;
+      // END CHANGE TechDivision
+      // noinspection UnreachableCodeJS
+      // eslint-disable-next-line no-unreachable
       const knownProperties = ['weight', 'id', 'referer', 'checkpoint', 't', 'source', 'target', 'cwv', 'CLS', 'FID', 'LCP', 'INP', 'TTFB'];
       const sendPing = (pdata = data) => {
         // eslint-disable-next-line max-len
@@ -90,6 +95,7 @@ function sampleRUM(checkpoint, data = {}) {
         // eslint-disable-next-line no-console
         console.debug(`ping:${checkpoint}`, pdata);
       };
+      // eslint-disable-next-line no-unreachable
       sampleRUM.cases = sampleRUM.cases || {
         cwv: () => sampleRUM.cwv(data) || true,
         lazy: () => {
@@ -100,6 +106,7 @@ function sampleRUM(checkpoint, data = {}) {
           return true;
         },
       };
+      // eslint-disable-next-line no-unreachable
       sendPing(data);
       if (sampleRUM.cases[checkpoint]) {
         sampleRUM.cases[checkpoint]();
@@ -514,16 +521,13 @@ async function fetchPlaceholders(prefix = 'default') {
   window.placeholders = window.placeholders || {};
   if (!window.placeholders[prefix]) {
     window.placeholders[prefix] = new Promise((resolve) => {
-      fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
-        .then((resp) => {
-          if (resp.ok) {
-            return resp.json();
-          }
-          return {};
-        })
-        .then((json) => {
+      // BEGIN CHANGE TechDivision
+      // use cached fetch
+      cachedFetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
+        // END CHANGE TechDivision
+        .then((data) => {
           const placeholders = {};
-          json.data
+          data
             .filter((placeholder) => placeholder.Key)
             .forEach((placeholder) => {
               // BEGIN CHANGE TechDivision

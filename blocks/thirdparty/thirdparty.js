@@ -9,8 +9,6 @@
  * license@techdivision.com
  */
 
-// noinspection JSUnusedGlobalSymbols,JSUnresolvedReference
-
 import loadThirdPartyScript from '../../scripts/load-thirdparty-script.js';
 import { getCurrentUrl, transformRowsToData } from '../../scripts/helpers.js';
 import { betterLoadScript } from '../../scripts/load-resource.js';

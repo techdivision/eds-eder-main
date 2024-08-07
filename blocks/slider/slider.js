@@ -9,8 +9,6 @@
  * license@techdivision.com
  */
 
-// noinspection JSUnusedGlobalSymbols,JSUnresolvedReference
-
 import { loadThirdPartyBundle } from '../../scripts/load-resource.js';
 
 /**

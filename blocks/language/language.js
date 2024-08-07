@@ -10,8 +10,11 @@
  */
 
 import { defaultLanguage } from '../../scripts/defaults.js';
-import { getCurrentLanguage } from '../../scripts/i18n.js';
-import { getMetadata } from '../../scripts/aem.js';
+import {
+  getCurrentLanguage,
+  getUrlForLanguage,
+  setAvailableLanguages,
+} from '../../scripts/i18n.js';
 
 function getLanguageData(block) {
   const languages = {};
@@ -34,15 +37,15 @@ function getLanguageData(block) {
   return languages;
 }
 
-function addLanguageItems(languageSelectorList, possibleLanguagesList, languageSites) {
+function addLanguageItems(languageSelectorList, possibleLanguagesList) {
   Object.entries(possibleLanguagesList)
     .forEach((language) => {
-      const languageSite = languageSites.find((site) => site.lang === language[0]);
+      const languageSite = getUrlForLanguage(language[0]);
       const languageListItem = document.createElement('li');
       const languageSiteLink = document.createElement('a');
 
       const urlKey = language[0] === defaultLanguage ? '' : language[0];
-      languageSiteLink.href = languageSite ? languageSite.path : `/${urlKey}`;
+      languageSiteLink.href = languageSite || `/${urlKey}`;
       const img = document.createElement('img');
       img.src = language[1].image;
 
@@ -60,43 +63,24 @@ export default async function decorate(block) {
   const possibleLanguages = getLanguageData(block);
   block.innerHTML = '';
 
-  const key = getMetadata('key') || 'index';
   const currentLanguage = getCurrentLanguage();
 
   const currentLanguageImage = document.createElement('img');
   currentLanguageImage.src = possibleLanguages[currentLanguage].image;
+  block.append(currentLanguageImage);
 
   const currentLanguageText = document.createElement('p');
   currentLanguageText.innerHTML = possibleLanguages[currentLanguage].label;
-
-  block.append(currentLanguageImage);
   block.append(currentLanguageText);
 
   const languageSelectorList = document.createElement('ul');
-  languageSelectorList.classList.add('language-list', 'hidden');
-
-  block.addEventListener('mouseover', () => {
-    languageSelectorList.classList.remove('hidden');
-  });
-
-  block.addEventListener('mouseleave', () => {
-    languageSelectorList.classList.add('hidden');
-  });
-
+  languageSelectorList.classList.add('language-list');
   block.append(languageSelectorList);
-  // Render default language select
-  addLanguageItems(languageSelectorList, possibleLanguages, []);
 
-  const response = await fetch('/query-index.json');
-  if (!response.ok) {
-    return null;
-  }
-  const sites = await response.json();
-  const languageSites = sites.data.filter((site) => site.key === key);
-
-  // Clear Language select and render again with fetch data
-  languageSelectorList.innerHTML = '';
-  addLanguageItems(languageSelectorList, possibleLanguages, languageSites);
-
+  document.addEventListener('changedLanguages', () => {
+    languageSelectorList.innerHTML = '';
+    addLanguageItems(languageSelectorList, possibleLanguages);
+  });
+  setAvailableLanguages(Object.keys(possibleLanguages));
   return block;
 }
