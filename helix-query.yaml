@@ -93,6 +93,10 @@ indices:
         select: head > meta[name="key"]
         value: |
           attribute(el, "content")
+      section:
+        select: head > meta[name="section"]
+        value: |
+          attribute(el, "content")
       location:
         select: head > meta[name="location"]
         value: |
@@ -150,6 +154,10 @@ indices:
           attribute(el, "content")
       key:
         select: head > meta[name="key"]
+        value: |
+          attribute(el, "content")
+      section:
+        select: head > meta[name="section"]
         value: |
           attribute(el, "content")
       location:
