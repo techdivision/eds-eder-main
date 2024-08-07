@@ -9,8 +9,6 @@
  * license@techdivision.com
  */
 
-// noinspection JSUnresolvedReference
-
 /*
  * Copyright 2024 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -525,7 +523,6 @@ async function fetchPlaceholders(prefix = 'default') {
     window.placeholders[prefix] = new Promise((resolve) => {
       // BEGIN CHANGE TechDivision
       // use cached fetch
-      // noinspection JSUnresolvedReference
       cachedFetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
         // END CHANGE TechDivision
         .then((data) => {

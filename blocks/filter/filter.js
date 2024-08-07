@@ -9,8 +9,6 @@
  * license@techdivision.com
  */
 
-// noinspection JSUnresolvedReference
-
 import {
   getUrlParam, isEmpty, setUrlParam, transformRowsToData,
 } from '../../scripts/helpers.js';
@@ -23,7 +21,7 @@ import { setCurrentPage } from '../../scripts/list.js';
 /**
  * Process filters
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement & {filterItems: Array}} block
  * @param {Array} filters
  */
 function processFilters(block, filters) {
@@ -57,7 +55,7 @@ function processFilters(block, filters) {
 /**
  * Handle HTML elements visibility
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement & {filterItems: Array}} block
  */
 function handleHtmlElementsVisibility(block) {
   block.filterItems.forEach((element) => {
@@ -70,7 +68,7 @@ function handleHtmlElementsVisibility(block) {
 /**
  * Add filters
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement & {filterItems: Array}} block
  * @param {Array} filters
  */
 function renderFilters(block, filters) {
@@ -181,7 +179,7 @@ function saveState(filters) {
 /**
  * Initialize block
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement & {filterItems: Array}} block
  * @param {Array} filters
  */
 function initializeBlock(block, filters) {

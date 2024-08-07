@@ -107,7 +107,6 @@ function build(block, container, filter) {
   // set current filter value
   if (filter.value) {
     checkboxes.forEach((checkbox) => {
-      // noinspection JSUnresolvedReference
       checkbox.checked = filter.value.includes(checkbox.value);
     });
   }
