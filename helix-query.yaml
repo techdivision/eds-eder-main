@@ -101,7 +101,7 @@ indices:
         select: head > meta[property="og:image"]
         value: |
           match(attribute(el, 'content'), 'https:\/\/[^\/]+(\/.*)')
-      preview_image:
+      previewImage:
         select: head > meta[name="preview_image"]
         value: |
           attribute(el, "content")
@@ -160,7 +160,7 @@ indices:
         select: head > meta[property="og:image"]
         value: |
           match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
-      preview_image:
+      previewImage:
         select: head > meta[name="preview_image"]
         value: |
           attribute(el, "content")
