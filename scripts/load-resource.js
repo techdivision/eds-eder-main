@@ -10,6 +10,10 @@
  */
 
 // eslint-disable-next-line prefer-const
+import ffetch from './vendor/ffetch.js';
+
+const fetchCacheKey = 'fetch-cache';
+// eslint-disable-next-line prefer-const
 let loadedStorage = {};
 // eslint-disable-next-line prefer-const
 let onLoadStorage = {};
@@ -116,9 +120,46 @@ function loadThirdPartyBundle(name, callback) {
     .then(callback);
 }
 
+/**
+ * Cached fetch request
+ *
+ * @param {string} url
+ * @returns {Promise}
+ */
+async function cachedFetch(url) {
+  // open cache
+  const cache = await caches.open(fetchCacheKey);
+
+  // check if response is cached
+  const cachedResponse = await cache.match(url);
+  if (cachedResponse) {
+    return Promise.resolve(await cachedResponse.json());
+  }
+
+  // if no cached response, perform a fetch
+  return ffetch(url)
+    .all()
+    .then(async (data) => {
+      // noinspection JSCheckFunctionSignatures
+      await cache.put(url, new Response(JSON.stringify(data)));
+      return data;
+    });
+}
+
+/**
+ * Clear fetch cache
+ *
+ * @returns {Promise<void>}
+ */
+async function clearFetchCache() {
+  await caches.delete(fetchCacheKey);
+}
+
 export {
   betterLoadScript,
   betterLoadCSS,
   loadThirdPartyBundle,
   loadThirdPartyModule,
+  cachedFetch,
+  clearFetchCache,
 };

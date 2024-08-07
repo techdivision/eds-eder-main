@@ -23,6 +23,7 @@ import { defaultDateTimeLocale } from '../../scripts/defaults.js';
  * @param {Object} item
  */
 function isCurrentEvent(item) {
+  // noinspection JSUnresolvedReference
   return !item.endDate || convertDate(item.endDate) >= new Date();
 }
 
@@ -33,10 +34,14 @@ function isCurrentEvent(item) {
  * @returns {string}
  */
 function getDateRange(item) {
+  // noinspection JSUnresolvedReference
   const startDate = getReadableDate(convertDate(item.startDate));
+  // noinspection JSUnresolvedReference
   const endDate = getReadableDate(convertDate(item.endDate));
+  // noinspection JSUnresolvedReference
   const startTime = convertDate(item.startDate)
     .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
+  // noinspection JSUnresolvedReference
   const endTime = convertDate(item.endDate)
     .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
 
@@ -63,8 +68,9 @@ function manipulateItems(items) {
     item.dateRange = getDateRange(item);
 
     // optimized image
+    // noinspection JSUnresolvedReference
     item.picture = createOptimizedPicture(
-      item.image,
+      item.previewImage || item.image,
       item.title,
       true,
       [{ width: '500' }],
