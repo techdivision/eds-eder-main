@@ -198,7 +198,7 @@ export const handleImages = (main) => {
     // remove link around the image, as it would link to the Typo3 url-structure
     parent = image.parentElement;
 
-    if (parent.tagName === 'A') {
+    if (parent.tagName === 'A' && parent.href.startsWith('/')) {
       // eliminate the link's Markup
       parent.outerHTML = image.outerHTML;
     }
@@ -244,6 +244,11 @@ export const handleLinks = (main, document, baseUrl) => {
 
       // remove link from collapse links as they cause an error in Sharepoint
       if (href.startsWith('#collapse')) {
+        link.outerHTML = link.innerText;
+      }
+
+      // remove links that triggered JS hide/show-logic
+      if (href === '#/') {
         link.outerHTML = link.innerText;
       }
 
@@ -657,7 +662,6 @@ export const handleFilterAndRows = (main, document) => {
   if (rows.length > 0) {
     const rowCells = [
       [blockName],
-      ['', '', '', '', 'power_min', 'power_max', 'brand'],
     ];
 
     rows.forEach((row) => {
@@ -683,64 +687,82 @@ export const handleFilterAndRows = (main, document) => {
       // perform modifications to original content data
       const content = originalContentDiv;
 
-      // extract logo
-      const originalLogo = originalContentDiv.querySelector('img');
-
-      // extract data-value from logo
-      const brand = originalLogo.getAttribute('data-value');
-
-      // build-up new logo in order to use 'data-regular' of the image
-      const resultLogo = document.createElement('img');
-
-      resultLogo.src = originalLogo.getAttribute('data-regular');
-      resultLogo.alt = brand;
-
-      // remove original logo from the content
-      originalLogo.remove();
-
-      // extract power-data
-      let powerMin = originalContentDiv.querySelector('span[data-value=power-min]');
-
-      if (powerMin) {
-        powerMin = parseInt(powerMin.innerText, 10);
-      } else {
-        powerMin = '';
-      }
-
-      let powerMax = originalContentDiv.querySelector('span[data-value=power-max]');
-
-      if (powerMax) {
-        powerMax = parseInt(powerMax.innerText, 10);
-      } else {
-        powerMax = '';
-      }
-
-      // create own paragraph, add italic element around text of info-button
-      const infoButton = originalContentDiv.querySelector('a.info-btn');
-
-      const italicElement = document.createElement('em');
-      italicElement.append(infoButton.innerHTML);
-
-      const infoButtonParagraph = document.createElement('p');
-      infoButtonParagraph.append(italicElement);
-
-      infoButton.innerHTML = infoButtonParagraph.outerHTML;
-
       // create own paragraph, add bold element around to text of contact-button
       const contactButton = originalContentDiv.querySelector('a.contact-btn');
 
-      const boldElement = document.createElement('strong');
-      boldElement.append(contactButton.innerHTML);
+      if (contactButton) {
+        const boldElement = document.createElement('strong');
+        boldElement.append(contactButton.innerHTML);
 
-      const contactButtonParagraph = document.createElement('p');
-      contactButtonParagraph.append(boldElement);
+        const contactButtonParagraph = document.createElement('p');
+        contactButtonParagraph.append(boldElement);
 
-      contactButton.innerHTML = contactButtonParagraph.outerHTML;
+        contactButton.innerHTML = contactButtonParagraph.outerHTML;
+      }
 
-      // store modified data
-      rowCells.push(
-        [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
-      );
+      // check for different types of rows
+      if (originalImageDiv && originalContentDiv && !originalRecommendDiv) {
+        // image and content are present, but no recommendations -> Rows with only two columns
+
+        // store modified data
+        rowCells.push(
+          [resultImage, content],
+        );
+      } else {
+        // recommendations are present -> use Rows with full number of columns
+        // only as first line of data: add headlines for filters
+        if (rowCells.length === 1) {
+          rowCells.push(['', '', '', '', 'power_min', 'power_max', 'brand']);
+        }
+
+        // extract logo
+        const originalLogo = originalContentDiv.querySelector('img');
+
+        // extract data-value from logo
+        const brand = originalLogo.getAttribute('data-value');
+
+        // build-up new logo in order to use 'data-regular' of the image
+        const resultLogo = document.createElement('img');
+
+        resultLogo.src = originalLogo.getAttribute('data-regular');
+        resultLogo.alt = brand;
+
+        // remove original logo from the content
+        originalLogo.remove();
+
+        // extract power-data
+        let powerMin = originalContentDiv.querySelector('span[data-value=power-min]');
+
+        if (powerMin) {
+          powerMin = parseInt(powerMin.innerText, 10);
+        } else {
+          powerMin = '';
+        }
+
+        let powerMax = originalContentDiv.querySelector('span[data-value=power-max]');
+
+        if (powerMax) {
+          powerMax = parseInt(powerMax.innerText, 10);
+        } else {
+          powerMax = '';
+        }
+
+        // create own paragraph, add italic element around text of info-button
+        const infoButton = originalContentDiv.querySelector('a.info-btn');
+
+        const italicElement = document.createElement('em');
+        italicElement.append(infoButton.innerHTML);
+
+        const infoButtonParagraph = document.createElement('p');
+        infoButtonParagraph.append(italicElement);
+
+        infoButton.innerHTML = infoButtonParagraph.outerHTML;
+
+        // store modified data
+        rowCells.push(
+          [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
+        );
+      }
     });
     const rowResultTable = WebImporter.DOMUtils.createTable(rowCells, document);
 
@@ -911,7 +933,7 @@ export const handleContacts = (main, document) => {
 export const handlePdfs = (main, url, baseUrl, results) => {
   main.querySelectorAll('a').forEach((a) => {
     const href = a.getAttribute('href');
-    if (href && href.endsWith('.pdf')) {
+    if (href && href.startsWith('/') && href.endsWith('.pdf')) {
       const u = new URL(href, url);
       const newPath = WebImporter.FileUtils.sanitizePath(u.pathname);
       results.push({
