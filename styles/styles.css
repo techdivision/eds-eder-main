@@ -526,6 +526,23 @@ main .section-breadcrumbs {
     float: left;
     margin: 0 var(--spacing-half) 0 0;
   }
+
+  .section.location {
+    max-width: var(--page-width);
+    display: grid;
+    grid-template-columns: 2fr 5fr;
+    column-gap: var(--spacing-simple);
+    margin: 0 auto;
+  }
+
+  .section.location > div {
+    align-self: start;
+    margin: 0;
+  }
+
+  .section.location > div > p:first-child {
+    margin-top: 0;
+  }
 }
 
 @keyframes loading {
