@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2024 TechDivision GmbH
+ * All rights reserved
+ *
+ * This product includes proprietary software developed at TechDivision GmbH, Germany
+ * For more information see https://www.techdivision.com/
+ *
+ * To obtain a valid license for using this software please contact us at
+ * license@techdivision.com
+ */
+.contacts {
+  font-size: var(--body-font-size-xs);
+  line-height: var(--body-line-height-xs);
+}
+.contacts p {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.contacts a.has-chevron::after {
+  content: none;
+}
+
+.contacts .section.columns-container {
+  padding: 0;
+}
+
+.contacts .section .columns-wrapper > .columns > div {
+  align-items: start;
+  flex-direction: unset;
+  gap: var(--spacing-half);
+}
+
+.contacts .section .columns-wrapper > .columns > div p:first-child {
+  font-size: var(--body-font-size-s);
+}
+
+.contacts .section .columns-wrapper > .columns > div p:nth-child(2) {
+  margin-bottom: var(--spacing-half);
+}
+
+.contacts-wrapper .contact-headline {
+  margin-bottom: var(--spacing-half);
+  font-size: var(--heading-font-size-m);
+  line-height: var(--heading-line-height-m);
+  font-weight: var(--font-weight-bold);
+}
+
+@media (width > 900px) {
+  .contacts.columns-3-cols > div {
+    display: grid;
+    grid-gap: var(--spacing-simple);
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

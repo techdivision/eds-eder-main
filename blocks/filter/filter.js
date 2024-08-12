@@ -10,7 +10,7 @@
  */
 
 import {
-  getUrlParam, isEmpty, setUrlParam, transformRowsToData,
+  getUrlParam, isEmpty, replaceWhitespaces, setUrlParam, transformRowsToData,
 } from '../../scripts/helpers.js';
 import { build as decorateSliderFilter } from './types/slider.js';
 import { build as decorateDropdownFilter } from './types/dropdown.js';
@@ -126,7 +126,7 @@ function retrieveFilterItems(block, filters) {
   const allFilterFields = filters.flatMap((filter) => filter.filterFields);
   const fields = allFilterFields.map((field) => {
     // remove whitespaces from field
-    const cleanField = field.replace(/\s/g, '');
+    const cleanField = replaceWhitespaces(field, '');
     return `[data-${cleanField}]`;
   })
     .join(', ');
