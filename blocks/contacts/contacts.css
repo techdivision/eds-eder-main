@@ -12,10 +12,12 @@
   font-size: var(--body-font-size-xs);
   line-height: var(--body-line-height-xs);
 }
+
 .contacts p {
   margin-top: 0;
   margin-bottom: 5px;
 }
+
 .contacts a.has-chevron::after {
   content: none;
 }
