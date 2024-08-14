@@ -285,7 +285,7 @@ export const handleEventsList = (main, document, params) => {
  */
 export const handleContactBanner = (main, document) => {
   // check for all the different variations of the Contact-Banner
-  const originalContactBlocks = document.querySelectorAll('div.tf-service-wrapper, div.kontakt-banner, div.staff');
+  const originalContactBlocks = document.querySelectorAll('div.tf-service-wrapper, div.kontakt-banner-content, div.staff');
 
   originalContactBlocks.forEach((originalContactBlock) => {
     let names = originalContactBlock.querySelectorAll('p.h3, p.staff-headline');
@@ -297,6 +297,8 @@ export const handleContactBanner = (main, document) => {
       const namesToCheck = [
         'Daniel Strehle',
         'Klaus Mayer',
+        'RTK-Experten',
+        'AGRATEC LANDTECHNIKZENTRUM',
       ];
 
       // check if name can be extracted from the text
@@ -307,38 +309,40 @@ export const handleContactBanner = (main, document) => {
       });
     }
 
-    const cells = [
-      ['Contact-Banner'],
-    ];
+    if (names.length > 0) {
+      const cells = [
+        ['Contact-Banner'],
+      ];
 
-    // check if there are multiple names within the Block
-    if (names.length > 1) {
-      cells.push([names[0], names[1]]);
-    } else {
-      cells.push([names[0]]);
-    }
-
-    // check if there are
-    const links = originalContactBlock.querySelectorAll('a');
-
-    let lastLink;
-    if (links.length > 0) {
-      lastLink = links[links.length - 1];
-
-      // push one link for each entry
+      // check if there are multiple names within the Block
       if (names.length > 1) {
-        cells.push(
-          [lastLink, lastLink.cloneNode(true)],
-        );
+        cells.push([names[0], names[1]]);
       } else {
-        cells.push(
-          [lastLink],
-        );
+        cells.push([names[0]]);
       }
-    }
-    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
-    originalContactBlock.replaceWith(resultTable);
+      // check if there are
+      const buttons = originalContactBlock.querySelectorAll('div.coa-button');
+
+      let firstButton;
+      if (buttons.length > 0) {
+        [firstButton] = buttons;
+
+        // push one link for each entry
+        if (names.length > 1) {
+          cells.push(
+            [firstButton, firstButton.cloneNode(true)],
+          );
+        } else {
+          cells.push(
+            [firstButton],
+          );
+        }
+      }
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      originalContactBlock.replaceWith(resultTable);
+    }
   });
 };
 
