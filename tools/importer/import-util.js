@@ -61,6 +61,19 @@ export const isButton = (link) => {
 };
 
 /**
+ * Returns whether the current import takes place for eder-gmbh.de
+ * @param params
+ * @returns {boolean}
+ */
+export const isEderGmbh = (params) => {
+  const originalUrl = new URL(params.originalURL);
+
+  const originalDomain = originalUrl.host;
+
+  return originalDomain === 'www.eder-gmbh.de';
+};
+
+/**
  * Determines whether the given news or events entry should be imported for the given domain
  * @param entry
  * @param originalUrl
@@ -279,9 +292,11 @@ export const handle2ColumnsGrid = (main, document) => {
     const result = document.createElement('div');
 
     // add headline to result, if there is any
-    const headline = parent.querySelector('h2');
+    const firstChild = parent.firstElementChild;
+    const headline = firstChild.querySelector('h2');
 
-    if (headline) {
+    // avoid adding headline from product-entries
+    if (firstChild.tagName === 'DIV' && headline) {
       result.append(headline);
     }
 
@@ -303,7 +318,7 @@ export const handle2ColumnsGrid = (main, document) => {
         const newContent = document.createElement('div');
 
         const logo = originalContent.querySelector('img');
-        const productHeadline = originalContent.querySelector('h3');
+        const productHeadline = originalContent.querySelector('h3, h2');
         const productDescription = originalContent.querySelector('p.description');
 
         /*
