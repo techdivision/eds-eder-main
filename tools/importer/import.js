@@ -108,6 +108,16 @@ export const handleShopData = (main, document) => {
       const phoneNumbers = generalContact.querySelector('div.phone-numbers');
       const openTimes = generalContact.querySelector('div.open-times');
 
+      // format openTimes
+      const openTimeRows = openTimes.querySelectorAll('div.col-xs-12');
+
+      openTimeRows.forEach((openTimeRow) => {
+        const firstEntry = openTimeRow.querySelector('div.col-xs-3');
+        const secondEntry = openTimeRow.querySelector('div.col-xs-9');
+
+        openTimeRow.innerHTML = `${firstEntry.innerText} ${secondEntry.innerText}`;
+      });
+
       generalContactCells.push([divisionName, phoneNumbers, openTimes]);
     });
 
@@ -121,7 +131,7 @@ export const handleShopData = (main, document) => {
 
     const sectionMetadata = [
       ['Section Metadata'],
-      ['Style', 'side-by-side'],
+      ['Style', 'location'],
     ];
     const sectionMetadataTable = WebImporter.DOMUtils.createTable(sectionMetadata, document);
 
