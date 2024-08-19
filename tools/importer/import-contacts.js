@@ -58,6 +58,20 @@ export default {
 
       const details = contact;
 
+      // remove newline between icon and text
+      const detailLines = details.querySelectorAll('div.detail-text');
+
+      detailLines.forEach((detailLine) => {
+        const icon = detailLine.querySelector('div.staff-headline');
+        const staffText = detailLine.querySelector('div.staff-text');
+
+        const newLine = document.createElement('p');
+
+        newLine.append(`${icon.innerText} ${staffText.innerText}`);
+
+        detailLine.replaceWith(newLine);
+      });
+
       const cells = [
         ['Columns (one-quarter-three-quarter)'],
         [image, details],

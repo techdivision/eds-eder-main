@@ -12,6 +12,8 @@
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { loadPlaceholders, ts } from '../../scripts/i18n.js';
 import { setUrlParam } from '../../scripts/helpers.js';
+import { cachedFetch } from '../../scripts/load-resource.js';
+import { queryParamSearch } from '../../scripts/defaults.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
@@ -84,24 +86,6 @@ function highlightTextElements(terms, elements) {
   });
 }
 
-export async function fetchData(source) {
-  const response = await fetch(source);
-  if (!response.ok) {
-    // eslint-disable-next-line no-console
-    console.error('error loading API response', response);
-    return null;
-  }
-
-  const json = await response.json();
-  if (!json) {
-    // eslint-disable-next-line no-console
-    console.error('empty API response', source);
-    return null;
-  }
-
-  return json.data;
-}
-
 function renderResult(result, searchTerms, titleTag) {
   const li = document.createElement('li');
   const a = document.createElement('a');
@@ -140,7 +124,7 @@ function clearSearchResults(block) {
 
 function clearSearch(block) {
   clearSearchResults(block);
-  setUrlParam('q', null);
+  setUrlParam(queryParamSearch, null);
 }
 
 async function renderResults(block, config, filteredData, searchTerms) {
@@ -213,7 +197,7 @@ function filterData(searchTerms, data) {
 
 async function handleSearch(e, block, config) {
   const searchValue = e.target.value;
-  setUrlParam('q', searchValue);
+  setUrlParam(queryParamSearch, searchValue);
 
   if (searchValue.length < 3) {
     clearSearch(block);
@@ -223,7 +207,7 @@ async function handleSearch(e, block, config) {
     .split(/\s+/)
     .filter((term) => !!term);
 
-  const data = await fetchData(config.source);
+  const data = await cachedFetch(config.source);
   const filteredData = filterData(searchTerms, data || []);
   await renderResults(block, config, filteredData, searchTerms);
 }
@@ -289,9 +273,9 @@ export default async function decorate(block) {
     searchResultsContainer(block),
   );
 
-  if (searchParams.get('q')) {
+  if (searchParams.get(queryParamSearch)) {
     const input = block.querySelector('input');
-    input.value = searchParams.get('q');
+    input.value = searchParams.get(queryParamSearch);
     input.dispatchEvent(new Event('input'));
   }
 

@@ -26,6 +26,8 @@ import {
 } from './aem.js';
 import { getCurrentLanguage, loadPlaceholders, ts } from './i18n.js';
 import { addBodyClass } from './helpers.js';
+import { clearFetchCache } from './load-resource.js';
+import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -194,8 +196,20 @@ export function decorateMain(main) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
+  // head and body tags
   document.documentElement.lang = getCurrentLanguage();
   decorateTemplateAndTheme();
+  renderCanonical();
+  renderHrefLang();
+  document.addEventListener('changedLanguages', renderHrefLang);
+
+  // clear cache
+  const usp = new URLSearchParams(window.location.search);
+  if (usp.get('nocache')) {
+    await clearFetchCache();
+  }
+
+  // decorate main
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);

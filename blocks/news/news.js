@@ -17,14 +17,20 @@ import { ts } from '../../scripts/i18n.js';
 /**
  * Manipulate items
  *
- * @param {Array} items
+ * @param {Array<{
+ *   image: string,
+ *   previewImage?: string,
+ *   title: string,
+ *   publishDate: string,
+ *   lastModified: string
+ * }>} items
  * @returns {Array}
  */
 function manipulateItems(items) {
   items.forEach((item) => {
     // filter date
     item.filterDate = getReadableDate(
-      convertDate(item.lastModified),
+      convertDate(item.publishDate || item.lastModified),
       {
         year: 'numeric',
         month: 'long',
@@ -32,11 +38,13 @@ function manipulateItems(items) {
     );
 
     // formatted date
-    item.formattedDate = getReadableDate(convertDate(item.lastModified));
+    item.formattedDate = getReadableDate(
+      convertDate(item.publishDate || item.lastModified),
+    );
 
     // optimized image
     item.picture = createOptimizedPicture(
-      item.image,
+      item.previewImage || item.image,
       item.title,
       true,
       [{ width: '500' }],

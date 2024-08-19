@@ -11,8 +11,8 @@
 
 import {
   copyAttributes,
-  transformToMetadata,
   isFilterable,
+  transformToMetadata,
   wrapImages,
 } from '../../scripts/helpers.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
@@ -28,8 +28,9 @@ function optimizeImage(scope, selector, imgWidth) {
       const closestPicture = img.closest('picture');
 
       if (closestPicture) {
-        // eslint-disable-next-line max-len
-        closestPicture.replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: imgWidth }]));
+        closestPicture.replaceWith(
+          createOptimizedPicture(img.src, img.alt, false, [{ width: imgWidth }]),
+        );
       }
     });
 }

@@ -19,9 +19,10 @@
 }
 
 .cards > ul > li {
-  border: 1px solid var(--dark-color);
-  background-color: var(--background-color);
   position: relative;
+  border-radius: var(--card-border-radius);
+  background-color: var(--color-gray-light);
+  overflow: hidden;
 }
 
 .cards > ul > li.clickable {
@@ -78,11 +79,7 @@
 }
 
 .cards.teaser > ul > li {
-  border: none;
-  border-radius: var(--card-border-radius);
   position: relative;
-  background-color: var(--color-gray-light);
-  overflow: hidden;
 }
 
 .cards.teaser > ul > li .cards-card-image img {

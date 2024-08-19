@@ -198,7 +198,7 @@ export const handleImages = (main) => {
     // remove link around the image, as it would link to the Typo3 url-structure
     parent = image.parentElement;
 
-    if (parent.tagName === 'A') {
+    if (parent.tagName === 'A' && parent.href.startsWith('/')) {
       // eliminate the link's Markup
       parent.outerHTML = image.outerHTML;
     }
@@ -227,18 +227,28 @@ export const handleLinks = (main, document, baseUrl) => {
 
       // replace relative urls
       if (href.charAt(0) === '/') {
-        link.setAttribute('href', baseUrl + href);
+        href = baseUrl + href;
       }
 
       // replace http- by https-urls
       if (href.startsWith('http://')) {
         href = `https://${href.slice('7')}`;
-
-        link.setAttribute('href', href);
       }
+
+      // remove trailing slash from internal links
+      if (href.includes(baseUrl)) {
+        href = href.replace(/\/$/, '');
+      }
+
+      link.setAttribute('href', href);
 
       // remove link from collapse links as they cause an error in Sharepoint
       if (href.startsWith('#collapse')) {
+        link.outerHTML = link.innerText;
+      }
+
+      // remove links that triggered JS hide/show-logic
+      if (href === '#/') {
         link.outerHTML = link.innerText;
       }
 
@@ -500,6 +510,13 @@ export const handleIframes = (main, document) => {
           [blockname],
           [link],
         ];
+        // handle alfright.eu-urls
+      } else if (src.startsWith('https://app.alfright.eu/')) {
+        // set static key for hlx.page - must be configured for production-urls manually later on
+        cells = [
+          ['data-privacy-notice'],
+          ['bebc9af8aa47408e85446c482ae3b64a'],
+        ];
       }
 
       if (cells) {
@@ -571,18 +588,33 @@ export const handleGallerySlider = (main, document, baseUrl) => {
 };
 
 export const handleTextBoxes = (main, document) => {
-  const textBoxes = main.querySelectorAll('div.alert-danger');
+  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865');
 
-  if (textBoxes) {
-    textBoxes.forEach((textBox) => {
+  if (redTextBoxes) {
+    redTextBoxes.forEach((redTextBox) => {
       const cells = [
         ['Text-Box (red)'],
-        [textBox.innerHTML],
+        [redTextBox.innerHTML],
       ];
 
       const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
-      textBox.replaceWith(resultTable);
+      redTextBox.replaceWith(resultTable);
+    });
+  }
+
+  const blueTextBoxes = main.querySelectorAll('div.alert-warning, div.custom-style-1486');
+
+  if (blueTextBoxes) {
+    blueTextBoxes.forEach((blueTextBox) => {
+      const cells = [
+        ['Text-Box (blue)'],
+        [blueTextBox.innerHTML],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      blueTextBox.replaceWith(resultTable);
     });
   }
 };
@@ -597,6 +629,8 @@ export const handleFilterAndRows = (main, document) => {
   let parent;
 
   const result = document.createElement('div');
+
+  let blockName = 'Rows';
 
   if (filter) {
     parent = filter.parentElement;
@@ -619,13 +653,15 @@ export const handleFilterAndRows = (main, document) => {
     const filterResultTable = WebImporter.DOMUtils.createTable(filterCells, document);
 
     result.append(filterResultTable);
+
+    // change block-name to be filterable
+    blockName = 'Rows (filterable)';
   }
 
   // handle rows with product data
   if (rows.length > 0) {
     const rowCells = [
-      ['Rows'],
-      ['', '', '', '', 'power_min', 'power_max', 'brand'],
+      [blockName],
     ];
 
     rows.forEach((row) => {
@@ -651,64 +687,82 @@ export const handleFilterAndRows = (main, document) => {
       // perform modifications to original content data
       const content = originalContentDiv;
 
-      // extract logo
-      const originalLogo = originalContentDiv.querySelector('img');
-
-      // extract data-value from logo
-      const brand = originalLogo.getAttribute('data-value');
-
-      // build-up new logo in order to use 'data-regular' of the image
-      const resultLogo = document.createElement('img');
-
-      resultLogo.src = originalLogo.getAttribute('data-regular');
-      resultLogo.alt = brand;
-
-      // remove original logo from the content
-      originalLogo.remove();
-
-      // extract power-data
-      let powerMin = originalContentDiv.querySelector('span[data-value=power-min]');
-
-      if (powerMin) {
-        powerMin = parseInt(powerMin.innerText, 10);
-      } else {
-        powerMin = '';
-      }
-
-      let powerMax = originalContentDiv.querySelector('span[data-value=power-max]');
-
-      if (powerMax) {
-        powerMax = parseInt(powerMax.innerText, 10);
-      } else {
-        powerMax = '';
-      }
-
-      // create own paragraph, add italic element around text of info-button
-      const infoButton = originalContentDiv.querySelector('a.info-btn');
-
-      const italicElement = document.createElement('em');
-      italicElement.append(infoButton.innerHTML);
-
-      const infoButtonParagraph = document.createElement('p');
-      infoButtonParagraph.append(italicElement);
-
-      infoButton.innerHTML = infoButtonParagraph.outerHTML;
-
       // create own paragraph, add bold element around to text of contact-button
       const contactButton = originalContentDiv.querySelector('a.contact-btn');
 
-      const boldElement = document.createElement('strong');
-      boldElement.append(contactButton.innerHTML);
+      if (contactButton) {
+        const boldElement = document.createElement('strong');
+        boldElement.append(contactButton.innerHTML);
 
-      const contactButtonParagraph = document.createElement('p');
-      contactButtonParagraph.append(boldElement);
+        const contactButtonParagraph = document.createElement('p');
+        contactButtonParagraph.append(boldElement);
 
-      contactButton.innerHTML = contactButtonParagraph.outerHTML;
+        contactButton.innerHTML = contactButtonParagraph.outerHTML;
+      }
 
-      // store modified data
-      rowCells.push(
-        [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
-      );
+      // check for different types of rows
+      if (originalImageDiv && originalContentDiv && !originalRecommendDiv) {
+        // image and content are present, but no recommendations -> Rows with only two columns
+
+        // store modified data
+        rowCells.push(
+          [resultImage, content],
+        );
+      } else {
+        // recommendations are present -> use Rows with full number of columns
+        // only as first line of data: add headlines for filters
+        if (rowCells.length === 1) {
+          rowCells.push(['', '', '', '', 'power_min', 'power_max', 'brand']);
+        }
+
+        // extract logo
+        const originalLogo = originalContentDiv.querySelector('img');
+
+        // extract data-value from logo
+        const brand = originalLogo.getAttribute('data-value');
+
+        // build-up new logo in order to use 'data-regular' of the image
+        const resultLogo = document.createElement('img');
+
+        resultLogo.src = originalLogo.getAttribute('data-regular');
+        resultLogo.alt = brand;
+
+        // remove original logo from the content
+        originalLogo.remove();
+
+        // extract power-data
+        let powerMin = originalContentDiv.querySelector('span[data-value=power-min]');
+
+        if (powerMin) {
+          powerMin = parseInt(powerMin.innerText, 10);
+        } else {
+          powerMin = '';
+        }
+
+        let powerMax = originalContentDiv.querySelector('span[data-value=power-max]');
+
+        if (powerMax) {
+          powerMax = parseInt(powerMax.innerText, 10);
+        } else {
+          powerMax = '';
+        }
+
+        // create own paragraph, add italic element around text of info-button
+        const infoButton = originalContentDiv.querySelector('a.info-btn');
+
+        const italicElement = document.createElement('em');
+        italicElement.append(infoButton.innerHTML);
+
+        const infoButtonParagraph = document.createElement('p');
+        infoButtonParagraph.append(italicElement);
+
+        infoButton.innerHTML = infoButtonParagraph.outerHTML;
+
+        // store modified data
+        rowCells.push(
+          [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
+        );
+      }
     });
     const rowResultTable = WebImporter.DOMUtils.createTable(rowCells, document);
 
@@ -829,40 +883,67 @@ export const handleContacts = (main, document) => {
   // remove "Kontakt"-headline from Sidebar
   const sidebar = main.querySelector('div.news-sidebar');
 
+  // only consider Contacts within the sidebar
   if (sidebar) {
-    // unfortunately there are different Markups
-    let contactHeadline = sidebar.querySelector('div.bodytext');
+    // unfortunately there are several different Markups, and no unique identification
+    const contactHeadline = sidebar.querySelector('span, strong, h1, h2');
 
-    if (!contactHeadline) {
-      contactHeadline = sidebar.querySelector('h1');
-    }
-
-    // remove if a headline was found
     if (contactHeadline) {
-      contactHeadline.remove();
+      const contactHeadlineText = (contactHeadline.innerText).toLowerCase();
+
+      if (contactHeadlineText.includes('kontakt')) {
+        contactHeadline.remove();
+      }
+    }
+
+    // use id here, as there is no other way of identification
+    const contactBlocks = sidebar.querySelectorAll('div.element-dce_dceuid2');
+
+    let parent;
+
+    if (contactBlocks.length > 0) {
+      const contactCells = [
+        ['Contacts'],
+      ];
+
+      contactBlocks.forEach((contactBlock) => {
+        parent = contactBlock.parentElement;
+
+        const name = contactBlock.querySelector('p.staff-headline').innerText;
+
+        contactCells.push([name]);
+      });
+
+      const contactsResultTable = WebImporter.DOMUtils.createTable(contactCells, document);
+
+      parent.replaceWith(contactsResultTable);
     }
   }
+};
 
-  // use id here, as there is no other way of identification
-  const contactBlocks = main.querySelectorAll('div.element-dce_dceuid2');
+/**
+ * Handle internal PDF download-links on the page by downloading the target
+ * and replacing the download-link
+ * Taken from https://github.com/adobe/helix-importer-ui/blob/main/docs/download-pdf.md
+ * @param main
+ * @param url
+ * @param baseUrl
+ * @param results
+ */
+export const handlePdfs = (main, url, baseUrl, results) => {
+  main.querySelectorAll('a').forEach((a) => {
+    const href = a.getAttribute('href');
+    if (href && href.startsWith('/') && href.endsWith('.pdf')) {
+      const u = new URL(href, url);
+      const newPath = WebImporter.FileUtils.sanitizePath(u.pathname);
+      results.push({
+        path: newPath,
+        from: u.toString(),
+      });
 
-  let parent;
-
-  if (contactBlocks.length > 0) {
-    const contactCells = [
-      ['Contacts'],
-    ];
-
-    contactBlocks.forEach((contactBlock) => {
-      parent = contactBlock.parentElement;
-
-      const name = contactBlock.querySelector('p.staff-headline').innerText;
-
-      contactCells.push([name]);
-    });
-
-    const contactsResultTable = WebImporter.DOMUtils.createTable(contactCells, document);
-
-    parent.replaceWith(contactsResultTable);
-  }
+      // update the link to new path on the target host
+      // this is required to be able to follow the links in Word
+      a.setAttribute('href', newPath);
+    }
+  });
 };

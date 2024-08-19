@@ -239,6 +239,16 @@ function addBodyClass(...classes) {
 }
 
 /**
+ * Check for body class
+ *
+ * @param {String} className
+ * @returns {boolean}
+ */
+function hasBodyClass(className) {
+  return document.body.classList.contains(className);
+}
+
+/**
  * Check if block is filterable
  *
  * @returns {boolean}
@@ -269,6 +279,29 @@ function wrapImages(scope) {
   }
 }
 
+/**
+ * Replace whitespaces with any other char
+ * @param string
+ * @param replaceChar
+ * @returns {*}
+ */
+function replaceWhitespaces(string, replaceChar) {
+  return string.replace(/\s/g, replaceChar);
+}
+
+/**
+ * Normalizes string
+ *
+ * @param str
+ * @returns {*}
+ */
+function normalize(str) {
+  const combining = /[\u0300-\u036F]/g;
+  return str.normalize('NFKD')
+    .replace(combining, '')
+    .replace('ß', 'ss');
+}
+
 // export
 export {
   isEmpty,
@@ -283,4 +316,7 @@ export {
   addBodyClass,
   isFilterable,
   wrapImages,
+  replaceWhitespaces,
+  normalize,
+  hasBodyClass,
 };

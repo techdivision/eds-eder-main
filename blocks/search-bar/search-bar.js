@@ -10,6 +10,8 @@
  */
 
 import { loadPlaceholders, ts } from '../../scripts/i18n.js';
+import { queryParamSearch } from '../../scripts/defaults.js';
+import { getUrlParam } from '../../scripts/helpers.js';
 
 /**
  * Build search form
@@ -22,7 +24,8 @@ function getSearchForm() {
   form.method = 'get';
 
   const input = document.createElement('input');
-  input.name = 'q';
+  input.name = queryParamSearch;
+  input.value = getUrlParam(queryParamSearch);
   input.className = 'search-input';
 
   const searchPlaceholder = ts('Search');

@@ -9,8 +9,6 @@
  * license@techdivision.com
  */
 
-// noinspection JSUnresolvedReference
-
 import { decorateList } from '../../scripts/list.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { convertDate, getCurrentUrl, getReadableDate } from '../../scripts/helpers.js';
@@ -20,7 +18,7 @@ import { defaultDateTimeLocale } from '../../scripts/defaults.js';
 /**
  * Check if event is relevant
  *
- * @param {Object} item
+ * @param {Object|{startDate: string, endDate: string}} item
  */
 function isCurrentEvent(item) {
   return !item.endDate || convertDate(item.endDate) >= new Date();
@@ -29,7 +27,7 @@ function isCurrentEvent(item) {
 /**
  * Get date range
  *
- * @param {Object} item
+ * @param {Object|{startDate: string, endDate: string}} item
  * @returns {string}
  */
 function getDateRange(item) {
@@ -49,7 +47,7 @@ function getDateRange(item) {
 /**
  * Manipulate items
  *
- * @param {Array} items
+ * @param {Array<{image: string, previewImage?: string, title: string}>} items
  * @returns {Array}
  */
 function manipulateItems(items) {
@@ -64,7 +62,7 @@ function manipulateItems(items) {
 
     // optimized image
     item.picture = createOptimizedPicture(
-      item.image,
+      item.previewImage || item.image,
       item.title,
       true,
       [{ width: '500' }],

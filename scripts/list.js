@@ -9,12 +9,12 @@
  * license@techdivision.com
  */
 
-import ffetch from './vendor/ffetch.js';
 import { getCurrentUrl, getUrlParam, setUrlParam } from './helpers.js';
 import { loadPlaceholders, ts } from './i18n.js';
 import { getTenants, getTenantUrl } from './tenants.js';
 import { readBlockConfig } from './aem.js';
-import { defaultTenant } from './defaults.js';
+import { defaultTenant, queryParamPage } from './defaults.js';
+import { cachedFetch } from './load-resource.js';
 
 /**
  * Get current page
@@ -22,7 +22,7 @@ import { defaultTenant } from './defaults.js';
  * @returns {Number}
  */
 function getCurrentPage() {
-  return Number(getUrlParam('page')) || 1;
+  return Number(getUrlParam(queryParamPage)) || 1;
 }
 
 /**
@@ -35,7 +35,7 @@ function setCurrentPage(page) {
   if (Number.isNaN(page) || page < 2) {
     actualPage = null;
   }
-  setUrlParam('page', actualPage);
+  setUrlParam(queryParamPage, actualPage);
 }
 
 /**
@@ -234,8 +234,7 @@ function sortItems(items) {
  * @returns {Promise}
  */
 async function fetchListItems(listType, baseUrl) {
-  return ffetch(`${baseUrl || '/'}query-index-${listType}.json`)
-    .all()
+  return cachedFetch(`${baseUrl || '/'}query-index-${listType}.json`)
     // do not add calculation errors
     .then((items) => items.filter((item) => item.path && item.path !== '#CALC!'))
     .then(sortItems);
