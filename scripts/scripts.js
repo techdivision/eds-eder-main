@@ -201,7 +201,7 @@ async function loadEager(doc) {
 
   // clear cache
   const usp = new URLSearchParams(window.location.search);
-  if (usp.get('nocache')) {
+  if (usp.get('nocache') || usp.get('disablecache')) {
     await clearFetchCache();
   }
 

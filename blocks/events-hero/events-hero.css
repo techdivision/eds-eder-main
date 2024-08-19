@@ -62,7 +62,8 @@ main .events-hero-container {
 
     .container-events {
       margin: 0 auto;
-      max-width: 270px;
+      width: 270px;
+      max-width: 100%;
       background-color: var(--color-gray-dark);
       padding: 20px;
 
