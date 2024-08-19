@@ -19,7 +19,6 @@ main .events-hero-container {
   .events-hero {
     p, a {
       color: var(--color-white);
-      display: inline-block;
     }
 
     @media (width >= 900px) {
