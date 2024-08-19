@@ -10,11 +10,16 @@
  */
 
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { copyAttributes, transformToMetadata } from '../../scripts/helpers.js';
+import {
+  copyAttributes,
+  transformToMetadata,
+  isFilterable,
+  wrapImages,
+} from '../../scripts/helpers.js';
 
 export default function decorate(block) {
   // transform to metadata when class filterable is set
-  if (block.classList.contains('filterable')) {
+  if (isFilterable(block)) {
     transformToMetadata(block);
   }
 
@@ -30,21 +35,7 @@ export default function decorate(block) {
         div.className = 'cards-card-image';
       } else {
         div.className = 'cards-card-body';
-
-        const images = div.querySelectorAll('picture');
-        if (images.length > 0) {
-          const imgWrapper = document.createElement('div');
-          imgWrapper.className = 'image-wrapper';
-
-          images.forEach((img) => {
-            const parent = img.closest('p');
-            if (parent) {
-              imgWrapper.append(parent);
-            }
-          });
-
-          div.append(imgWrapper);
-        }
+        wrapImages(div);
       }
     });
 
