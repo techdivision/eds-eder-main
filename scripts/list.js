@@ -10,9 +10,8 @@
  */
 
 import { getCurrentUrl, getUrlParam, setUrlParam } from './helpers.js';
-import { loadPlaceholders, ts } from './i18n.js';
+import { loadPlaceholders, tContent, ts } from './i18n.js';
 import { getTenants, getTenantUrl } from './tenants.js';
-import { readBlockConfig } from './aem.js';
 import { defaultTenant, queryParamPage } from './defaults.js';
 import { cachedFetch } from './load-resource.js';
 
@@ -41,13 +40,13 @@ function setCurrentPage(page) {
 /**
  * Get filter block
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement} referenceElement
  * @returns {Element}
  */
-function getFilterBlock(block) {
+function getFilterBlock(referenceElement) {
   // define scope
   let scope = document;
-  const currentSection = block.closest('.section');
+  const currentSection = referenceElement.closest('.section');
   if (currentSection) {
     scope = currentSection;
   }
@@ -102,18 +101,18 @@ function createPaginationListItem(page, label) {
 /**
  * Render pagination
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement} container
  * @param {Array} items
  * @param {Number|String} page
  * @param {Number|String} limit
  * @returns {Promise}
  */
-async function renderPagination(block, items, page, limit) {
+async function renderPagination(container, items, page, limit) {
   // ensure placeholders have been loaded
   await loadPlaceholders();
 
   // find filter block
-  const filterBlock = getFilterBlock(block);
+  const filterBlock = getFilterBlock(container);
 
   // get filtered items
   const filteredItems = getFilteredItems(items);
@@ -187,7 +186,7 @@ async function renderPagination(block, items, page, limit) {
       if (filterBlock) {
         filterBlock.dispatchEvent(new Event('renderFilters'));
       } else {
-        block.dispatchEvent(new Event('pageChanged'));
+        container.dispatchEvent(new Event('pageChanged'));
       }
       event.preventDefault();
     }
@@ -203,16 +202,13 @@ async function renderPagination(block, items, page, limit) {
  * @returns {*}
  */
 function getItemsForCurrentPage(items, itemsPerPage) {
-  // retrieve items that match for current filter set
-  const filteredItems = getFilteredItems(items);
-
   // get current page from URL parameter
   const currentPage = getCurrentPage();
 
   // calculate items for current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  return filteredItems.slice(startIndex, endIndex);
+  return items.slice(startIndex, endIndex);
 }
 
 /**
@@ -222,7 +218,41 @@ function getItemsForCurrentPage(items, itemsPerPage) {
  * @returns {Array}
  */
 function sortItems(items) {
-  items.sort((a, b) => b.lastModified - a.lastModified);
+  // check for fields to check for sorting
+  const fieldsToSort = [
+    'endDate',
+    'startDate',
+    'publishDate',
+    'lastModified',
+  ];
+
+  // get first available date
+  function getFirstAvailableDate(item) {
+    for (let i = 0; i < fieldsToSort.length; i += 1) {
+      const field = fieldsToSort[i];
+      if (item[field]) {
+        return item[field];
+      }
+    }
+    return null;
+  }
+
+  // sort items
+  items.sort((a, b) => {
+    const dateA = getFirstAvailableDate(a);
+    const dateB = getFirstAvailableDate(b);
+
+    if (dateA && dateB) {
+      if (dateA < dateB) return 1;
+      if (dateA > dateB) return -1;
+    } else if (dateA) {
+      return -1;
+    } else if (dateB) {
+      return 1;
+    }
+    return 0;
+  });
+
   return items;
 }
 
@@ -237,6 +267,15 @@ async function fetchListItems(listType, baseUrl) {
   return cachedFetch(`${baseUrl || '/'}query-index-${listType}.json`)
     // do not add calculation errors
     .then((items) => items.filter((item) => item.path && item.path !== '#CALC!'))
+    .then((items) => items.map((item) => {
+      Object.keys(item)
+        .forEach((key) => {
+          if (item[key] === '0') {
+            item[key] = null;
+          }
+        });
+      return item;
+    }))
     .then(sortItems);
 }
 
@@ -274,7 +313,7 @@ async function fetchTenantsListItems(listType, tenants, preloadedItems) {
         items = items.concat(tenantItems);
       }));
 
-  // sort accumulated items by lastModified
+  // sort accumulated items
   return Promise.allSettled(tenantPromises)
     .then(() => sortItems(items));
 }
@@ -282,38 +321,39 @@ async function fetchTenantsListItems(listType, tenants, preloadedItems) {
 /**
  * Render placeholders
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement} container
  * @param {function} renderer
  * @param {Number|String} limit
  * @returns {void}
  */
-function renderPlaceholders(block, renderer, limit) {
-  block.innerHTML = '';
+function renderPlaceholders(container, renderer, limit) {
+  container.innerHTML = '';
   const items = Array.from({ length: limit }, () => ({}));
   items.forEach((item) => {
     const placeholder = renderer(item);
     placeholder.classList.add('placeholder');
-    block.append(placeholder);
+    container.append(placeholder);
   });
 }
 
 /**
  * Render list
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement} container
  * @param {function} renderer
  * @param {Array} items
  * @param {Number|String} limit
  * @returns {Promise<void>}
  */
-async function renderList(block, renderer, items, limit) {
+async function renderList(container, renderer, items, limit) {
   // get pagination
-  const pagination = await renderPagination(block, items, getCurrentPage(), limit);
+  await loadPlaceholders();
+  const pagination = await renderPagination(container, items, getCurrentPage(), limit);
 
   // get items for current page
-  let relevantItems = items;
+  let relevantItems = getFilteredItems(items);
   if (pagination) {
-    relevantItems = getItemsForCurrentPage(items, limit);
+    relevantItems = getItemsForCurrentPage(relevantItems, limit);
   }
 
   // build HTML
@@ -324,41 +364,49 @@ async function renderList(block, renderer, items, limit) {
   });
 
   // render
-  block.innerHTML = '';
+  container.innerHTML = '';
   if (pagination) {
-    block.append(pagination);
+    container.append(pagination);
   }
-  relevantItems.forEach((item) => {
-    block.append(item.renderedHtml);
-  });
+  if (relevantItems.length) {
+    relevantItems.forEach((item) => {
+      container.append(item.renderedHtml);
+    });
+  } else {
+    const p = document.createElement('p');
+    p.classList.add('no-results');
+    tContent(p, 'No results match your selection.')
+      .then();
+    container.append(p);
+  }
 }
 
 /**
  * Decorate list
  *
- * @param {HTMLElement} block
+ * @param {HTMLElement} container
+ * @param {Object|{renderCallback: function, amount: string, limit: string, classes: Array}} config
  * @param {string} listType
  * @param {Function} renderer
  * @param {Function} [itemManipulator]
  * @returns {Promise<void>}
  */
-async function decorateList(block, listType, renderer, itemManipulator) {
+async function decorateList(container, config, listType, renderer, itemManipulator) {
   // get config
-  const config = readBlockConfig(block);
   const amount = Number.parseInt(config.amount, 10) || 0;
   const limit = Number.parseInt(config.limit, 10) || 10;
 
   // render placeholders to prevent layout shifts
-  renderPlaceholders(block, renderer, limit);
+  renderPlaceholders(container, renderer, amount || limit);
 
   // ensure placeholders have been loaded
   await loadPlaceholders();
 
   // get items
   let items = [];
-  if (block.classList.contains('all')) {
+  if (config.classes && config.classes.includes('all')) {
     items = await fetchTenantsListItems(listType, getTenants());
-  } else if (block.classList.contains('with-global')) {
+  } else if (config.classes && config.classes.includes('with-global')) {
     items = await fetchTenantsListItems(
       listType,
       [defaultTenant],
@@ -378,23 +426,27 @@ async function decorateList(block, listType, renderer, itemManipulator) {
     items = items.slice(0, amount);
   }
 
+  // define renderer
+  const listRenderer = async () => {
+    await renderList(container, renderer, items, limit);
+    if (config.renderCallback) {
+      config.renderCallback();
+    }
+  };
+
   // set filter items
-  const filterBlock = getFilterBlock(block);
+  const filterBlock = getFilterBlock(container);
   if (filterBlock) {
     // set items to be filtered
     filterBlock.filterItems = items;
 
     // when we process filters, the items and pagination need to be re-drawn
-    filterBlock.addEventListener('filtersProcessed', async () => {
-      await renderList(block, renderer, items, limit);
-    });
+    filterBlock.addEventListener('filtersProcessed', listRenderer);
     filterBlock.dispatchEvent(new Event('renderFilters'));
   } else {
     // when we change the page, the list should be updated even if no filters are present
-    block.addEventListener('pageChanged', async () => {
-      await renderList(block, renderer, items, limit);
-    });
-    block.dispatchEvent(new Event('pageChanged'));
+    container.addEventListener('pageChanged', listRenderer);
+    container.dispatchEvent(new Event('pageChanged'));
   }
 }
 

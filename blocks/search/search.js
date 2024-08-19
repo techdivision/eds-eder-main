@@ -10,7 +10,7 @@
  */
 
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
-import { loadPlaceholders, ts } from '../../scripts/i18n.js';
+import { loadPlaceholders, tContent, ts } from '../../scripts/i18n.js';
 import { setUrlParam } from '../../scripts/helpers.js';
 import { cachedFetch } from '../../scripts/load-resource.js';
 import { queryParamSearch } from '../../scripts/defaults.js';
@@ -141,7 +141,8 @@ async function renderResults(block, config, filteredData, searchTerms) {
   } else {
     const noResultsMessage = document.createElement('li');
     searchResults.classList.add('no-results');
-    noResultsMessage.textContent = ts('No results found.');
+    tContent(noResultsMessage, 'No results found.')
+      .then();
     searchResults.append(noResultsMessage);
   }
 }
@@ -256,7 +257,8 @@ function searchBox(block, config) {
   );
 
   const searchResultText = document.createElement('p');
-  searchResultText.textContent = ts('Search results');
+  tContent(searchResultText, 'Search results')
+    .then();
   box.append(searchResultText);
 
   return box;

@@ -24,7 +24,7 @@ import {
   sampleRUM,
   waitForLCP,
 } from './aem.js';
-import { getCurrentLanguage, loadPlaceholders, ts } from './i18n.js';
+import { getCurrentLanguage, tContent } from './i18n.js';
 import { addBodyClass } from './helpers.js';
 import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
@@ -137,6 +137,8 @@ function linkPicture(picture) {
 function decorateNews(main) {
   const datePublished = getMetadata('date_published');
   const date = document.createElement('p');
+  tContent(date, 'published on %1', datePublished)
+    .then();
   if (datePublished) {
     date.classList.add('publish-date');
 
@@ -150,19 +152,13 @@ function decorateNews(main) {
   if (newsLink) {
     const link = document.createElement('a');
     link.href = newsLink;
+    tContent(link, 'More news')
+      .then();
 
     const newsContent = main.querySelector('.news-content');
     if (newsContent) {
       newsContent.append(link);
     }
-
-    loadPlaceholders()
-      .then(() => {
-        link.innerHTML = ts('More news');
-        if (datePublished) {
-          date.innerHTML = `${ts('published on')} ${datePublished}`;
-        }
-      });
   }
 }
 
@@ -205,7 +201,7 @@ async function loadEager(doc) {
 
   // clear cache
   const usp = new URLSearchParams(window.location.search);
-  if (usp.get('nocache')) {
+  if (usp.get('nocache') || usp.get('disablecache')) {
     await clearFetchCache();
   }
 
@@ -220,7 +216,8 @@ async function loadEager(doc) {
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
     if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
-      loadFonts();
+      loadFonts()
+        .then();
     }
   } catch (e) {
     // do nothing
@@ -239,11 +236,15 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadHeader(doc.querySelector('header'));
-  loadFooter(doc.querySelector('footer'));
+  loadHeader(doc.querySelector('header'))
+    .then();
+  loadFooter(doc.querySelector('footer'))
+    .then();
 
-  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  loadFonts();
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`)
+    .then();
+  loadFonts()
+    .then();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -266,4 +267,5 @@ async function loadPage() {
   loadDelayed();
 }
 
-loadPage();
+loadPage()
+  .then();

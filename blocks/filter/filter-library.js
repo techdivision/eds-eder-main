@@ -35,6 +35,23 @@ function getNumericFilterValueForElement(element, filterField) {
 }
 
 /**
+ * Get all months as strings
+ *
+ * @param {string} locale
+ * @param {string} format
+ * @returns {string[]}
+ */
+function getAllMonths({
+  locale = navigator.language,
+  format = 'long',
+} = {}) {
+  // noinspection JSCheckFunctionSignatures
+  const applyFormat = new Intl.DateTimeFormat(locale, { month: format }).format;
+  return [...Array(12)
+    .keys()].map((m) => applyFormat(new Date(2021, m)));
+}
+
+/**
  * Retrieve options for filter field
  *
  * @param {Object} filter
@@ -58,6 +75,24 @@ function retrieveOptionsForFilterField(filter, filterField) {
     return values.map(Number)
       .sort((a, b) => a - b);
   }
+
+  // apply date sort if all values are dates
+  const monthIndexMap = getAllMonths()
+    .reduce((acc, month, index) => {
+      acc[month] = index;
+      return acc;
+    }, {});
+  const toDate = (dateString) => {
+    const [monthName, year] = dateString.split(' ');
+    const monthIndex = monthIndexMap[monthName];
+    return new Date(year, monthIndex);
+  };
+  const allDates = values.every((value) => !Number.isNaN(Date.parse(value)));
+  if (allDates) {
+    return values.sort((a, b) => toDate(a) + toDate(b));
+  }
+
+  // standard sort
   return values.sort();
 }
 

@@ -302,6 +302,30 @@ function normalize(str) {
     .replace('ß', 'ss');
 }
 
+/**
+ * Replace text content
+ *
+ * @param {HTMLElement} element
+ * @param {string} text
+ */
+function replaceTextContent(element, text) {
+  let textNode = null;
+  for (let i = 0; i < element.childNodes.length; i += 1) {
+    if (element.childNodes[i].nodeType === Node.TEXT_NODE) {
+      textNode = element.childNodes[i];
+      break;
+    }
+  }
+
+  // if a text node exists, replace its content; otherwise, create a new text node
+  if (textNode) {
+    textNode.textContent = text;
+  } else {
+    textNode = document.createTextNode(text);
+    element.appendChild(textNode);
+  }
+}
+
 // export
 export {
   isEmpty,
@@ -314,6 +338,7 @@ export {
   convertDate,
   getReadableDate,
   addBodyClass,
+  replaceTextContent,
   isFilterable,
   wrapImages,
   replaceWhitespaces,

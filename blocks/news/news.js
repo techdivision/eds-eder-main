@@ -10,7 +10,7 @@
  */
 
 import { decorateList } from '../../scripts/list.js';
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
 import { convertDate, getCurrentUrl, getReadableDate } from '../../scripts/helpers.js';
 import { ts } from '../../scripts/i18n.js';
 
@@ -73,9 +73,15 @@ function renderItem(item) {
   article.classList.add('news-list-item');
   article.innerHTML = `
     <div class="details-wrapper">
-        <div class="date">${item.formattedDate}</div>
+        <div class="date">
+          ${item.formattedDate}
+        </div>
         <div class="title">
-            <h3><a title="${item.title}" href="${item.path}">${item.title}</a></h3>
+            <h3>
+                <a title="${item.title}" href="${item.path}" target="${urlTarget}">
+                  ${item.title}
+                </a>
+            </h3>
         </div>
         <div class="description"><p>${item.description}</p></div>
         <a
@@ -99,6 +105,8 @@ function renderItem(item) {
  * @param {HTMLElement} block
  */
 export default async function decorate(block) {
-  decorateList(block, 'news', renderItem, manipulateItems)
+  const config = readBlockConfig(block);
+  config.classes = [...block.classList];
+  decorateList(block, config, 'news', renderItem, manipulateItems)
     .then();
 }
