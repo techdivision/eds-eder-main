@@ -1,0 +1,13 @@
+{
+  "project": "Eder Anhaenger",
+  "plugins": [
+    {
+      "id": "library",
+      "title": "Library",
+      "environments": [
+        "edit"
+      ],
+      "url": "https://main--eds-eder-main--techdivision.hlx.page/tools/sidekick/library.html"
+    }
+  ]
+}

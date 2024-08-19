@@ -8,3 +8,15 @@ sites:
   agratec-salching:
     origin: https://github.com/techdivision/eds-agratec-salching
     port: 3003
+  eder-baumaschinen:
+    origin: https://github.com/techdivision/eds-eder-baumaschinen
+    port: 3004
+  feedstar:
+    origin: https://github.com/techdivision/eds-feedstar
+    port: 3005
+  eder-profi:
+    origin: https://github.com/techdivision/eds-eder-profi
+    port: 3006
+  eder-anhaenger:
+    origin: https://github.com/techdivision/eds-eder-anhaenger
+    port: 3007
