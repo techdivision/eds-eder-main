@@ -31,6 +31,7 @@ import {
   handleBrs,
   handleContacts,
   handlePdfs,
+  isEderGmbh,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -45,7 +46,7 @@ const removeGenericContent = (main) => {
     '.offcanvas',
     '.breadcrumb',
     '.visible-xs',
-    '.visible-ma-button',
+    '.hidden-ma-button',
     '.locations',
   ]);
 };
@@ -107,6 +108,16 @@ export const handleShopData = (main, document) => {
       const phoneNumbers = generalContact.querySelector('div.phone-numbers');
       const openTimes = generalContact.querySelector('div.open-times');
 
+      // format openTimes
+      const openTimeRows = openTimes.querySelectorAll('div.col-xs-12');
+
+      openTimeRows.forEach((openTimeRow) => {
+        const firstEntry = openTimeRow.querySelector('div.col-xs-3');
+        const secondEntry = openTimeRow.querySelector('div.col-xs-9');
+
+        openTimeRow.innerHTML = `${firstEntry.innerText} ${secondEntry.innerText}`;
+      });
+
       generalContactCells.push([divisionName, phoneNumbers, openTimes]);
     });
 
@@ -120,7 +131,7 @@ export const handleShopData = (main, document) => {
 
     const sectionMetadata = [
       ['Section Metadata'],
-      ['Style', 'side-by-side'],
+      ['Style', 'location'],
     ];
     const sectionMetadataTable = WebImporter.DOMUtils.createTable(sectionMetadata, document);
 
@@ -197,6 +208,154 @@ export const handleShopData = (main, document) => {
   }
 };
 
+/**
+ * Method to migrate the list of news, including its optional filter
+ * @param main
+ * @param document
+ * @param params
+ */
+export const handleNewsList = (main, document, params) => {
+  // get parent-element(s)
+  const newsListElements = main.querySelectorAll('div.news-list-view');
+
+  newsListElements.forEach((newsListElement) => {
+    // handle (possible) filter
+    const newsFilter = newsListElement.querySelector('div.news-search-form');
+
+    if (newsFilter) {
+      const newsFilterCells = [
+        ['Filter'],
+        ['Geschäftsbereich', 'dropdown', 'section'],
+        ['Standort', 'dropdown', 'location'],
+        ['Termine', 'dropdown', 'filterDate'],
+      ];
+
+      const newsFilterResultTable = WebImporter.DOMUtils.createTable(newsFilterCells, document);
+
+      newsFilter.replaceWith(newsFilterResultTable);
+    }
+
+    // handle the news-list itself
+    const newsList = newsListElement.querySelector('div.news-content');
+
+    if (newsList) {
+      // determine block-variation
+      let newsListBlockName = 'News (with global)';
+
+      if (isEderGmbh(params)) {
+        // use different Block for eder-gmbh
+        newsListBlockName = 'News (all)';
+      }
+
+      const newsListCells = [
+        [newsListBlockName],
+        ['Limit', '10'],
+      ];
+
+      const newsListResultTable = WebImporter.DOMUtils.createTable(newsListCells, document);
+
+      newsList.replaceWith(newsListResultTable);
+    }
+  });
+};
+
+/**
+ * Method to migrate the list of events
+ * @param main
+ * @param document
+ * @param params
+ */
+export const handleEventsList = (main, document, params) => {
+  const eventsList = main.querySelector('div.element-sfeventmgt_pievent');
+
+  if (eventsList) {
+    // determine block-variation
+    let eventsListBlockName = 'Events (with global)';
+
+    if (isEderGmbh(params)) {
+      // use different Block for eder-gmbh
+      eventsListBlockName = 'Events (all)';
+    }
+
+    const eventsListCells = [
+      [eventsListBlockName],
+      ['Limit', '10'],
+    ];
+
+    const eventsListResultTable = WebImporter.DOMUtils.createTable(eventsListCells, document);
+
+    eventsList.replaceWith(eventsListResultTable);
+  }
+};
+
+/**
+ * Handle Contact-Banner variations by replacing them by one unified EDS-Block
+ * @param main
+ * @param document
+ */
+export const handleContactBanner = (main, document) => {
+  // check for all the different variations of the Contact-Banner
+  const originalContactBlocks = document.querySelectorAll('div.tf-service-wrapper, div.kontakt-banner-content, div.staff');
+
+  originalContactBlocks.forEach((originalContactBlock) => {
+    let names = originalContactBlock.querySelectorAll('p.h3, p.staff-headline');
+
+    // handle special cases, where no name is given
+    if (names.length === 0) {
+      names = [];
+      // names to look for
+      const namesToCheck = [
+        'Daniel Strehle',
+        'Klaus Mayer',
+        'RTK-Experten',
+        'AGRATEC LANDTECHNIKZENTRUM',
+      ];
+
+      // check if name can be extracted from the text
+      namesToCheck.forEach((nameToCheck) => {
+        if (originalContactBlock.innerText.includes(nameToCheck)) {
+          names.push(nameToCheck);
+        }
+      });
+    }
+
+    if (names.length > 0) {
+      const cells = [
+        ['Contact-Banner'],
+      ];
+
+      // check if there are multiple names within the Block
+      if (names.length > 1) {
+        cells.push([names[0], names[1]]);
+      } else {
+        cells.push([names[0]]);
+      }
+
+      // check if there are
+      const buttons = originalContactBlock.querySelectorAll('div.coa-button');
+
+      let firstButton;
+      if (buttons.length > 0) {
+        [firstButton] = buttons;
+
+        // push one link for each entry
+        if (names.length > 1) {
+          cells.push(
+            [firstButton, firstButton.cloneNode(true)],
+          );
+        } else {
+          cells.push(
+            [firstButton],
+          );
+        }
+      }
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      originalContactBlock.replaceWith(resultTable);
+    }
+  });
+};
+
 export default {
   transform: ({
     document,
@@ -241,6 +400,9 @@ export default {
     handleContacts(main, document);
     handleBlockquotes(main, document);
     handleShopData(main, document);
+    handleNewsList(main, document, params);
+    handleEventsList(main, document, params);
+    handleContactBanner(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 

@@ -17,7 +17,9 @@
 
 .rows > ul > li {
   margin-bottom: var(--spacing-simple);
-  background-color: var(--color-white);
+  background-color: var(--color-gray-light);
+  border-radius: var(--card-border-radius);
+  overflow: hidden;
 }
 
 .rows .image {
@@ -85,6 +87,17 @@
   display: inline-block;
 }
 
+/* rows with only two columns */
+.rows ul.two-columns li .content .image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.rows ul.two-columns li .content .image-wrapper p:not(:last-child) {
+  margin-right: var(--spacing-simple);
+}
+
 @media (width > 900px) {
   .rows > ul > li {
     display: grid;
@@ -103,5 +116,14 @@
 
   .rows .content .logo {
     right: 0;
+  }
+
+  /* rows with only two columns */
+  .rows ul.two-columns li {
+    grid-template: 'image content' / 1fr 3fr;
+  }
+
+  .rows ul.two-columns li .content {
+    padding-right: var(--spacing-simple);
   }
 }

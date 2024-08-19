@@ -249,6 +249,37 @@ function hasBodyClass(className) {
 }
 
 /**
+ * Check if block is filterable
+ *
+ * @returns {boolean}
+ */
+function isFilterable(block) {
+  return block.classList.contains('filterable');
+}
+
+/**
+ * Wrap all images with one div
+ *
+ * @param scope
+ */
+function wrapImages(scope) {
+  const images = scope.querySelectorAll('picture');
+  if (images.length > 0) {
+    const imgWrapper = document.createElement('div');
+    imgWrapper.className = 'image-wrapper';
+
+    images.forEach((img) => {
+      const parent = img.closest('p');
+      if (parent) {
+        imgWrapper.append(parent);
+      }
+    });
+
+    scope.append(imgWrapper);
+  }
+}
+
+/**
  * Replace whitespaces with any other char
  * @param string
  * @param replaceChar
@@ -308,6 +339,8 @@ export {
   getReadableDate,
   addBodyClass,
   replaceTextContent,
+  isFilterable,
+  wrapImages,
   replaceWhitespaces,
   normalize,
   hasBodyClass,
