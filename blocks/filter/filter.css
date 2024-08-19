@@ -46,7 +46,8 @@
       /* arrow down */
 
       &::after {
-        right: 20px;
+        right: 1em;
+        bottom: 1em;
       }
 
       select {
