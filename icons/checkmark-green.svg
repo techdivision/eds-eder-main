@@ -1,4 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-  <path style="fill: rgb(134, 157, 103);" d="M213.33,334.6l-79.85-79.85,16-16.01,63.85,63.85,137.2-137.2,16,16.01-153.2,153.2Z"/>
-</svg>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"><path d="m213.33 334.6-79.85-79.85 16-16.01 63.85 63.85 137.2-137.2 16 16.01z" fill="#869d67"/></svg>

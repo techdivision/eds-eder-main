@@ -10,66 +10,10 @@
  */
 
 import { decorateList } from '../../scripts/list.js';
-import { createOptimizedPicture } from '../../scripts/aem.js';
-import { convertDate, getCurrentUrl, getReadableDate } from '../../scripts/helpers.js';
+import { readBlockConfig } from '../../scripts/aem.js';
+import { getCurrentUrl } from '../../scripts/helpers.js';
 import { ts } from '../../scripts/i18n.js';
-import { defaultDateTimeLocale } from '../../scripts/defaults.js';
-
-/**
- * Check if event is relevant
- *
- * @param {Object|{startDate: string, endDate: string}} item
- */
-function isCurrentEvent(item) {
-  return !item.endDate || convertDate(item.endDate) >= new Date();
-}
-
-/**
- * Get date range
- *
- * @param {Object|{startDate: string, endDate: string}} item
- * @returns {string}
- */
-function getDateRange(item) {
-  const startDate = getReadableDate(convertDate(item.startDate));
-  const endDate = getReadableDate(convertDate(item.endDate));
-  const startTime = convertDate(item.startDate)
-    .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
-  const endTime = convertDate(item.endDate)
-    .toLocaleTimeString(defaultDateTimeLocale, { timeStyle: 'short' });
-
-  if (startDate === endDate) {
-    return `${startDate} ${startTime} - ${endTime}`;
-  }
-  return `${startDate} - ${endDate}`;
-}
-
-/**
- * Manipulate items
- *
- * @param {Array<{image: string, previewImage?: string, title: string}>} items
- * @returns {Array}
- */
-function manipulateItems(items) {
-  return items.filter((item) => {
-    // check if event has ended
-    if (!isCurrentEvent(item)) {
-      return false;
-    }
-
-    // format date
-    item.dateRange = getDateRange(item);
-
-    // optimized image
-    item.picture = createOptimizedPicture(
-      item.previewImage || item.image,
-      item.title,
-      true,
-      [{ width: '500' }],
-    ).outerHTML;
-    return true;
-  });
-}
+import manipulateEventItems from './lib/events.js';
 
 /**
  * Render item
@@ -91,9 +35,15 @@ function renderItem(item) {
   article.classList.add('events-list-item');
   article.innerHTML = `
     <div class="details-wrapper">
-        <div class="date">${item.dateRange}</div>
+        <div class="date">
+          ${item.dateRange}
+        </div>
         <div class="title">
-            <h3><a title="${item.title}" href="${item.path}">${item.title}</a></h3>
+            <h3>
+                <a title="${item.title}" href="${item.path}" target="${urlTarget}">
+                  ${item.title}
+                </a>
+            </h3>
         </div>
         <div class="description"><p>${item.description}</p></div>
         <a
@@ -117,6 +67,8 @@ function renderItem(item) {
  * @param {HTMLElement} block
  */
 export default async function decorate(block) {
-  decorateList(block, 'events', renderItem, manipulateItems)
+  const config = readBlockConfig(block);
+  config.classes = [...block.classList];
+  decorateList(block, config, 'events', renderItem, manipulateEventItems)
     .then();
 }

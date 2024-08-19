@@ -12,6 +12,7 @@
 import { defaultLanguage } from './defaults.js';
 import { fetchPlaceholders, getMetadata } from './aem.js';
 import { cachedFetch } from './load-resource.js';
+import { replaceTextContent } from './helpers.js';
 
 /**
  * Available languages
@@ -170,20 +171,24 @@ function ts(text, ...params) {
 }
 
 /**
- * Translate text
+ * Set translated text content
  *
+ * @param {HTMLElement} element
  * @param {String} text
  * @param {*} params
- * @returns {Promise<String>}
+ * @returns {Promise}
  */
-async function t(text, ...params) {
-  await loadPlaceholders();
-  return ts(text, ...params);
+async function tContent(element, text, ...params) {
+  replaceTextContent(element, ts(text, ...params));
+  loadPlaceholders()
+    .then(() => {
+      replaceTextContent(element, ts(text, ...params));
+    });
 }
 
 export {
-  t,
   ts,
+  tContent,
   loadPlaceholders,
   getCurrentLanguage,
   getUrlForLanguage,

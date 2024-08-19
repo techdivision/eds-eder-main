@@ -9,16 +9,13 @@
  * license@techdivision.com
  */
 
-// eslint-disable-next-line prefer-const
 import ffetch from './vendor/ffetch.js';
 
 // fetch cache is valid for the current day only to ensure current content is being loaded
 const currentDate = new Date().toISOString().split('T')[0];
 const fetchCacheKey = `fetch-cache-${currentDate}`;
-// eslint-disable-next-line prefer-const
-let loadedStorage = {};
-// eslint-disable-next-line prefer-const
-let onLoadStorage = {};
+const loadedStorage = {};
+const onLoadStorage = {};
 
 /**
  * Resolve loaded resource

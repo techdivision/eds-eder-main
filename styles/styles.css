@@ -304,7 +304,7 @@ main .section.highlight {
   display: none;
 }
 
-main .section [class$='-wrapper']:not(.image-wrapper) {
+.block {
   margin-bottom: var(--spacing-simple);
 }
 
@@ -402,7 +402,7 @@ main .section-breadcrumbs {
 
   &::after {
     position: absolute;
-    top: 50%;
+    bottom: 0.25em;
     display: inline-block;
     content: '';
     width: 6px;
