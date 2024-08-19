@@ -411,6 +411,7 @@ main .section-breadcrumbs {
     pointer-events: none;
     border-style: solid;
     border-width: 2px 2px 0 0;
+    z-index: 0;
   }
 
   &.chevron-left::after {
@@ -424,6 +425,11 @@ main .section-breadcrumbs {
   &.chevron-down::after {
     border-width: 0 2px 2px 0;
   }
+}
+
+a.has-chevron {
+  display: inline-block;
+  padding-right: 1em;
 }
 
 /* pagination */

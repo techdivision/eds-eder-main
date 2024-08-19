@@ -37,8 +37,8 @@ function renderItem(item) {
         <div class="date">
           <a title="${item.title}" href="${item.path}" target="${urlTarget}">${item.dateRange}</a>
         </div>
-        <div class="title has-chevron">
-            <a title="${item.title}" href="${item.path}" target="${urlTarget}">${item.title}</a>
+        <div class="title">
+            <a title="${item.title}" href="${item.path}" target="${urlTarget}" class="has-chevron">${item.title}</a>
         </div>
     </div>
 `;

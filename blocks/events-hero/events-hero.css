@@ -17,8 +17,9 @@ main .events-hero-container {
   }
 
   .events-hero {
-    &, p, a {
+    p, a {
       color: var(--color-white);
+      display: inline-block;
     }
 
     @media (width >= 900px) {
@@ -67,6 +68,11 @@ main .events-hero-container {
       background-color: var(--color-gray-dark);
       padding: 20px;
 
+      .icon {
+        width: 18px;
+        height: 18px;
+      }
+
       .events-list {
         margin-bottom: 20px;
       }
@@ -80,6 +86,7 @@ main .events-hero-container {
         .details-wrapper {
           .date {
             font-size: var(--body-font-size-xs);
+            line-height: var(--body-line-height-xs);
           }
 
           .title {
