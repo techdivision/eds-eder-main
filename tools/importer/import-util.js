@@ -21,6 +21,10 @@ export const determineEdsBaseUrl = (params) => {
     'https://www.eder-gmbh.de': 'https://main--eds-eder-gmbh--techdivision.hlx.page',
     'https://www.eder-landtechnik.de': 'https://main--eds-eder-landtechnik--techdivision.hlx.page',
     'https://www.agratec-salching.de': 'https://main--eds-agratec-salching--techdivision.hlx.page',
+    'https://www.eder-baumaschinen.de': 'https://main--eds-eder-baumaschinen--techdivision.hlx.page',
+    'https://www.feedstar.com': 'https://main--eds-feedstar--techdivision.hlx.page',
+    'https://www.eder-profi.de': 'https://main--eds-eder-profi--techdivision.hlx.page',
+    'https://www.eder-anhaenger.de': 'https://main--eds-eder-anhaenger--techdivision.hlx.page',
   };
 
   const originalUrl = new URL(params.originalURL);
