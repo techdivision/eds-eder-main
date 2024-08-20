@@ -109,7 +109,7 @@ function loadAdobeAnalytics(url) {
 }
 
 /**
- * Decorate slider block
+ * Decorate block
  *
  * @param {HTMLElement} block
  */
