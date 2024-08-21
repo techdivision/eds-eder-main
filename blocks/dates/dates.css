@@ -21,7 +21,7 @@
   padding-left: var(--spacing-double);
 }
 
-.dates-container .dates.block > div:before {
+.dates-container .dates.block > div::before {
   content: url('../../icons/arrow-right.svg');
   position: absolute;
   left: 0;
@@ -30,7 +30,7 @@
   transform: translateY(-50%);
 }
 
-.dates-container .dates.block > div:first-child:before {
+.dates-container .dates.block > div:first-child::before {
   content: url('../../icons/calendar.svg');
 }
 
