@@ -10,10 +10,9 @@
  */
 
 main .events-hero-container {
-  padding: 0;
-
-  > div:first-child {
+  .events-hero-wrapper {
     max-width: unset;
+    margin: 0 calc(-1 * var(--spacing-simple));
   }
 
   .events-hero {
