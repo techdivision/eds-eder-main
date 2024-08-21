@@ -18,6 +18,8 @@ main .events-hero-container {
   }
 
   .events-hero {
+    position: relative;
+
     p, a {
       color: var(--color-white);
     }
