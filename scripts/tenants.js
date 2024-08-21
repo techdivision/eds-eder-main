@@ -18,8 +18,6 @@ import { defaultTenant } from './defaults.js';
  * @type {Object}
  */
 const tenants = {
-  // FIXME remove next line, just for testing
-  'eder-main': 'https://main--eds-eder-main--techdivision.hlx.live/',
   [defaultTenant]: 'https://main--eds-eder-gmbh--techdivision.hlx.live/',
   'eder-landtechnik': 'https://main--eds-eder-landtechnik--techdivision.hlx.live/',
   'agratec-salching': 'https://main--eds-agratec-salching--techdivision.hlx.live/',
@@ -60,7 +58,6 @@ function getTenantUrl(tenant, path) {
 
   // get paths
   let tenantBaseUrl = tenants[tenant];
-  const normalizedPath = path || '';
 
   // set environment
   if (tenantBaseUrl.includes('.hlx.live')) {
@@ -70,8 +67,11 @@ function getTenantUrl(tenant, path) {
     }
   }
 
+  // check path
+  const normalizedPath = path || '';
+
   // return URL
-  return `${tenantBaseUrl.replace(/\/+$/, '')}/${normalizedPath.replace(/^\/+/, '')}`;
+  return `${tenantBaseUrl.replace(/\/+$/, '')}/${normalizedPath.replace(/^[./]+/, '')}`;
 }
 
 export {
