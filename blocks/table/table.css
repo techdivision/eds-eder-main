@@ -72,3 +72,8 @@
   border-top: none;
   border-bottom: none;
 }
+
+/* striped variant */
+.table.striped tbody tr:nth-child(odd) {
+  background-color: var(--light-color);
+}
