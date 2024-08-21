@@ -9,12 +9,13 @@
  * license@techdivision.com
  */
 
+// noinspection DuplicatedCode
+
+import { tContent } from '../../scripts/i18n.js';
+import { decorateIcons, getMetadata, readBlockConfig } from '../../scripts/aem.js';
+import manipulateEventItems from '../events/lib/events.js';
 import { decorateList } from '../../scripts/list.js';
 import { getCurrentUrl } from '../../scripts/helpers.js';
-// noinspection DuplicatedCode
-import { tContent } from '../../scripts/i18n.js';
-import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
-import manipulateEventItems from '../events/lib/events.js';
 
 /**
  * Render item
@@ -99,7 +100,7 @@ export default async function decorate(block) {
   const allEventsLink = document.createElement('a');
   allEventsLink.classList.add('has-chevron');
   // noinspection JSUnresolvedReference
-  allEventsLink.href = config.overview || '/';
+  allEventsLink.href = config.overview || getMetadata('overview_link') || '/';
   tContent(allEventsLink, 'All events')
     .then();
   eventsContainer.append(allEventsLink);

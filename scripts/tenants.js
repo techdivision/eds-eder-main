@@ -60,7 +60,6 @@ function getTenantUrl(tenant, path) {
 
   // get paths
   let tenantBaseUrl = tenants[tenant];
-  const normalizedPath = path || '';
 
   // set environment
   if (tenantBaseUrl.includes('.hlx.live')) {
@@ -70,8 +69,11 @@ function getTenantUrl(tenant, path) {
     }
   }
 
+  // check path
+  const normalizedPath = path || '';
+
   // return URL
-  return `${tenantBaseUrl.replace(/\/+$/, '')}/${normalizedPath.replace(/^\/+/, '')}`;
+  return `${tenantBaseUrl.replace(/\/+$/, '')}/${normalizedPath.replace(/^[.\/]+/, '')}`;
 }
 
 export {

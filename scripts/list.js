@@ -291,8 +291,9 @@ async function fetchListItemsForTenant(listType, tenant) {
   return fetchListItems(listType, getTenantUrl(tenant))
     .then((tenantItems) => tenantItems.map((item) => ({
       ...item,
-      path: getTenantUrl(tenant, item.path),
-      image: getTenantUrl(tenant, item.image),
+      path: item.path ? getTenantUrl(tenant, item.path) : '',
+      image: item.image ? getTenantUrl(tenant, item.image) : '',
+      previewImage: item.previewImage ? getTenantUrl(tenant, item.previewImage) : '',
     })));
 }
 
@@ -451,13 +452,6 @@ async function decorateList(container, config, listType, renderer, itemManipulat
 }
 
 export {
-  getCurrentPage,
   setCurrentPage,
-  getItemsForCurrentPage,
-  fetchListItems,
-  fetchTenantsListItems,
-  getFilterBlock,
-  renderPlaceholders,
-  renderList,
   decorateList,
 };

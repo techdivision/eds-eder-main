@@ -32,7 +32,6 @@
       padding: 40px;
 
       .date {
-        font-size: var(--body-font-size-s);
         margin: 0 0 25px;
         color: var(--color-red);
       }
@@ -70,6 +69,7 @@
         width: 100%;
         height: 290px;
         object-fit: contain;
+        background-color: var(--color-gray);
       }
     }
   }

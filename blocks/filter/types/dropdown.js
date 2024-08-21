@@ -36,7 +36,6 @@ function buildOption(name, value) {
 function elementMatches(filter, element) {
   const elementValue = getFilterValueForElement(element, filter.filterFields[0]);
   return isEmpty(filter.value)
-    || isEmpty(elementValue)
     || elementValue === filter.value;
 }
 
