@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2024 TechDivision GmbH
+ * All rights reserved
+ *
+ * This product includes proprietary software developed at TechDivision GmbH, Germany
+ * For more information see https://www.techdivision.com/
+ *
+ * To obtain a valid license for using this software please contact us at
+ * license@techdivision.com
+ */
+
+.dates-container .dates.block {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: var(--color-gray-light);
+}
+
+.dates-container .dates.block > div {
+  position: relative;
+  padding-left: var(--spacing-double);
+}
+
+.dates-container .dates.block > div::before {
+  content: url('../../icons/arrow-right.svg');
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 30px;
+  transform: translateY(-50%);
+}
+
+.dates-container .dates.block > div:first-child::before {
+  content: url('../../icons/calendar.svg');
+}
+
+.dates-container .dates.block > div .date {
+  color: var(--color-red);
+  font-size: var(--heading-font-size-m);
+  line-height: var(--heading-line-height-m);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
