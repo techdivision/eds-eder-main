@@ -11,9 +11,8 @@
 
 main .events-hero-container {
   padding: 0;
-  position: relative;
 
-  > div {
+  > div:first-child {
     max-width: unset;
   }
 
