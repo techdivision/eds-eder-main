@@ -194,7 +194,7 @@ button {
   padding: 8px 15px;
   text-align: center;
   font-style: normal;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
   color: var(--button-color);
   background-color: var(--button-background);
@@ -399,6 +399,7 @@ main .section-breadcrumbs {
 /* chevron */
 .has-chevron {
   position: relative;
+  font-weight: var(--font-weight-bold);
 
   &::after {
     position: absolute;

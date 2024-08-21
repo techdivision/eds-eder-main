@@ -326,6 +326,41 @@ function replaceTextContent(element, text) {
   }
 }
 
+/**
+ * Parse date
+ *
+ * @param input
+ * @returns {Date}
+ */
+function parseDate(input) {
+  const parts = input.match(/(\d+)/g);
+
+  // note parts[1]-1
+  return new Date(parts[2], parts[1] - 1, parts[0]);
+}
+
+/**
+ * Get name of weekday
+ *
+ * @param {Date} date
+ * @returns {string}
+ */
+function getDayName(date) {
+  return parseDate(date).toLocaleDateString(defaultDateTimeLocale, { weekday: 'long' });
+}
+
+/**
+ * Get time as string
+ *
+ * @param input
+ * @returns {string}
+ */
+function getTime(input) {
+  const parts = input.match(/(\d+)/g);
+
+  return `${parts[3]}:${parts[4]}`;
+}
+
 // export
 export {
   isEmpty,
@@ -344,4 +379,6 @@ export {
   replaceWhitespaces,
   normalize,
   hasBodyClass,
+  getDayName,
+  getTime,
 };

@@ -131,6 +131,33 @@ function linkPicture(picture) {
 }
 
 /**
+ * Add overview link to element
+ *
+ * @param {Element} main
+ * @param {string} linkText
+ * @param {string} appendTo
+ * @param {boolean} buttonStyle
+ */
+function addOverviewLink(main, linkText, appendTo, buttonStyle) {
+  const overviewLink = getMetadata('overview_link');
+  if (overviewLink) {
+    const link = document.createElement('a');
+    link.href = overviewLink;
+    tContent(link, linkText)
+      .then();
+
+    if (buttonStyle) {
+      link.classList.add('button');
+    }
+
+    const element = main.querySelector(appendTo);
+    if (element) {
+      element.append(link);
+    }
+  }
+}
+
+/**
  * Add publishing date and news link to news articles
  * @param {Element} main The container element
  */
@@ -148,18 +175,15 @@ function decorateNews(main) {
     }
   }
 
-  const newsLink = getMetadata('news_link');
-  if (newsLink) {
-    const link = document.createElement('a');
-    link.href = newsLink;
-    tContent(link, 'More news')
-      .then();
+  addOverviewLink(main, 'More news', '.news-content', false);
+}
 
-    const newsContent = main.querySelector('.news-content');
-    if (newsContent) {
-      newsContent.append(link);
-    }
-  }
+/**
+ * Add overview link to event sidebar
+ * @param {Element} main The container element
+ */
+function decorateEvents(main) {
+  addOverviewLink(main, 'More events', '.sidebar', true);
 }
 
 export function decorateLinkedPictures(block) {
@@ -184,6 +208,9 @@ export function decorateMain(main) {
   decorateLinkedPictures(main);
   if (getMetadata('template') === 'news') {
     decorateNews(main);
+  }
+  if (getMetadata('template') === 'events') {
+    decorateEvents(main);
   }
 }
 

@@ -571,3 +571,7 @@ header nav .mobile-menu li.is-visible > ul {
     display: block;
   }
 }
+
+.header .search-bar-container .block {
+  margin-bottom: 0;
+}
