@@ -16,6 +16,29 @@ import {
   handleIcons,
 } from './import-util.js';
 
+/**
+ * Replace whitespaces with any other char
+ * @param string
+ * @param replaceChar
+ * @returns {*}
+ */
+function replaceWhitespaces(string, replaceChar) {
+  return string.replace(/\s/g, replaceChar);
+}
+
+/**
+ * Normalizes string
+ *
+ * @param str
+ * @returns {*}
+ */
+function normalize(str) {
+  const combining = /[\u0300-\u036F]/g;
+  return str.normalize('NFKD')
+    .replace(combining, '')
+    .replace('ß', 'ss');
+}
+
 const removeGenericContent = (main) => {
   // remove header, footer and generic elements from content
   WebImporter.DOMUtils.remove(main, [
@@ -33,9 +56,9 @@ const removeGenericContent = (main) => {
 };
 
 const generateDocumentPathFromName = (name) => {
-  const result = `/contacts/${name.toLowerCase()}`;
+  const contactName = replaceWhitespaces(name, '-').toLowerCase();
 
-  return result.replace(/[^a-z0-9/]/gm, '-');
+  return `/contacts/${normalize(contactName)}`;
 };
 
 export default {
