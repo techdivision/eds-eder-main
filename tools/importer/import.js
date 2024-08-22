@@ -48,6 +48,8 @@ const removeGenericContent = (main) => {
     '.visible-xs',
     '.hidden-ma-button',
     '.locations',
+    '.route-link',
+    '.hidden',
   ]);
 };
 
@@ -83,9 +85,9 @@ export const handleBlockquotes = (main, document) => {
  */
 export const handleShopData = (main, document) => {
   // handle "shop-accordion" which contains the main data about the location
-  const shopAccordion = main.querySelector('div.shop-accordion');
+  const shopAccordions = main.querySelectorAll('div.shop-accordion');
 
-  if (shopAccordion) {
+  shopAccordions.forEach((shopAccordion) => {
     const locationResult = document.createElement('div');
 
     // remove some specific data
@@ -95,30 +97,63 @@ export const handleShopData = (main, document) => {
     // extract sections of the original content
     const headlineSection = shopAccordion.querySelector('div.headline');
     const addressDetails = shopAccordion.querySelector('div.address-details');
+
+    // remove hidden button from address-details
+    const detailButton = addressDetails.querySelector('a.detail-link');
+
+    if (detailButton) {
+      detailButton.remove();
+    }
+
     // handle general contacts, replace them by EDS Table-element
 
     const generalContactCells = [
-      ['Table (no header, no border)'],
+      ['Table (no header, no border, striped)'],
     ];
 
     const generalContacts = shopAccordion.querySelectorAll('div.division');
 
     generalContacts.forEach((generalContact) => {
-      const divisionName = generalContact.querySelector('div.division-name');
-      const phoneNumbers = generalContact.querySelector('div.phone-numbers');
-      const openTimes = generalContact.querySelector('div.open-times');
+      const divisionNameDiv = generalContact.querySelector('div.division-name');
+      const phoneNumbersDiv = generalContact.querySelector('div.phone-numbers');
+      const openTimesDiv = generalContact.querySelector('div.open-times');
+
+      // make division name bold
+      const originalDivisionName = divisionNameDiv.querySelector('p.text-bold');
+
+      let formattedDivisionName;
+
+      if (originalDivisionName) {
+        formattedDivisionName = document.createElement('strong');
+        formattedDivisionName.append(originalDivisionName.innerText);
+      } else {
+        formattedDivisionName = '';
+      }
+
+      // format phone-numbers
+      const phoneNumberRows = phoneNumbersDiv.querySelectorAll('div.row');
+
+      phoneNumberRows.forEach((phoneNumberRow) => {
+        const icon = phoneNumberRow.querySelector('div.col-xs-3');
+        const text = phoneNumberRow.querySelector('div.col-xs-9');
+        const paragraph = text.querySelector('p');
+
+        phoneNumberRow.innerHTML = `${icon.innerHTML} ${paragraph.innerHTML}`;
+      });
 
       // format openTimes
-      const openTimeRows = openTimes.querySelectorAll('div.col-xs-12');
+      const openTimeRows = openTimesDiv.querySelectorAll('div.col-xs-12');
 
       openTimeRows.forEach((openTimeRow) => {
         const firstEntry = openTimeRow.querySelector('div.col-xs-3');
         const secondEntry = openTimeRow.querySelector('div.col-xs-9');
 
-        openTimeRow.innerHTML = `${firstEntry.innerText} ${secondEntry.innerText}`;
+        if (firstEntry && secondEntry) {
+          openTimeRow.innerHTML = `${firstEntry.innerText} ${secondEntry.innerText}`;
+        }
       });
 
-      generalContactCells.push([divisionName, phoneNumbers, openTimes]);
+      generalContactCells.push([formattedDivisionName, phoneNumbersDiv, openTimesDiv]);
     });
 
     const generalContactTable = WebImporter.DOMUtils.createTable(generalContactCells, document);
@@ -139,7 +174,7 @@ export const handleShopData = (main, document) => {
     locationResult.append(document.createElement('hr'));
 
     shopAccordion.replaceWith(locationResult);
-  }
+  });
 
   // handle list of employees/contacts
   const shopContent = main.querySelector('div.shop-content');
@@ -150,9 +185,14 @@ export const handleShopData = (main, document) => {
 
     shopDivisions.forEach((shopDivision) => {
       // get headline
-      const headline = shopDivision.querySelector('div.shop-division-headline');
+      const headlineDiv = shopDivision.querySelector('div.shop-division-headline');
 
-      contactsResult.append(headline);
+      // convert existing headline to h3
+      const headline = headlineDiv.querySelector('span.division-name');
+      const h3 = document.createElement('h3');
+      h3.append(headline.innerText);
+
+      contactsResult.append(h3);
 
       const cells = [
         ['Contacts'],
@@ -309,6 +349,7 @@ export const handleContactBanner = (main, document) => {
         'Klaus Mayer',
         'RTK-Experten',
         'AGRATEC LANDTECHNIKZENTRUM',
+        'Stefan Buchner',
       ];
 
       // check if name can be extracted from the text
@@ -357,6 +398,22 @@ export const handleContactBanner = (main, document) => {
 };
 
 export default {
+  /**
+   * preprocess-method in order to convert empty italic tags to span tags,
+   * without the customizing the EDS-logic would remove those tags
+   * @param document
+   */
+  preprocess: ({ document }) => {
+    const italicTagIcons = document.querySelectorAll('i.flaticon');
+
+    italicTagIcons.forEach((italicTagIcon) => {
+      const { className } = italicTagIcon;
+      const spanTag = document.createElement('span');
+      spanTag.className = className;
+
+      italicTagIcon.replaceWith(spanTag);
+    });
+  },
   transform: ({
     document,
     url,

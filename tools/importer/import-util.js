@@ -56,7 +56,7 @@ export const isButton = (link) => {
     return false;
   }
 
-  if (parent.className.includes('coa-button') || parent.className.includes('offer-btn-wrapper')) {
+  if (parent.className.includes('coa-button') || parent.className.includes('offer-btn-wrapper') || parent.className.includes('contact-button')) {
     return true;
   }
 
@@ -493,7 +493,8 @@ export const handleIframes = (main, document) => {
           [link],
         ];
         // check for yumpu-url
-      } else if (src.startsWith('https://www.yumpu.com/') || src.startsWith('https://forms.office.com')) {
+      } else if (src.startsWith('https://www.yumpu.com/') || src.startsWith('https://forms.office.com')
+        || src.startsWith('https://v2.webmag.io/')) {
         const blockClasses = [];
 
         // handle height of iframe
