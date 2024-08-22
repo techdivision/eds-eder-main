@@ -12,8 +12,10 @@
 import ffetch from './vendor/ffetch.js';
 
 // fetch cache is valid for the current day only to ensure current content is being loaded
-const currentDate = new Date().toISOString().split('T')[0];
-const fetchCacheKey = `fetch-cache-${currentDate}`;
+const currentDate = new Date().toISOString()
+  .split('T')[0];
+const fetchCacheKeyPrefix = 'fetch-cache';
+const fetchCacheKey = `${fetchCacheKeyPrefix}-${currentDate}`;
 const loadedStorage = {};
 const onLoadStorage = {};
 
@@ -120,12 +122,33 @@ function loadThirdPartyBundle(name, callback) {
 }
 
 /**
+ * Tidy old cache entries
+ *
+ * @returns {Promise}
+ */
+async function tidyOldCacheEntries() {
+  return caches.keys()
+    .then((cacheKeys) => {
+      cacheKeys.forEach((key) => {
+        if (key.startsWith(fetchCacheKeyPrefix)
+          && key !== fetchCacheKey) {
+          caches.delete(key)
+            .then();
+        }
+      });
+    });
+}
+
+/**
  * Cached fetch request
  *
  * @param {string} url
  * @returns {Promise}
  */
 async function cachedFetch(url) {
+  // remove old cache entries
+  tidyOldCacheEntries().then();
+
   // open cache
   const cache = await caches.open(fetchCacheKey);
 
@@ -148,10 +171,13 @@ async function cachedFetch(url) {
 /**
  * Clear fetch cache
  *
- * @returns {Promise<void>}
+ * @returns {Promise}
  */
 async function clearFetchCache() {
-  await caches.delete(fetchCacheKey);
+  tidyOldCacheEntries()
+    .then();
+  return caches.delete(fetchCacheKey)
+    .then();
 }
 
 export {

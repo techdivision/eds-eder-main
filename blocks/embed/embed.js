@@ -15,6 +15,7 @@
  * Embed Block
  * Show videos and social posts directly on your page
  * https://www.hlx.live/developer/block-collection/embed
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/embed
  */
 
 import { betterLoadScript } from '../../scripts/load-resource.js';

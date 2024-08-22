@@ -13,6 +13,7 @@
  * Fragment Block
  * Include content on a page as a fragment.
  * https://www.aem.live/developer/block-collection/fragment
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/fragment
  */
 
 import { decorateMain } from '../../scripts/scripts.js';

@@ -122,8 +122,6 @@ async function loadPlaceholders() {
  */
 function getLoadedPlaceholders() {
   if (!window.placeholders) {
-    // eslint-disable-next-line no-console
-    console.error('Placeholders have not been loaded yet');
     return {};
   }
   return {
@@ -171,6 +169,22 @@ function ts(text, ...params) {
 }
 
 /**
+ * Handle asynchronous translation
+ *
+ * @param {Function} handler
+ * @param {String} text
+ * @param {*} params
+ * @returns {Promise}
+ */
+async function handleTranslate(handler, text, ...params) {
+  handler(ts(text, ...params));
+  return loadPlaceholders()
+    .then(() => {
+      handler(ts(text, ...params));
+    });
+}
+
+/**
  * Set translated text content
  *
  * @param {HTMLElement} element
@@ -179,15 +193,18 @@ function ts(text, ...params) {
  * @returns {Promise}
  */
 async function tContent(element, text, ...params) {
-  replaceTextContent(element, ts(text, ...params));
-  loadPlaceholders()
-    .then(() => {
-      replaceTextContent(element, ts(text, ...params));
-    });
+  return handleTranslate(
+    (translation) => {
+      replaceTextContent(element, translation);
+    },
+    text,
+    ...params,
+  );
 }
 
 export {
   ts,
+  handleTranslate,
   tContent,
   loadPlaceholders,
   getCurrentLanguage,

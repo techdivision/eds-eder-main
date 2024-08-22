@@ -13,6 +13,7 @@
  * Table Block
  * Recreate a table
  * https://www.hlx.live/developer/block-collection/table
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/table
  */
 
 function buildCell(rowIndex) {

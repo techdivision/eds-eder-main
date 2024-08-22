@@ -15,6 +15,7 @@
  * Video Block
  * Show a video referenced by a link
  * https://www.hlx.live/developer/block-collection/video
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/video
  */
 
 function embedYoutube(url, replacePlaceholder, autoplay) {

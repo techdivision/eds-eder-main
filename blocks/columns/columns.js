@@ -9,6 +9,10 @@
  * license@techdivision.com
  */
 
+/**
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/columns
+ */
+
 export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);

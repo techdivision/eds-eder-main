@@ -11,11 +11,13 @@
 
 import { createOptimizedPicture, decorateIcons } from '../../scripts/aem.js';
 import { loadPlaceholders, tContent, ts } from '../../scripts/i18n.js';
-import { setUrlParam } from '../../scripts/helpers.js';
+import { getUrlParam, setUrlParam } from '../../scripts/helpers.js';
 import { cachedFetch } from '../../scripts/load-resource.js';
 import { queryParamSearch } from '../../scripts/defaults.js';
 
-const searchParams = new URLSearchParams(window.location.search);
+/**
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/search
+ */
 
 function findNextHeading(el) {
   // noinspection JSUnresolvedReference
@@ -275,9 +277,10 @@ export default async function decorate(block) {
     searchResultsContainer(block),
   );
 
-  if (searchParams.get(queryParamSearch)) {
+  const searchValue = getUrlParam(queryParamSearch);
+  if (searchValue) {
     const input = block.querySelector('input');
-    input.value = searchParams.get(queryParamSearch);
+    input.value = searchValue;
     input.dispatchEvent(new Event('input'));
   }
 
