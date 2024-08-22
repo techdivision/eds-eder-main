@@ -84,7 +84,7 @@ export default async function decorate(block) {
   const eventsHeading = document.createElement('p');
   eventsHeading.classList.add('events-heading');
   const eventsHeadingIcon = document.createElement('span');
-  eventsHeadingIcon.classList.add('icon', 'icon-calendar');
+  eventsHeadingIcon.classList.add('icon', 'icon-calendar-white');
   eventsHeading.append(eventsHeadingIcon);
   eventsContainer.append(eventsHeading);
   decorateIcons(eventsHeading);
