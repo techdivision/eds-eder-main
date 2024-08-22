@@ -45,7 +45,7 @@ export const determineEdsBaseUrl = (params) => {
  */
 export const isButton = (link) => {
   // check for buttons that are defined at link level
-  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray')) {
+  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray') || link.className.includes('btn-ghost')) {
     return true;
   }
 
@@ -297,15 +297,18 @@ export const handle2ColumnsGrid = (main, document) => {
 
     // add headline to result, if there is any
     const firstChild = parent.firstElementChild;
-    const headline = firstChild.querySelector('h2');
 
     // avoid adding headline from product-entries
-    if (firstChild.tagName === 'DIV' && headline) {
+    const firstElementIsProductContainer = firstChild.innerHTML.includes('product-container');
+
+    const headline = firstChild.querySelector('h2');
+
+    if (!firstElementIsProductContainer) {
       result.append(headline);
     }
 
     // handle the product-entries itself
-    const originalLinks = parent.querySelectorAll('a');
+    const originalLinks = parent.querySelectorAll('div.product-container');
 
     if (originalLinks.length > 0) {
       const cells = [
@@ -325,19 +328,30 @@ export const handle2ColumnsGrid = (main, document) => {
         const productHeadline = originalContent.querySelector('h3, h2');
         const productDescription = originalContent.querySelector('p.description');
 
+        newContent.append(productHeadline);
+        newContent.append(productDescription);
+
         /*
-        In Typo3 the link is set on the entire container, instead it should go on "price",
+        In Typo3 the link is on the parents-parent, instead it should go on "price",
         which is displayed as a link in Typo3
         */
         const productPrice = originalContent.querySelector('span.price');
 
-        const newLink = document.createElement('a');
-        newLink.href = originalLink.href;
-        newLink.append(productPrice);
+        const parentParent = originalLink.parentElement.parentElement;
 
-        newContent.append(productHeadline);
-        newContent.append(productDescription);
-        newContent.append(newLink);
+        if (parentParent.tagName === 'A') {
+          const newLink = document.createElement('a');
+          newLink.href = parentParent.href;
+          newLink.append(productPrice);
+
+          newContent.append(newLink);
+        } else if (productPrice) {
+          // case: price it not link - append original content in bold
+          const boldElement = document.createElement('strong');
+          boldElement.append(productPrice);
+
+          newContent.append(boldElement);
+        }
 
         cells.push(
           [image, logo, newContent],
@@ -418,6 +432,40 @@ export const handle3ColumnsGrid = (main, document) => {
 };
 
 /**
+ * Handle 4-column grids by converting them to EDS quarter-width Card Blocks
+ * @param main
+ * @param document
+ */
+export const handle4ColumnsGrid = (main, document) => {
+  const parent = main.querySelector('div.company-sections');
+
+  if (parent) {
+    const cells = [
+      ['Cards (quarter-width)'],
+    ];
+
+    const cards = parent.querySelectorAll('div.small-card');
+
+    cards.forEach((card) => {
+      const header = card.querySelector('div.card-header');
+      const image = header.querySelector('img');
+
+      const body = card.querySelector('div.card-body-wrapper');
+
+      cells.push(
+        [image, body],
+      );
+    });
+
+    if (cells.length > 1) {
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      parent.replaceWith(resultTable);
+    }
+  }
+};
+
+/**
  * Handle top-image by converting Typo3 hero-image into a regular image within the docx,
  * and putting the headline thereafter
  * @param main
@@ -494,7 +542,7 @@ export const handleIframes = (main, document) => {
         ];
         // check for yumpu-url
       } else if (src.startsWith('https://www.yumpu.com/') || src.startsWith('https://forms.office.com')
-        || src.startsWith('https://v2.webmag.io/')) {
+        || src.startsWith('https://v2.webmag.io/') || src.startsWith('https://dealersites.technikboerse.com/')) {
         const blockClasses = [];
 
         // handle height of iframe
@@ -648,6 +696,8 @@ export const handleFilterAndRows = (main, document) => {
 
   let parent;
 
+  let hasFilter = false;
+
   const result = document.createElement('div');
 
   let blockName = 'Rows';
@@ -676,6 +726,8 @@ export const handleFilterAndRows = (main, document) => {
 
     // change block-name to be filterable
     blockName = 'Rows (filterable)';
+
+    hasFilter = true;
   }
 
   // handle rows with product data
@@ -731,7 +783,7 @@ export const handleFilterAndRows = (main, document) => {
       } else {
         // recommendations are present -> use Rows with full number of columns
         // only as first line of data: add headlines for filters
-        if (rowCells.length === 1) {
+        if (hasFilter && rowCells.length === 1) {
           rowCells.push(['', '', '', '', 'power_min', 'power_max', 'brand']);
         }
 
@@ -779,9 +831,15 @@ export const handleFilterAndRows = (main, document) => {
         infoButton.innerHTML = infoButtonParagraph.outerHTML;
 
         // store modified data
-        rowCells.push(
-          [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
-        );
+        if (hasFilter) {
+          rowCells.push(
+            [resultImage, resultLogo, content, originalRecommendDiv, powerMin, powerMax, brand],
+          );
+        } else {
+          rowCells.push(
+            [resultImage, resultLogo, content, originalRecommendDiv],
+          );
+        }
       }
     });
     const rowResultTable = WebImporter.DOMUtils.createTable(rowCells, document);

@@ -18,6 +18,7 @@ import {
   handleLinks,
   handle2ColumnsGrid,
   handle3ColumnsGrid,
+  handle4ColumnsGrid,
   handleSidebar,
   handleImages,
   handleIcons,
@@ -347,6 +348,7 @@ export const handleContactBanner = (main, document) => {
       const namesToCheck = [
         'Daniel Strehle',
         'Klaus Mayer',
+        'EDER LANDTECHNIK',
         'RTK-Experten',
         'AGRATEC LANDTECHNIKZENTRUM',
         'Stefan Buchner',
@@ -445,6 +447,7 @@ export default {
     handleLinks(main, document, baseUrl);
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
+    handle4ColumnsGrid(main, document);
     handleSidebar(main, document);
     handleIcons(main);
     handleIframes(main, document);
