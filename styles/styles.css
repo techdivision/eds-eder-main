@@ -245,6 +245,7 @@ main img {
   height: 18px;
   width: auto;
   margin-right: 8px;
+  user-select: none;
 }
 
 .icon img {
