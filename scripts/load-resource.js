@@ -127,7 +127,6 @@ function loadThirdPartyBundle(name, callback) {
  * @returns {Promise}
  */
 async function tidyOldCacheEntries() {
-  // Get all cache keys
   return caches.keys()
     .then((cacheKeys) => {
       cacheKeys.forEach((key) => {
@@ -147,7 +146,7 @@ async function tidyOldCacheEntries() {
  * @returns {Promise}
  */
 async function cachedFetch(url) {
-  // tidy
+  // remove old cache entries
   tidyOldCacheEntries().then();
 
   // open cache

@@ -169,7 +169,7 @@ function ts(text, ...params) {
 }
 
 /**
- * Hand asynchronous translation
+ * Handle asynchronous translation
  *
  * @param {Function} handler
  * @param {String} text
