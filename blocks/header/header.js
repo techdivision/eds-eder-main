@@ -14,6 +14,10 @@ import { loadFragment } from '../fragment/fragment.js';
 import { loadPlaceholders, ts } from '../../scripts/i18n.js';
 import { addBodyClass, getCurrentUrl } from '../../scripts/helpers.js';
 
+/**
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/header
+ */
+
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 

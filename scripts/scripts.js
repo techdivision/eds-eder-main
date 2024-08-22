@@ -25,11 +25,28 @@ import {
   waitForLCP,
 } from './aem.js';
 import { getCurrentLanguage, tContent } from './i18n.js';
-import { addBodyClass } from './helpers.js';
+import { addBodyClass, hasUrlParam } from './helpers.js';
 import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
+
+/**
+ * Auto-link modals
+ *
+ * @param {HTMLElement} element
+ */
+function autolinkModals(element) {
+  element.addEventListener('click', async (e) => {
+    const origin = e.target.closest('a');
+
+    if (origin && origin.href && origin.href.includes('/modals/')) {
+      e.preventDefault();
+      const { openModal } = await import(`${window.hlx.codeBasePath}/blocks/modal/modal.js`);
+      openModal(origin.href);
+    }
+  });
+}
 
 /**
  * load fonts.css and set a session storage flag
@@ -216,7 +233,7 @@ export function decorateMain(main) {
 
 /**
  * Loads everything needed to get to LCP.
- * @param {Element} doc The container element
+ * @param {HTMLElement|Element|Document} doc The container element
  */
 async function loadEager(doc) {
   // head and body tags
@@ -227,8 +244,8 @@ async function loadEager(doc) {
   document.addEventListener('changedLanguages', renderHrefLang);
 
   // clear cache
-  const usp = new URLSearchParams(window.location.search);
-  if (usp.get('nocache') || usp.get('disablecache')) {
+  if (hasUrlParam('nocache')
+    || hasUrlParam('disablecache')) {
     await clearFetchCache();
   }
 
@@ -253,9 +270,11 @@ async function loadEager(doc) {
 
 /**
  * Loads everything that doesn't need to be delayed.
- * @param {Element} doc The container element
+ * @param {HTMLElement|Element|Document} doc The container element
  */
 async function loadLazy(doc) {
+  autolinkModals(doc);
+
   const main = doc.querySelector('main');
   await loadBlocks(main);
 

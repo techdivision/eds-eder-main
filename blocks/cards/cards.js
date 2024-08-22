@@ -17,6 +17,10 @@ import {
   wrapImages,
 } from '../../scripts/helpers.js';
 
+/**
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/cards
+ */
+
 export default function decorate(block) {
   // transform to metadata when class filterable is set
   if (isFilterable(block)) {

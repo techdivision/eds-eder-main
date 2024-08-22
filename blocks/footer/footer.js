@@ -16,6 +16,7 @@ import { getCurrentUrl } from '../../scripts/helpers.js';
 /**
  * loads and decorates the footer
  * @param {Element} block The footer block element
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/footer
  */
 export default async function decorate(block) {
   // load footer as fragment

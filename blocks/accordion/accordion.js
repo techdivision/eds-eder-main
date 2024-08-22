@@ -12,7 +12,9 @@
 /*
  * Accordion Block
  * Recreate an accordion
+ *
  * https://www.hlx.live/developer/block-collection/accordion
+ * @see https://github.com/adobe/aem-block-collection/tree/main/blocks/accordion
  */
 
 function hasWrapper(el) {

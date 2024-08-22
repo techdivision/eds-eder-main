@@ -169,6 +169,16 @@ function getCurrentUrl() {
 }
 
 /**
+ * Check if we have a specific URL Param
+ *
+ * @param {string} field
+ * @returns {boolean}
+ */
+function hasUrlParam(field) {
+  return new URLSearchParams(window.location.search).has(field);
+}
+
+/**
  * Get URL Param
  *
  * @param {string} field
@@ -367,6 +377,7 @@ export {
   copyAttributes,
   transformRowsToData,
   transformToMetadata,
+  hasUrlParam,
   getUrlParam,
   setUrlParam,
   getCurrentUrl,
