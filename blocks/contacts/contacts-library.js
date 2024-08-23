@@ -13,7 +13,7 @@ import {
   normalize,
   replaceWhitespaces,
 } from '../../scripts/helpers.js';
-import { loadFragment } from '../fragment/fragment.js';
+import { loadFragmentAsync } from '../fragment/fragment.js';
 
 /**
  * Load contact by name
@@ -27,5 +27,5 @@ export default async function loadContactByName(name) {
 
   // load contact as fragment and create structure
   const contactUrl = `/contacts/${normalize(contactName)}`;
-  return loadFragment(contactUrl);
+  return loadFragmentAsync(contactUrl);
 }
