@@ -11,6 +11,8 @@
 
 /* banner */
 .contact-banner {
+  min-height: 300px;
+
   /* side by side */
   @media (width >= 600px) {
     display: flex;

@@ -36,18 +36,29 @@ async function buildContactCard(name, link) {
     });
 }
 
+/**
+ * Decorate block
+ *
+ * @param {HTMLElement} block
+ */
 export default async function decorate(block) {
+  // get data from block
   const namesArray = Array.from(block.children[0]?.children || [])
     .map((child) => child.textContent);
   const linksArray = Array.from(block.children[1]?.children || [])
     .map((child) => child);
 
+  // reset block HTML
   block.innerHTML = '';
+
+  // build cards
   namesArray.forEach((name, index) => {
     buildContactCard(name, linksArray[index] || null)
       .then((contactCard) => {
         if (contactCard) {
           block.append(contactCard);
+        } else {
+          block.append(name);
         }
       });
   });

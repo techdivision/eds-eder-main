@@ -245,6 +245,7 @@ async function loadEager(doc) {
 
   // clear cache
   if (hasUrlParam('nocache')
+    || hasUrlParam('clearcache')
     || hasUrlParam('disablecache')) {
     await clearFetchCache();
   }

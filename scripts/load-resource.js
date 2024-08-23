@@ -140,14 +140,16 @@ async function tidyOldCacheEntries() {
 }
 
 /**
- * Cached fetch request
+ * Cache wrapper
  *
  * @param {string} url
+ * @param {Function} handler
  * @returns {Promise}
  */
-async function cachedFetch(url) {
+async function cacheWrapper(url, handler) {
   // remove old cache entries
-  tidyOldCacheEntries().then();
+  tidyOldCacheEntries()
+    .then();
 
   // open cache
   const cache = await caches.open(fetchCacheKey);
@@ -158,14 +160,41 @@ async function cachedFetch(url) {
     return Promise.resolve(await cachedResponse.json());
   }
 
-  // if no cached response, perform a fetch
-  return ffetch(url)
+  // return given handler with save handler
+  return handler(async (data) => {
+    // noinspection JSCheckFunctionSignatures
+    await cache.put(url, new Response(JSON.stringify(data)));
+    return data;
+  });
+}
+
+/**
+ * Cached fetch request
+ *
+ * @param {string} url
+ * @returns {Promise}
+ */
+async function cachedFetch(url) {
+  return cacheWrapper(url, (save) => ffetch(url)
     .all()
-    .then(async (data) => {
-      // noinspection JSCheckFunctionSignatures
-      await cache.put(url, new Response(JSON.stringify(data)));
-      return data;
-    });
+    .then(save));
+}
+
+/**
+ * Cached HTML fetch request
+ *
+ * @param {string} url
+ * @returns {Promise}
+ */
+async function cachedHtmlFetch(url) {
+  return cacheWrapper(url, (save) => fetch(url)
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
+      }
+      return null;
+    })
+    .then(save));
 }
 
 /**
@@ -186,5 +215,6 @@ export {
   loadThirdPartyBundle,
   loadThirdPartyModule,
   cachedFetch,
+  cachedHtmlFetch,
   clearFetchCache,
 };
