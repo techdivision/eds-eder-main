@@ -43,22 +43,21 @@ async function buildContactCard(name, link) {
  */
 export default async function decorate(block) {
   // get data from block
-  const namesArray = Array.from(block.children[0]?.children || [])
-    .map((child) => child.textContent);
-  const linksArray = Array.from(block.children[1]?.children || [])
-    .map((child) => child);
+  const namesArray = Array.from(block.children[0]?.children || []);
+  const linksArray = Array.from(block.children[1]?.children || []);
 
   // reset block HTML
-  block.innerHTML = '';
+  [...block.children].slice(1)
+    .forEach((child) => block.removeChild(child));
 
   // build cards
   namesArray.forEach((name, index) => {
-    buildContactCard(name, linksArray[index] || null)
+    console.log(name);
+    buildContactCard(name.textContent, linksArray[index] || null)
       .then((contactCard) => {
         if (contactCard) {
-          block.append(contactCard);
-        } else {
-          block.append(name);
+          name.innerHTML = '';
+          name.append(contactCard);
         }
       });
   });

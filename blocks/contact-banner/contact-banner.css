@@ -11,16 +11,29 @@
 
 /* banner */
 .contact-banner {
-  min-height: 300px;
+  min-height: 310px;
 
   /* side by side */
-  @media (width >= 600px) {
-    display: flex;
-    gap: var(--spacing-simple);
+
+  > div {
+
+    @media (width >= 600px) {
+      display: flex;
+      gap: var(--spacing-simple);
+
+      > div {
+        flex: 1;
+        max-width: 50%;
+      }
+    }
 
     > div {
-      flex: 1;
-      max-width: 50%;
+      min-height: 300px;
+
+      @media (width >= 600px) {
+        flex: 1;
+        max-width: 50%;
+      }
     }
   }
 
