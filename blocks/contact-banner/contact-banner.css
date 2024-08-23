@@ -96,6 +96,12 @@
     }
   }
 
+  /* icons */
+
+  .icon {
+    width: 18px;
+  }
+
   /* link */
 
   .contact-link {
