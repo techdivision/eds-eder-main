@@ -52,7 +52,6 @@ export default async function decorate(block) {
 
   // build cards
   namesArray.forEach((name, index) => {
-    console.log(name);
     buildContactCard(name.textContent, linksArray[index] || null)
       .then((contactCard) => {
         if (contactCard) {

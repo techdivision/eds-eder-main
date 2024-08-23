@@ -16,7 +16,6 @@
   /* side by side */
 
   > div {
-
     @media (width >= 600px) {
       display: flex;
       gap: var(--spacing-simple);
