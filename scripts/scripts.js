@@ -167,7 +167,7 @@ function addOverviewLink(main, linkText, appendTo, buttonStyle) {
       link.classList.add('button');
     }
 
-    const element = [...main.querySelectorAll(appendTo + ':last-child') || []].pop();
+    const element = [...main.querySelectorAll(`${appendTo}:last-child`) || []].pop();
     if (element) {
       element.append(link);
     }
