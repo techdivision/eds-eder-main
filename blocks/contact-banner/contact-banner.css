@@ -11,7 +11,11 @@
 
 /* banner */
 .contact-banner {
-  min-height: 320px;
+  min-height: 650px;
+
+  @media (width >= 900px) {
+    min-height: 320px;
+  }
 
   /* side by side */
 
