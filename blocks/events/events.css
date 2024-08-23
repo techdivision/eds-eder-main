@@ -16,7 +16,7 @@
 
   .events-list-item {
     background: var(--color-gray-light);
-    border-radius: 20px;
+    border-radius: var(--card-border-radius);
     overflow: hidden;
     margin: 10px 0;
 

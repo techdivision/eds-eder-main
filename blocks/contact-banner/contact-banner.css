@@ -1,0 +1,101 @@
+/*
+ * Copyright (c) 2024 TechDivision GmbH
+ * All rights reserved
+ *
+ * This product includes proprietary software developed at TechDivision GmbH, Germany
+ * For more information see https://www.techdivision.com/
+ *
+ * To obtain a valid license for using this software please contact us at
+ * license@techdivision.com
+ */
+
+/* banner */
+.contact-banner {
+  /* side by side */
+  @media (width >= 600px) {
+    display: flex;
+    gap: var(--spacing-simple);
+
+    > div {
+      flex: 1;
+      max-width: 50%;
+    }
+  }
+
+  /* sections are not regular sections */
+
+  .section {
+    padding: 0;
+  }
+
+  /* columns element */
+
+  .columns {
+    background-color: var(--color-gray-lighter);
+    border-radius: var(--card-border-radius);
+    overflow: hidden;
+
+    & > div {
+      align-items: stretch;
+
+      > div:not(:first-child) {
+        padding: 20px;
+
+        @media (width >= 900px) {
+          padding-left: 0;
+        }
+      }
+
+      > div {
+        > p {
+          margin: 0;
+
+          &:first-child {
+            font-size: var(--heading-font-size-m);
+            margin-bottom: var(--spacing-simple);
+          }
+
+          &:nth-child(2) {
+            margin-bottom: var(--spacing-half);
+          }
+
+          &:first-child,
+          &:nth-child(2) {
+            font-weight: var(--font-weight-bold);
+          }
+        }
+      }
+    }
+
+    /* image */
+
+    .columns-img-col img {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &.one-quarter-three-quarter > div > div:first-child {
+      flex: 0 0 40%;
+    }
+  }
+
+  /* link */
+
+  .contact-link {
+    p {
+      padding: 0;
+      margin: 0;
+    }
+
+    a {
+      padding: 8px 16px;
+      background-color: var(--color-gray-darker);
+      color: var(--color-white);
+      display: inline-block;
+      margin-top: var(--spacing-simple);
+    }
+  }
+}

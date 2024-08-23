@@ -174,7 +174,7 @@
     list-style: none;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 42px;
+    grid-gap: var(--spacing-simple);
     text-align: center;
   }
 

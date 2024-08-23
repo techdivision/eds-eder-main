@@ -167,7 +167,7 @@ function addOverviewLink(main, linkText, appendTo, buttonStyle) {
       link.classList.add('button');
     }
 
-    const element = main.querySelector(appendTo);
+    const element = [...main.querySelectorAll(appendTo + ':last-child') || []].pop();
     if (element) {
       element.append(link);
     }
@@ -192,7 +192,7 @@ function decorateNews(main) {
     }
   }
 
-  addOverviewLink(main, 'More news', '.news-content', false);
+  addOverviewLink(main, 'More news', '.default-content-wrapper', false);
 }
 
 /**
