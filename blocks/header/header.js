@@ -78,7 +78,7 @@ function toggleMenu(nav, navSections, button, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  navSections.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  navSections?.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   if (button) {
     button.setAttribute('role', 'button');
@@ -86,7 +86,7 @@ function toggleMenu(nav, navSections, button, forceExpanded = null) {
     button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   }
   // enable nav dropdown keyboard accessibility
-  const navDrops = navSections.querySelectorAll('.nav-drop');
+  const navDrops = navSections?.querySelectorAll('.nav-drop') || [];
   if (isDesktop.matches) {
     navDrops.forEach((drop) => {
       if (!drop.hasAttribute('tabindex')) {
@@ -306,7 +306,7 @@ export default async function decorate(block) {
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
-  while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
+  while (fragment?.firstElementChild) nav.append(fragment.firstElementChild);
 
   const classes = ['logo', 'sections'];
   classes.forEach((c, i) => {
@@ -316,7 +316,7 @@ export default async function decorate(block) {
 
   // link for logo
   const navLogo = nav.querySelector('.nav-logo');
-  const logoLink = navLogo.querySelector('.button');
+  const logoLink = navLogo?.querySelector('.button');
   if (logoLink) {
     logoLink.className = '';
     logoLink.closest('.button-container').className = '';

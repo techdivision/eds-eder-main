@@ -19,18 +19,22 @@
 import { decorateMain } from '../../scripts/scripts.js';
 import { loadBlocks } from '../../scripts/aem.js';
 import { getCurrentUrl } from '../../scripts/helpers.js';
+import { cachedHtmlFetch } from '../../scripts/load-resource.js';
 
 /**
  * Loads a fragment.
  * @param {string} path The path to the fragment
- * @returns {HTMLElement} The root element of the fragment
+ * @returns {Promise|HTMLElement} The root element of the fragment
  */
 export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
-    const resp = await fetch(`${path}.plain.html`);
-    if (resp.ok) {
+    // BEGIN CHANGE TechDivision
+    // cache fragment
+    const responseText = await cachedHtmlFetch(`${path}.plain.html`);
+    if (responseText) {
       const main = document.createElement('main');
-      main.innerHTML = await resp.text();
+      main.innerHTML = await responseText;
+      // END CHANGE TechDivision
 
       // reset base path for media to fragment base
       const resetAttributeBase = (tag, attr) => {
@@ -51,6 +55,26 @@ export async function loadFragment(path) {
     }
   }
   return null;
+}
+
+/**
+ * Load fragment asynchronously
+ *
+ * @param {string} path The path to the fragment
+ * @returns {Promise<HTMLElement>}
+ */
+export async function loadFragmentAsync(path) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      loadFragment(path)
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    }, 0);
+  });
 }
 
 export default async function decorate(block) {

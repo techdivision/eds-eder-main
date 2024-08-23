@@ -3,4 +3,4 @@
 Test URLs:
 
 - Before: https://main--eds-eder-main--techdivision.hlx.live/
-- After: https://<branch>--eds-eder-main--techdivision.hlx.live/
+- After: https://edercms-<branch>--eds-eder-main--techdivision.hlx.live/
