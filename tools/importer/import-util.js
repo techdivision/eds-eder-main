@@ -386,7 +386,7 @@ export const handle3ColumnsGrid = (main, document) => {
     let hasFilter = false;
 
     // check if there are any filters present
-    const select = document.querySelector('select.category-filter-select');
+    const select = main.querySelector('select.category-filter-select');
 
     const optionsMapping = [];
 
