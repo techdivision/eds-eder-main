@@ -448,10 +448,11 @@ export const handle3ColumnsGrid = (main, document) => {
       // special handling for some headlines: replace h3-class elements by proper h3
       const h3ClassElement = thirdWidthCard.querySelector('p.h3');
 
-      const h3 = document.createElement('h3');
-      h3.innerText = h3ClassElement.innerText;
-
-      h3ClassElement.replaceWith(h3);
+      if (h3ClassElement) {
+        const h3 = document.createElement('h3');
+        h3.innerText = h3ClassElement.innerText;
+        h3ClassElement.replaceWith(h3);
+      }
 
       // check if there is any image present
       if (image) {
