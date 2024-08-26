@@ -352,6 +352,7 @@ export const handleContactBanner = (main, document) => {
         'RTK-Experten',
         'AGRATEC LANDTECHNIKZENTRUM',
         'Stefan Buchner',
+        'EDER Baumaschinen',
       ];
 
       // check if name can be extracted from the text
@@ -466,9 +467,16 @@ export default {
 
     WebImporter.rules.createMetadata(main, document);
 
+    // work-around for home-page (in case we want to take some data out of it)
+    let { pathname } = new URL(url);
+
+    if (pathname === '/') {
+      pathname = '/index';
+    }
+
     results.push({
       element: main,
-      path: new URL(url).pathname,
+      path: pathname,
     });
 
     return results;

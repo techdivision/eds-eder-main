@@ -353,9 +353,15 @@ export const handle2ColumnsGrid = (main, document) => {
           newContent.append(boldElement);
         }
 
-        cells.push(
-          [image, logo, newContent],
-        );
+        if (logo) {
+          cells.push(
+            [image, logo, newContent],
+          );
+        } else {
+          cells.push(
+            [image, newContent],
+          );
+        }
       });
 
       const resultTable = WebImporter.DOMUtils.createTable(cells, document);
@@ -376,9 +382,58 @@ export const handle3ColumnsGrid = (main, document) => {
   const thirdWidthCards = main.querySelectorAll('div.col-md-4');
 
   if (thirdWidthCards.length > 0) {
-    const cells = [
-      ['Cards (third-width)'],
-    ];
+    // flag, whether filters are present
+    let hasFilter = false;
+
+    // check if there are any filters present
+    const select = document.querySelector('select.category-filter-select');
+
+    const optionsMapping = [];
+
+    // extract label next to filter-dropdown
+    const filterLabel = main.querySelector('div.category-filter-text');
+
+    if (select) {
+      const { options } = select;
+
+      if (options.length > 1) {
+        // set flag
+        hasFilter = true;
+
+        // build mapping between id used by Cards and their label
+        for (let i = 0; i < options.length; i += 1) {
+          const option = options[i];
+
+          optionsMapping[option.value] = option.text;
+        }
+
+        // add Filter Block
+        const filterCells = [
+          ['Filter'],
+          ['Kategorie', 'dropdown', 'category', ''],
+        ];
+
+        const filterTable = WebImporter.DOMUtils.createTable(filterCells, document);
+
+        select.replaceWith(filterTable);
+      } else if (options.length === 1) {
+        // eslint-disable-next-line max-len
+        // special case: there is only one option, but that does not have an id assigned -> remove Filter
+        select.remove();
+        filterLabel.remove();
+      }
+    }
+
+    const cells = [];
+
+    if (hasFilter) {
+      // use different Block-name if cards are filterable
+      cells.push(['Cards (third-width, filterable)']);
+      // push headline for category-filter
+      cells.push(['', '', 'category']);
+    } else {
+      cells.push(['Cards (third-width)']);
+    }
 
     let parent;
 
@@ -389,6 +444,14 @@ export const handle3ColumnsGrid = (main, document) => {
 
       // copy image to its own entry
       const image = thirdWidthCard.querySelector('img');
+
+      // special handling for some headlines: replace h3-class elements by proper h3
+      const h3ClassElement = thirdWidthCard.querySelector('p.h3');
+
+      const h3 = document.createElement('h3');
+      h3.innerText = h3ClassElement.innerText;
+
+      h3ClassElement.replaceWith(h3);
 
       // check if there is any image present
       if (image) {
@@ -414,9 +477,28 @@ export const handle3ColumnsGrid = (main, document) => {
           imageDiv.append(heroText);
         }
 
-        cells.push(
-          [imageDiv, thirdWidthCard],
-        );
+        // check if there are filters for the Cards-element
+        if (hasFilter) {
+          const rawCategories = thirdWidthCard.getAttribute('data-categories');
+
+          const categoriesArray = rawCategories.split(',');
+
+          const productCategories = [];
+
+          categoriesArray.forEach((category) => {
+            if (optionsMapping[category]) {
+              productCategories.push(optionsMapping[category]);
+            }
+          });
+
+          cells.push(
+            [imageDiv, thirdWidthCard, productCategories.join(',')],
+          );
+        } else {
+          cells.push(
+            [imageDiv, thirdWidthCard],
+          );
+        }
       } else {
         // Card with no image
         cells.push(

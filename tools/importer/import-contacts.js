@@ -77,7 +77,7 @@ export default {
     const documentList = [];
 
     contacts.forEach((contact) => {
-      const image = contact.querySelector('img');
+      const image = contact.querySelector('img') || '';
 
       const details = contact;
 
