@@ -69,7 +69,6 @@
         width: 100%;
         height: 260px;
         object-fit: contain;
-        background-color: var(--color-gray);
       }
     }
   }

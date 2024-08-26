@@ -50,7 +50,7 @@
   /* columns element */
 
   .columns {
-    background-color: var(--color-gray-lighter);
+    background-color: var(--color-gray-light);
     border-radius: var(--card-border-radius);
     overflow: hidden;
 

@@ -20,6 +20,10 @@ main .events-hero-wrapper {
   }
 }
 
+main .events-hero-container {
+  padding-top: 0;
+}
+
 .events-hero {
   max-width: var(--page-width);
   margin-left: auto;
