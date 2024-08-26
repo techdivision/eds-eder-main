@@ -236,6 +236,7 @@ header .pre-header[aria-expanded='true'] .default-content-wrapper > ul > li > ul
 /* contact section */
 header .pre-header .section:not(.search-bar-container):last-child {
   margin-left: auto;
+  padding-right: var(--spacing-half);
 }
 
 header .pre-header .section:not(.search-bar-container):last-child p {
