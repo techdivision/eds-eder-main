@@ -211,6 +211,24 @@ export function decorateLinkedPictures(block) {
 }
 
 /**
+ * Adds target=_blank to links that lead to external urls and PDFs
+ * @param main
+ */
+export function decorateLinkTarget(main) {
+  main.querySelectorAll('a').forEach((a) => {
+    const href = a.getAttribute('href');
+    if (href) {
+      const extension = href.split('.').pop().trim();
+      // check for external links or PDFs
+      if (!href.startsWith('/') || extension === 'pdf') {
+        // set target blank to open them in new tab
+        a.setAttribute('target', '_blank');
+      }
+    }
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -223,6 +241,7 @@ export function decorateMain(main) {
   decorateSections(main);
   decorateBlocks(main);
   decorateLinkedPictures(main);
+  decorateLinkTarget(main);
   if (getMetadata('template') === 'news') {
     decorateNews(main);
   }
