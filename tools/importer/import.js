@@ -18,6 +18,7 @@ import {
   handleLinks,
   handle2ColumnsGrid,
   handle3ColumnsGrid,
+  handle4ColumnsGrid,
   handleSidebar,
   handleImages,
   handleIcons,
@@ -347,9 +348,11 @@ export const handleContactBanner = (main, document) => {
       const namesToCheck = [
         'Daniel Strehle',
         'Klaus Mayer',
+        'EDER LANDTECHNIK',
         'RTK-Experten',
         'AGRATEC LANDTECHNIKZENTRUM',
         'Stefan Buchner',
+        'EDER Baumaschinen',
       ];
 
       // check if name can be extracted from the text
@@ -445,6 +448,7 @@ export default {
     handleLinks(main, document, baseUrl);
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
+    handle4ColumnsGrid(main, document);
     handleSidebar(main, document);
     handleIcons(main);
     handleIframes(main, document);
@@ -463,9 +467,16 @@ export default {
 
     WebImporter.rules.createMetadata(main, document);
 
+    // work-around for home-page (in case we want to take some data out of it)
+    let { pathname } = new URL(url);
+
+    if (pathname === '/') {
+      pathname = '/index';
+    }
+
     results.push({
       element: main,
-      path: new URL(url).pathname,
+      path: pathname,
     });
 
     return results;
