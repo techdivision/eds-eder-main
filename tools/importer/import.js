@@ -99,6 +99,13 @@ export const handleShopData = (main, document) => {
     const headlineSection = shopAccordion.querySelector('div.headline');
     const addressDetails = shopAccordion.querySelector('div.address-details');
 
+    // extract contact-button and append it below the address-details
+    const contactButton = shopAccordion.querySelector('div.contact-button, div.coa-button');
+
+    if (contactButton) {
+      addressDetails.append(contactButton);
+    }
+
     // remove hidden button from address-details
     const detailButton = addressDetails.querySelector('a.detail-link');
 
@@ -400,6 +407,42 @@ export const handleContactBanner = (main, document) => {
   });
 };
 
+/**
+ * Method to replace Typo3-forms by stub of Embed-block
+ * @param main
+ * @param document
+ */
+export const handleForm = (main, document) => {
+  const form = main.querySelector('form');
+
+  if (form) {
+    const result = document.createElement('div');
+
+    // get h1 if there is any
+    const h1 = document.querySelector('h1');
+
+    result.append(h1);
+
+    // replace <form> from Typo3 by Embed-Block that must be manually filled
+    const cells = [
+      ['Embed'],
+      ['TODO'],
+    ];
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    result.append(resultTable);
+
+    form.replaceWith(result);
+
+    // remove sidebar (if there is any)
+    const sidebar = main.querySelector('div.news-sidebar');
+    if (sidebar) {
+      sidebar.remove();
+    }
+  }
+};
+
 export default {
   /**
    * preprocess-method in order to convert empty italic tags to span tags,
@@ -444,6 +487,7 @@ export default {
     // handle images for all other imports that follow
     handleImages(main);
 
+    handleForm(main, document);
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
     handle2ColumnsGrid(main, document);

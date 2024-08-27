@@ -390,8 +390,12 @@ export const handle3ColumnsGrid = (main, document) => {
 
     const optionsMapping = [];
 
-    // extract label next to filter-dropdown
+    // extract label next to filter-dropdown and remove it
     const filterLabel = main.querySelector('div.category-filter-text');
+
+    if (filterLabel) {
+      filterLabel.remove();
+    }
 
     if (select) {
       const { options } = select;
@@ -420,7 +424,6 @@ export const handle3ColumnsGrid = (main, document) => {
         // eslint-disable-next-line max-len
         // special case: there is only one option, but that does not have an id assigned -> remove Filter
         select.remove();
-        filterLabel.remove();
       }
     }
 
@@ -448,10 +451,11 @@ export const handle3ColumnsGrid = (main, document) => {
       // special handling for some headlines: replace h3-class elements by proper h3
       const h3ClassElement = thirdWidthCard.querySelector('p.h3');
 
-      const h3 = document.createElement('h3');
-      h3.innerText = h3ClassElement.innerText;
-
-      h3ClassElement.replaceWith(h3);
+      if (h3ClassElement) {
+        const h3 = document.createElement('h3');
+        h3.innerText = h3ClassElement.innerText;
+        h3ClassElement.replaceWith(h3);
+      }
 
       // check if there is any image present
       if (image) {
