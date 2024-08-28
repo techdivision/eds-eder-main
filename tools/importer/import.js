@@ -33,6 +33,9 @@ import {
   handleContacts,
   handlePdfs,
   isEderGmbh,
+  handleMp4s,
+  handleTeaserRows,
+  handleSideBySide,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -51,6 +54,7 @@ const removeGenericContent = (main) => {
     '.locations',
     '.route-link',
     '.hidden',
+    '.hidden-md',
   ]);
 };
 
@@ -472,14 +476,16 @@ export default {
     // list of resulting documents in EDS, might be multiple if downloadable PDFs are present
     const results = [];
 
+    // handle tables first in order to avoid re-adding table-markup to migrated blocks
+    handleTable(main, document);
+
     // handle possible internal links to PDF-documents
     handlePdfs(main, url, baseUrl, results);
 
+    handleMp4s(main, url, baseUrl, results);
+
     // handle content of the document itself
     removeGenericContent(main);
-
-    // handle tables first in order to avoid re-adding table-markup to migrated blocks
-    handleTable(main, document);
 
     // handle image-slider before modifying image-urls in general
     handleGallerySlider(main, document, baseUrl);
@@ -499,6 +505,7 @@ export default {
     handleAccordions(main, document);
     handleTextBoxes(main, document);
     handleFilterAndRows(main, document);
+    handleTeaserRows(main, document);
     handleImagesInText(main, document);
     handleTextPic(main, document);
     handleBrs(main, document);
@@ -508,6 +515,9 @@ export default {
     handleNewsList(main, document, params);
     handleEventsList(main, document, params);
     handleContactBanner(main, document);
+
+    // handle side-by-side cases at least to check for converted EDS Markup
+    handleSideBySide(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 
