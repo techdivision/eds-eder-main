@@ -433,7 +433,9 @@ function decorateButtons(element) {
             up.childNodes.length === 1
             && up.tagName === 'STRONG'
             && twoup.childNodes.length === 1
-            && twoup.tagName === 'P'
+            // BEGIN CHANGE TechDivision
+            && (twoup.tagName === 'P' || twoup.tagName === 'DIV')
+            // END CHANGE TechDivision
           ) {
             a.className = 'button primary';
             twoup.classList.add('button-container');
@@ -442,7 +444,9 @@ function decorateButtons(element) {
             up.childNodes.length === 1
             && up.tagName === 'EM'
             && twoup.childNodes.length === 1
-            && twoup.tagName === 'P'
+            // BEGIN CHANGE TechDivision
+            && (twoup.tagName === 'P' || twoup.tagName === 'DIV')
+            // END CHANGE TechDivision
           ) {
             a.className = 'button secondary';
             twoup.classList.add('button-container');
