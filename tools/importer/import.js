@@ -592,7 +592,7 @@ export default {
 
     handleSidebar(main, document);
 
-    // handle side-by-side cases at least to check for converted EDS Markup
+    // handle side-by-side cases at last to check for converted EDS Markup
     handleSideBySide(main, document);
 
     WebImporter.rules.createMetadata(main, document);
