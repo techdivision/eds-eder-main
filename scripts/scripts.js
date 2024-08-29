@@ -157,7 +157,8 @@ function linkPicture(picture) {
  */
 function addOverviewLink(main, linkText, appendTo, buttonStyle) {
   const overviewLink = getMetadata('overview_link');
-  if (overviewLink) {
+  // check if parentElement is present to avoid adding link to header and footer
+  if (overviewLink && main.parentElement) {
     const link = document.createElement('a');
     link.href = overviewLink;
     tContent(link, linkText)
@@ -165,6 +166,8 @@ function addOverviewLink(main, linkText, appendTo, buttonStyle) {
 
     if (buttonStyle) {
       link.classList.add('button');
+    } else {
+      link.classList.add('has-chevron');
     }
 
     const element = [...main.querySelectorAll(`${appendTo}:last-child`) || []].pop();
