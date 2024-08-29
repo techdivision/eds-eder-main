@@ -59,6 +59,8 @@
 /* styling desktop */
 @media (width >= 900px) {
   .columns > div {
+    width: var(--page-width);
+    max-width: 100%;
     align-items: start;
     flex-direction: unset;
     gap: var(--spacing-simple);
