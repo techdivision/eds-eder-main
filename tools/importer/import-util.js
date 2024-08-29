@@ -45,7 +45,8 @@ export const determineEdsBaseUrl = (params) => {
  */
 export const isButton = (link) => {
   // check for buttons that are defined at link level
-  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray') || link.className.includes('btn-ghost')) {
+  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray') || link.className.includes('btn-ghost')
+   || link.className.includes('btn-red')) {
     return true;
   }
 
@@ -390,8 +391,12 @@ export const handle3ColumnsGrid = (main, document) => {
 
     const optionsMapping = [];
 
-    // extract label next to filter-dropdown
+    // extract label next to filter-dropdown and remove it
     const filterLabel = main.querySelector('div.category-filter-text');
+
+    if (filterLabel) {
+      filterLabel.remove();
+    }
 
     if (select) {
       const { options } = select;
@@ -420,7 +425,6 @@ export const handle3ColumnsGrid = (main, document) => {
         // eslint-disable-next-line max-len
         // special case: there is only one option, but that does not have an id assigned -> remove Filter
         select.remove();
-        filterLabel.remove();
       }
     }
 
@@ -448,10 +452,11 @@ export const handle3ColumnsGrid = (main, document) => {
       // special handling for some headlines: replace h3-class elements by proper h3
       const h3ClassElement = thirdWidthCard.querySelector('p.h3');
 
-      const h3 = document.createElement('h3');
-      h3.innerText = h3ClassElement.innerText;
-
-      h3ClassElement.replaceWith(h3);
+      if (h3ClassElement) {
+        const h3 = document.createElement('h3');
+        h3.innerText = h3ClassElement.innerText;
+        h3ClassElement.replaceWith(h3);
+      }
 
       // check if there is any image present
       if (image) {
@@ -707,13 +712,13 @@ export const handleAccordions = (main, document) => {
 };
 
 export const handleGallerySlider = (main, document, baseUrl) => {
-  const gallerySlider = main.querySelector('div.flexslider');
+  const gallerySlider = main.querySelector('div.flexslider, div.element-t3sbs_gallery');
 
   if (gallerySlider) {
     const cells = [
       ['Slider (Autostart, Desktop-1-Mobile-1)'],
     ];
-    const slides = gallerySlider.querySelectorAll('li.item');
+    const slides = gallerySlider.querySelectorAll('li.item, div.col-md-3');
 
     slides.forEach((slide) => {
       let imageSrc = slide.querySelector('a').getAttribute('href');
@@ -776,8 +781,6 @@ export const handleFilterAndRows = (main, document) => {
   // use id here, as the elements do not have another way to identify them
   const rows = main.querySelectorAll('div.element-dce_dceuid12');
 
-  let parent;
-
   let hasFilter = false;
 
   const result = document.createElement('div');
@@ -785,8 +788,6 @@ export const handleFilterAndRows = (main, document) => {
   let blockName = 'Rows';
 
   if (filter) {
-    parent = filter.parentElement;
-
     // handle filter-block
     const images = filter.querySelectorAll('img.filter-img');
 
@@ -810,6 +811,9 @@ export const handleFilterAndRows = (main, document) => {
     blockName = 'Rows (filterable)';
 
     hasFilter = true;
+
+    // remove original filter content
+    filter.remove();
   }
 
   // handle rows with product data
@@ -818,10 +822,9 @@ export const handleFilterAndRows = (main, document) => {
       [blockName],
     ];
 
-    rows.forEach((row) => {
-      // store parent
-      parent = row.parentElement;
+    let rowsCount = 0;
 
+    rows.forEach((row) => {
       // get the original-data from Typo3
       const originalImageDiv = row.querySelector('div.image');
       const originalContentDiv = row.querySelector('div.content');
@@ -904,13 +907,15 @@ export const handleFilterAndRows = (main, document) => {
         // create own paragraph, add italic element around text of info-button
         const infoButton = originalContentDiv.querySelector('a.info-btn');
 
-        const italicElement = document.createElement('em');
-        italicElement.append(infoButton.innerHTML);
+        if (infoButton) {
+          const italicElement = document.createElement('em');
+          italicElement.append(infoButton.innerHTML);
 
-        const infoButtonParagraph = document.createElement('p');
-        infoButtonParagraph.append(italicElement);
+          const infoButtonParagraph = document.createElement('p');
+          infoButtonParagraph.append(italicElement);
 
-        infoButton.innerHTML = infoButtonParagraph.outerHTML;
+          infoButton.innerHTML = infoButtonParagraph.outerHTML;
+        }
 
         // store modified data
         if (hasFilter) {
@@ -922,13 +927,21 @@ export const handleFilterAndRows = (main, document) => {
             [resultImage, resultLogo, content, originalRecommendDiv],
           );
         }
+        // remove each of the single items, but not the last one
+        if (rowsCount < rows.length - 1) {
+          row.remove();
+        }
+
+        rowsCount += 1;
       }
     });
     const rowResultTable = WebImporter.DOMUtils.createTable(rowCells, document);
 
     result.append(rowResultTable);
 
-    parent.replaceWith(result);
+    // get the last row and replace it by result-table
+    const lastRow = rows[rows.length - 1];
+    lastRow.replaceWith(result);
   }
 };
 
@@ -1106,4 +1119,166 @@ export const handlePdfs = (main, url, baseUrl, results) => {
       a.setAttribute('href', newPath);
     }
   });
+};
+
+/**
+ * Handle videos that were upload to the Typo3 server by downloading them
+ * and replacing the <video>-node by an EDS Video-block
+ * File-handling is taken from https://github.com/adobe/helix-importer-ui/blob/main/docs/download-pdf.md
+ * @param main
+ * @param url
+ * @param baseUrl
+ * @param results
+ */
+export const handleMp4s = (main, url, baseUrl, results) => {
+  main.querySelectorAll('video').forEach((video) => {
+    const source = video.querySelector('source');
+
+    const dataSrc = source.getAttribute('data-src');
+
+    if (dataSrc && dataSrc.startsWith('/') && dataSrc.endsWith('.mp4')) {
+      const u = new URL(dataSrc, url);
+      const newPath = WebImporter.FileUtils.sanitizePath(u.pathname);
+      results.push({
+        path: newPath,
+        from: u.toString(),
+      });
+
+      const newUrl = `${baseUrl}${newPath}`;
+
+      const link = document.createElement('a');
+      link.setAttribute('href', newUrl);
+      link.innerText = newUrl;
+
+      const cells = [
+        ['Video (autoplay)'],
+        [link],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      video.replaceWith(resultTable);
+    }
+  });
+};
+
+/**
+ * Handle teaser-rows from Typo3 by converting them to an EDS Row-Block
+ * @param main
+ * @param document
+ */
+export const handleTeaserRows = (main, document) => {
+  // use id here, as the elements do not have another way to identify them
+  const rows = main.querySelectorAll('div.element-dce_dceuid50');
+
+  const cells = [
+    ['Rows'],
+  ];
+
+  let rowsCount = 0;
+
+  if (rows.length > 0) {
+    rows.forEach((row) => {
+      const originalLink = row.querySelector('a');
+      const href = originalLink.getAttribute('href');
+
+      const imgDiv = row.querySelector('div.img-box');
+      const img = imgDiv.querySelector('img');
+
+      const textDiv = row.querySelector('div.text-box');
+
+      // extract last paragraph of the text and add link to
+      const paragraphs = textDiv.querySelectorAll('p');
+
+      const lastParagraph = paragraphs[paragraphs.length - 1];
+
+      const link = document.createElement('a');
+      link.append(lastParagraph.innerText);
+      link.href = href;
+
+      lastParagraph.replaceWith(link);
+
+      cells.push([img, textDiv]);
+
+      // remove each of the single items, but not the last one
+      if (rowsCount < rows.length - 1) {
+        row.remove();
+      }
+
+      rowsCount += 1;
+    });
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    // get the last row and replace it by result-table
+    const lastRow = rows[rows.length - 1];
+    lastRow.replaceWith(resultTable);
+  }
+};
+
+/**
+ * Handle side-by-side elements by replacing them with either a section-markup or a Columns-Block,
+ * depending on the content of the columns
+ * @param main
+ * @param document
+ */
+export const handleSideBySide = (main, document) => {
+  // use id here, as the elements do not have another way to identify them
+  const rows = main.querySelectorAll('div.row.use-maxwidth');
+
+  if (rows.length > 0) {
+    rows.forEach((row) => {
+      const elements = row.querySelectorAll('div.col-sm-6');
+
+      // only continue if there are at least two elements
+      if (elements && elements.length > 1) {
+        const firstElement = elements[0];
+        const secondElement = elements[1];
+
+        const result = document.createElement('div');
+
+        // check if content contains a table = an EDS Block markup
+        if (row.innerHTML.includes('table')) {
+          // section-markup with side-by-side Metadata must be generated
+          const sectionMetadata = [
+            ['Section Metadata'],
+            ['Style', 'side-by-side'],
+          ];
+          const sectionMetadataTable = WebImporter.DOMUtils.createTable(sectionMetadata, document);
+
+          result.append(document.createElement('hr'));
+
+          // check for 'pull-right', where the second element is displayed first
+          if (firstElement.className.includes('pull-right')) {
+            result.append(secondElement);
+            result.append(firstElement);
+          } else {
+            result.append(firstElement);
+            result.append(secondElement);
+          }
+
+          result.append(sectionMetadataTable);
+          result.append(document.createElement('hr'));
+
+          row.replaceWith(result);
+        } else {
+          // no tables found: Columns-Block can be used
+          const rowCells = [
+            ['Columns'],
+          ];
+
+          // check for 'pull-right', where the second element is displayed first
+          if (firstElement.className.includes('pull-right')) {
+            rowCells.push([secondElement, firstElement]);
+          } else {
+            rowCells.push([firstElement, secondElement]);
+          }
+
+          const resultTable = WebImporter.DOMUtils.createTable(rowCells, document);
+
+          row.replaceWith(resultTable);
+        }
+      }
+    });
+  }
 };

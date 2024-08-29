@@ -33,6 +33,9 @@ import {
   handleContacts,
   handlePdfs,
   isEderGmbh,
+  handleMp4s,
+  handleTeaserRows,
+  handleSideBySide,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -51,6 +54,7 @@ const removeGenericContent = (main) => {
     '.locations',
     '.route-link',
     '.hidden',
+    '.hidden-md',
   ]);
 };
 
@@ -98,6 +102,13 @@ export const handleShopData = (main, document) => {
     // extract sections of the original content
     const headlineSection = shopAccordion.querySelector('div.headline');
     const addressDetails = shopAccordion.querySelector('div.address-details');
+
+    // extract contact-button and append it below the address-details
+    const contactButton = shopAccordion.querySelector('div.contact-button, div.coa-button');
+
+    if (contactButton) {
+      addressDetails.append(contactButton);
+    }
 
     // remove hidden button from address-details
     const detailButton = addressDetails.querySelector('a.detail-link');
@@ -400,6 +411,116 @@ export const handleContactBanner = (main, document) => {
   });
 };
 
+/**
+ * Method to replace Typo3-forms by stub of Embed-block
+ * @param main
+ * @param document
+ */
+export const handleForm = (main, document) => {
+  const form = main.querySelector('form');
+
+  if (form) {
+    const result = document.createElement('div');
+
+    // get h1 if there is any
+    const h1 = document.querySelector('h1');
+
+    result.append(h1);
+
+    // replace <form> from Typo3 by Embed-Block that must be manually filled
+    const cells = [
+      ['Embed'],
+      ['TODO'],
+    ];
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    result.append(resultTable);
+
+    form.replaceWith(result);
+
+    // remove sidebar (if there is any)
+    const sidebar = main.querySelector('div.news-sidebar');
+    if (sidebar) {
+      sidebar.remove();
+    }
+  }
+};
+
+/**
+ * Handle different version of Contact-block that contains only links to contact-possibilities
+ * @param main
+ * @param document
+ */
+export const handleContactWithoutPerson = (main, document) => {
+  const originalBlock = main.querySelector('div.element-dce_dceuid29');
+
+  if (originalBlock) {
+    const textOnlyBlock = originalBlock.cloneNode(true);
+
+    // center text
+    const paragraphs = textOnlyBlock.querySelectorAll('p, h3');
+
+    paragraphs.forEach((paragraph) => {
+      paragraph.setAttribute('style', 'text-align: center;');
+    });
+
+    // remove links from the text-only block
+    const linksInText = textOnlyBlock.querySelectorAll('a');
+
+    linksInText.forEach((linkInText) => {
+      linkInText.remove();
+    });
+
+    // extract the links from the original block
+    const links = originalBlock.querySelectorAll('a');
+
+    const firstLink = links[0];
+    const secondLink = links[1];
+
+    /*
+     * Build result-table, must be done manually here
+     * as the EDS DOMUtils does not support the required formatting
+    */
+    const resultTable = document.createElement('table');
+
+    // build headline-row
+    const headlineRow = document.createElement('tr');
+    const headlineCell = document.createElement('th');
+    headlineCell.setAttribute('colspan', 2);
+    headlineCell.append('Columns');
+    headlineRow.append(headlineCell);
+
+    // build text-row
+    const textRow = document.createElement('tr');
+    const textCell = document.createElement('td');
+    textCell.setAttribute('align', 'center');
+    textCell.setAttribute('colspan', 2);
+    textCell.append(textOnlyBlock);
+    textRow.append(textCell);
+
+    // build link-row
+    const linkRow = document.createElement('tr');
+
+    const firstLinkCell = document.createElement('td');
+    firstLinkCell.setAttribute('align', 'right');
+    firstLinkCell.append(firstLink);
+    linkRow.append(firstLinkCell);
+
+    const secondLinkCell = document.createElement('td');
+    secondLinkCell.setAttribute('align', 'left');
+    secondLinkCell.append(secondLink);
+    linkRow.append(secondLinkCell);
+
+    // build table with the different rows
+    resultTable.append(headlineRow);
+    resultTable.append(textRow);
+    resultTable.append(linkRow);
+
+    originalBlock.replaceWith(resultTable);
+  }
+};
+
 export default {
   /**
    * preprocess-method in order to convert empty italic tags to span tags,
@@ -429,14 +550,16 @@ export default {
     // list of resulting documents in EDS, might be multiple if downloadable PDFs are present
     const results = [];
 
+    // handle tables first in order to avoid re-adding table-markup to migrated blocks
+    handleTable(main, document);
+
     // handle possible internal links to PDF-documents
     handlePdfs(main, url, baseUrl, results);
 
+    handleMp4s(main, url, baseUrl, results);
+
     // handle content of the document itself
     removeGenericContent(main);
-
-    // handle tables first in order to avoid re-adding table-markup to migrated blocks
-    handleTable(main, document);
 
     // handle image-slider before modifying image-urls in general
     handleGallerySlider(main, document, baseUrl);
@@ -444,17 +567,18 @@ export default {
     // handle images for all other imports that follow
     handleImages(main);
 
+    handleForm(main, document);
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
     handle4ColumnsGrid(main, document);
-    handleSidebar(main, document);
     handleIcons(main);
     handleIframes(main, document);
     handleAccordions(main, document);
     handleTextBoxes(main, document);
     handleFilterAndRows(main, document);
+    handleTeaserRows(main, document);
     handleImagesInText(main, document);
     handleTextPic(main, document);
     handleBrs(main, document);
@@ -464,6 +588,12 @@ export default {
     handleNewsList(main, document, params);
     handleEventsList(main, document, params);
     handleContactBanner(main, document);
+    handleContactWithoutPerson(main, document);
+
+    handleSidebar(main, document);
+
+    // handle side-by-side cases at last to check for converted EDS Markup
+    handleSideBySide(main, document);
 
     WebImporter.rules.createMetadata(main, document);
 
