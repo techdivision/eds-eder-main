@@ -447,6 +447,80 @@ export const handleForm = (main, document) => {
   }
 };
 
+/**
+ * Handle different version of Contact-block that contains only links to contact-possibilities
+ * @param main
+ * @param document
+ */
+export const handleContactWithoutPerson = (main, document) => {
+  const originalBlock = main.querySelector('div.element-dce_dceuid29');
+
+  if (originalBlock) {
+    const textOnlyBlock = originalBlock.cloneNode(true);
+
+    // center text
+    const paragraphs = textOnlyBlock.querySelectorAll('p, h3');
+
+    paragraphs.forEach((paragraph) => {
+      paragraph.setAttribute('style', 'text-align: center;');
+    });
+
+    // remove links from the text-only block
+    const linksInText = textOnlyBlock.querySelectorAll('a');
+
+    linksInText.forEach((linkInText) => {
+      linkInText.remove();
+    });
+
+    // extract the links from the original block
+    const links = originalBlock.querySelectorAll('a');
+
+    const firstLink = links[0];
+    const secondLink = links[1];
+
+    /*
+     * Build result-table, must be done manually here
+     * as the EDS DOMUtils does not support the required formatting
+    */
+    const resultTable = document.createElement('table');
+
+    // build headline-row
+    const headlineRow = document.createElement('tr');
+    const headlineCell = document.createElement('th');
+    headlineCell.setAttribute('colspan', 2);
+    headlineCell.append('Columns');
+    headlineRow.append(headlineCell);
+
+    // build text-row
+    const textRow = document.createElement('tr');
+    const textCell = document.createElement('td');
+    textCell.setAttribute('align', 'center');
+    textCell.setAttribute('colspan', 2);
+    textCell.append(textOnlyBlock);
+    textRow.append(textCell);
+
+    // build link-row
+    const linkRow = document.createElement('tr');
+
+    const firstLinkCell = document.createElement('td');
+    firstLinkCell.setAttribute('align', 'right');
+    firstLinkCell.append(firstLink);
+    linkRow.append(firstLinkCell);
+
+    const secondLinkCell = document.createElement('td');
+    secondLinkCell.setAttribute('align', 'left');
+    secondLinkCell.append(secondLink);
+    linkRow.append(secondLinkCell);
+
+    // build table with the different rows
+    resultTable.append(headlineRow);
+    resultTable.append(textRow);
+    resultTable.append(linkRow);
+
+    originalBlock.replaceWith(resultTable);
+  }
+};
+
 export default {
   /**
    * preprocess-method in order to convert empty italic tags to span tags,
@@ -499,7 +573,6 @@ export default {
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
     handle4ColumnsGrid(main, document);
-    handleSidebar(main, document);
     handleIcons(main);
     handleIframes(main, document);
     handleAccordions(main, document);
@@ -515,6 +588,9 @@ export default {
     handleNewsList(main, document, params);
     handleEventsList(main, document, params);
     handleContactBanner(main, document);
+    handleContactWithoutPerson(main, document);
+
+    handleSidebar(main, document);
 
     // handle side-by-side cases at least to check for converted EDS Markup
     handleSideBySide(main, document);

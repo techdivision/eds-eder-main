@@ -45,7 +45,8 @@ export const determineEdsBaseUrl = (params) => {
  */
 export const isButton = (link) => {
   // check for buttons that are defined at link level
-  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray') || link.className.includes('btn-ghost')) {
+  if (link.className.includes('btn-gray-ghost') || link.className.includes('btn-gray') || link.className.includes('btn-ghost')
+   || link.className.includes('btn-red')) {
     return true;
   }
 
@@ -1174,6 +1175,8 @@ export const handleTeaserRows = (main, document) => {
     ['Rows'],
   ];
 
+  let rowsCount = 0;
+
   if (rows.length > 0) {
     rows.forEach((row) => {
       const originalLink = row.querySelector('a');
@@ -1197,13 +1200,19 @@ export const handleTeaserRows = (main, document) => {
 
       cells.push([img, textDiv]);
 
-      // remove each of the single original items
-      row.remove();
+      // remove each of the single items, but not the last one
+      if (rowsCount < rows.length - 1) {
+        row.remove();
+      }
+
+      rowsCount += 1;
     });
 
     const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
-    main.append(resultTable);
+    // get the last row and replace it by result-table
+    const lastRow = rows[rows.length - 1];
+    lastRow.replaceWith(resultTable);
   }
 };
 
