@@ -561,23 +561,26 @@ export const handleContactWithoutPerson = (main, document) => {
     textCell.append(textOnlyBlock);
     textRow.append(textCell);
 
-    // build link-row
-    const linkRow = document.createElement('tr');
-
-    const firstLinkCell = document.createElement('td');
-    firstLinkCell.setAttribute('align', 'right');
-    firstLinkCell.append(firstLink);
-    linkRow.append(firstLinkCell);
-
-    const secondLinkCell = document.createElement('td');
-    secondLinkCell.setAttribute('align', 'left');
-    secondLinkCell.append(secondLink);
-    linkRow.append(secondLinkCell);
-
-    // build table with the different rows
+    // add both rows to table
     resultTable.append(headlineRow);
     resultTable.append(textRow);
-    resultTable.append(linkRow);
+
+    // build link-row
+    if (firstLink && secondLink) {
+      const linkRow = document.createElement('tr');
+
+      const firstLinkCell = document.createElement('td');
+      firstLinkCell.setAttribute('align', 'right');
+      firstLinkCell.append(firstLink);
+      linkRow.append(firstLinkCell);
+
+      const secondLinkCell = document.createElement('td');
+      secondLinkCell.setAttribute('align', 'left');
+      secondLinkCell.append(secondLink);
+      linkRow.append(secondLinkCell);
+
+      resultTable.append(linkRow);
+    }
 
     originalBlock.replaceWith(resultTable);
   }
@@ -585,11 +588,12 @@ export const handleContactWithoutPerson = (main, document) => {
 
 export default {
   /**
-   * preprocess-method in order to convert empty italic tags to span tags,
-   * without the customizing the EDS-logic would remove those tags
+   * preprocess-method: access data before it is removed by the EDS-logic later-on
    * @param document
+   * @param params
    */
-  preprocess: ({ document }) => {
+  preprocess: ({ document, params }) => {
+    // convert empty italic tags to span tags
     const italicTagIcons = document.querySelectorAll('i.flaticon');
 
     italicTagIcons.forEach((italicTagIcon) => {
@@ -599,6 +603,25 @@ export default {
 
       italicTagIcon.replaceWith(spanTag);
     });
+
+    // extract href-lang x-default value from HTML-head
+    const xDefault = document.querySelector('link[hreflang="x-default"]');
+
+    if (xDefault && xDefault.hasAttribute('href')) {
+      const xDefaultValue = xDefault.getAttribute('href');
+
+      const xDefaultSections = xDefaultValue.split('/');
+
+      const lastEntry = xDefaultSections[xDefaultSections.length - 1];
+      const secondLastEntry = xDefaultSections[xDefaultSections.length - 2];
+
+      // last entry might be empty, due to a trailing slash
+      if (lastEntry !== '') {
+        params.hreflangKey = lastEntry;
+      } else {
+        params.hreflangKey = secondLastEntry;
+      }
+    }
   },
   transform: ({
     document,
@@ -660,7 +683,19 @@ export default {
     // handle side-by-side cases at last to check for converted EDS Markup
     handleSideBySide(main, document);
 
-    WebImporter.rules.createMetadata(main, document);
+    // get regular metadata as its original done in WebImporter.rules.createMetadata
+    const meta = WebImporter.Blocks.getMetadata(document);
+
+    // check if a href-lang key was set by the preprocess-method
+    if (params.hreflangKey) {
+      meta.key = params.hreflangKey;
+    }
+
+    // create table for metadata and append it like it's done in WebImporter.rules.createMetadata
+    if (Object.keys(meta).length > 0) {
+      const block = WebImporter.Blocks.getMetadataBlock(document, meta);
+      main.append(block);
+    }
 
     // work-around for home-page (in case we want to take some data out of it)
     let { pathname } = new URL(url);
