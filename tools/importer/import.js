@@ -38,6 +38,7 @@ import {
   handleSideBySide,
   handleSup,
   handleReferenceRows,
+  formatTableData,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -510,29 +511,16 @@ export const handleMetricsColumns = (main, document) => {
 };
 
 /**
- * Handle different version of Contact-block that contains only links to contact-possibilities
+ * Handle different version of Contact-block that contains both text and links,
+ * but no contact-person
  * @param main
  * @param document
  */
-export const handleContactWithoutPerson = (main, document) => {
+export const handleFeedstarContact = (main, document) => {
   const originalBlock = main.querySelector('div.element-dce_dceuid29');
 
   if (originalBlock) {
     const textOnlyBlock = originalBlock.cloneNode(true);
-
-    // center text
-    const paragraphs = textOnlyBlock.querySelectorAll('p, h3');
-
-    paragraphs.forEach((paragraph) => {
-      paragraph.setAttribute('style', 'text-align: center;');
-    });
-
-    // remove links from the text-only block
-    const linksInText = textOnlyBlock.querySelectorAll('a');
-
-    linksInText.forEach((linkInText) => {
-      linkInText.remove();
-    });
 
     // extract the links from the original block
     const links = originalBlock.querySelectorAll('a');
@@ -540,50 +528,53 @@ export const handleContactWithoutPerson = (main, document) => {
     const firstLink = links[0];
     const secondLink = links[1];
 
-    /*
-     * Build result-table, must be done manually here
-     * as the EDS DOMUtils does not support the required formatting
-    */
-    const resultTable = document.createElement('table');
+    // only continue if there are exactly two links
+    if (links.length === 2) {
+      // remove links from the text-only block
+      const linksInText = textOnlyBlock.querySelectorAll('a');
 
-    // build headline-row
-    const headlineRow = document.createElement('tr');
-    const headlineCell = document.createElement('th');
-    headlineCell.setAttribute('colspan', 2);
-    headlineCell.append('Columns');
-    headlineRow.append(headlineCell);
+      linksInText.forEach((linkInText) => {
+        linkInText.remove();
+      });
 
-    // build text-row
-    const textRow = document.createElement('tr');
-    const textCell = document.createElement('td');
-    textCell.setAttribute('align', 'center');
-    textCell.setAttribute('colspan', 2);
-    textCell.append(textOnlyBlock);
-    textRow.append(textCell);
+      const cells = [
+        ['Columns'],
+        [textOnlyBlock],
+        [firstLink, secondLink],
+      ];
 
-    // add both rows to table
-    resultTable.append(headlineRow);
-    resultTable.append(textRow);
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
-    // build link-row
-    if (firstLink && secondLink) {
-      const linkRow = document.createElement('tr');
+      formatTableData(resultTable, ['center', 'right', 'left']);
 
-      const firstLinkCell = document.createElement('td');
-      firstLinkCell.setAttribute('align', 'right');
-      firstLinkCell.append(firstLink);
-      linkRow.append(firstLinkCell);
-
-      const secondLinkCell = document.createElement('td');
-      secondLinkCell.setAttribute('align', 'left');
-      secondLinkCell.append(secondLink);
-      linkRow.append(secondLinkCell);
-
-      resultTable.append(linkRow);
+      originalBlock.replaceWith(resultTable);
     }
-
-    originalBlock.replaceWith(resultTable);
   }
+};
+
+export const handleProfiContact = (main, document) => {
+  const originalBlocks = main.querySelectorAll('div.ge_three_columns');
+
+  originalBlocks.forEach((originalBlock) => {
+    // extract the links from the original block
+    const links = originalBlock.querySelectorAll('a');
+
+    if (links.length === 2) {
+      const firstLink = links[0];
+      const secondLink = links[1];
+
+      const cells = [
+        ['Columns'],
+        [firstLink, secondLink],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      formatTableData(resultTable, ['right', 'left']);
+
+      originalBlock.replaceWith(resultTable);
+    }
+  });
 };
 
 export default {
@@ -655,6 +646,8 @@ export default {
     handleForm(main, document);
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
+    handleFeedstarContact(main, document);
+    handleProfiContact(main, document);
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
     handle4ColumnsGrid(main, document);
@@ -673,7 +666,6 @@ export default {
     handleNewsList(main, document, params);
     handleEventsList(main, document, params);
     handleContactBanner(main, document);
-    handleContactWithoutPerson(main, document);
     handleSup(main, document);
     handleMetricsColumns(main, document);
     handleReferenceRows(main, document);

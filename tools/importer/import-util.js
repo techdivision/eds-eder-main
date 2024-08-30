@@ -119,6 +119,25 @@ export const shouldBeImported = (entry, originalUrl) => {
 };
 
 /**
+ * This method allows to set the alignment of data-cells of a table
+ * @param table
+ * @param formats
+ */
+export const formatTableData = (table, formats) => {
+  const tableDataCells = table.querySelectorAll('td');
+
+  let count = 0;
+
+  formats.forEach((format) => {
+    const tableDataCell = tableDataCells[count];
+
+    tableDataCell.setAttribute('align', format);
+
+    count += 1;
+  });
+};
+
+/**
  * Handle HTML-Table by adding the respective headline in order to mark them as an EDS table block
  * @param main
  * @param document
@@ -763,6 +782,8 @@ export const handleTextBoxes = (main, document) => {
 
       const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
+      formatTableData(resultTable, ['center']);
+
       redTextBox.replaceWith(resultTable);
     });
   }
@@ -777,6 +798,8 @@ export const handleTextBoxes = (main, document) => {
       ];
 
       const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      formatTableData(resultTable, ['center']);
 
       blueTextBox.replaceWith(resultTable);
     });
