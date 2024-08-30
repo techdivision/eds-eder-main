@@ -98,7 +98,7 @@ export const handleShopData = (main, document) => {
     const locationResult = document.createElement('div');
 
     // remove some specific data
-    const mapDistance = shopAccordion.querySelector('p.gmap-distance')
+    const mapDistance = shopAccordion.querySelector('p.gmap-distance');
     if (mapDistance) {
       mapDistance.remove();
     }
