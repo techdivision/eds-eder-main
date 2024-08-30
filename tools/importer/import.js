@@ -36,6 +36,8 @@ import {
   handleMp4s,
   handleTeaserRows,
   handleSideBySide,
+  handleSup,
+  handleReferenceRows,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -96,8 +98,16 @@ export const handleShopData = (main, document) => {
     const locationResult = document.createElement('div');
 
     // remove some specific data
-    shopAccordion.querySelector('p.gmap-distance').remove();
-    shopAccordion.querySelector('img + img').remove();
+    const mapDistance = shopAccordion.querySelector('p.gmap-distance')
+    if (mapDistance) {
+      mapDistance.remove();
+    }
+
+    const imagePlaceholder = shopAccordion.querySelector('img + img');
+
+    if (imagePlaceholder) {
+      imagePlaceholder.remove();
+    }
 
     // extract sections of the original content
     const headlineSection = shopAccordion.querySelector('div.headline');
@@ -448,6 +458,58 @@ export const handleForm = (main, document) => {
 };
 
 /**
+ * Handle metrics-box from Typo3 by replacing it by the metrics variation of the Columns block
+ * @param main
+ * @param document
+ */
+export const handleMetricsColumns = (main, document) => {
+  const metricBox = main.querySelector('div.metric-box');
+
+  if (metricBox) {
+    // create a custom table in order to allow formatting of entries
+    const resultTable = document.createElement('table');
+
+    // build headline-row
+    const headlineRow = document.createElement('tr');
+    const headlineCell = document.createElement('th');
+    headlineCell.setAttribute('colspan', 3);
+    headlineCell.append('Columns (metrics)');
+    headlineRow.append(headlineCell);
+
+    // build data-row
+    const dataRow = document.createElement('tr');
+
+    const columns = metricBox.querySelectorAll('div.col-sm-4');
+
+    columns.forEach((column) => {
+      const metricHeader = column.querySelector('div.metric-header');
+      const metricDescription = column.querySelector('div.metric-description');
+
+      const headerParagraph = document.createElement('p');
+      headerParagraph.append(metricHeader);
+
+      const descriptionParagraph = document.createElement('p');
+      descriptionParagraph.append(metricDescription);
+
+      const entry = document.createElement('div');
+      entry.append(metricHeader);
+      entry.append(metricDescription);
+
+      const tableCell = document.createElement('td');
+      tableCell.setAttribute('align', 'center');
+      tableCell.append(entry);
+
+      dataRow.append(tableCell);
+    });
+
+    resultTable.append(headlineRow);
+    resultTable.append(dataRow);
+
+    metricBox.replaceWith(resultTable);
+  }
+};
+
+/**
  * Handle different version of Contact-block that contains only links to contact-possibilities
  * @param main
  * @param document
@@ -589,6 +651,9 @@ export default {
     handleEventsList(main, document, params);
     handleContactBanner(main, document);
     handleContactWithoutPerson(main, document);
+    handleSup(main, document);
+    handleMetricsColumns(main, document);
+    handleReferenceRows(main, document);
 
     handleSidebar(main, document);
 
