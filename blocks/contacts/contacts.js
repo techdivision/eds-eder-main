@@ -26,9 +26,6 @@ export default async function decorate(block) {
       const contact = col.querySelector(':scope > p');
 
       if (contact) {
-        // remove contact name
-        contact.parentNode.removeChild(contact);
-
         // eslint-disable-next-line no-await-in-loop
         loadContactByName(contact.textContent)
           .then((contactFragment) => {
@@ -39,6 +36,9 @@ export default async function decorate(block) {
             }
           });
       }
+
+      // remove contact name
+      contact.textContent = '';
     });
   });
 
