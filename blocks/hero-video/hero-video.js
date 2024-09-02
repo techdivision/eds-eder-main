@@ -25,27 +25,10 @@ function getConfigRow(rows, name) {
 /**
  * Add overlay content
  * @param overlay
- * @param anchor
  */
-function decorateOverlay(overlay, anchor) {
+function decorateOverlay(overlay) {
   overlay.firstElementChild.remove();
   overlay.classList.add('overlay-content');
-  if (anchor && anchor.children[1].textContent.length > 0) {
-    anchor.firstElementChild.remove();
-    anchor.classList.add('overlay-anchor');
-    anchor.addEventListener('click', (e) => {
-      const parentNode = e.target.closest('.hero-video-wrapper');
-      const nav = document.getElementsByTagName('nav')[0];
-
-      window.scrollTo({
-        top: (parentNode.offsetTop + parentNode.offsetHeight) - nav.offsetHeight,
-        behavior: 'smooth',
-      });
-    });
-    overlay.append(anchor);
-  } else {
-    anchor.innerHTML = '';
-  }
 }
 
 /**
@@ -77,7 +60,6 @@ export default function decorate(block) {
   const mobileVideoRow = getConfigRow(configRows, 'mobile');
   const desktopVideoRow = getConfigRow(configRows, 'desktop');
   const overlayRow = getConfigRow(configRows, 'overlay');
-  const anchorRow = getConfigRow(configRows, 'anchor');
 
   const [mobileVideo, desktopVideo] = [
     [mobileVideoRow, 'mobile'],
@@ -110,7 +92,7 @@ export default function decorate(block) {
   };
 
   if (overlayRow) {
-    decorateOverlay(overlayRow, anchorRow);
+    decorateOverlay(overlayRow);
   }
 
   const mql = window.matchMedia('only screen and (min-width: 900px)');
