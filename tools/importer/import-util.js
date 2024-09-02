@@ -1091,15 +1091,15 @@ export const handleContacts = (main, document) => {
   // only consider Contacts within the sidebar
   if (sidebar) {
     // unfortunately there are several different Markups, and no unique identification
-    const contactHeadline = sidebar.querySelector('span, strong, h1, h2');
+    const possibleContactHeadlines = sidebar.querySelectorAll('span, strong, h1, h2');
 
-    if (contactHeadline) {
+    possibleContactHeadlines.forEach((contactHeadline) => {
       const contactHeadlineText = (contactHeadline.innerText).toLowerCase();
 
       if (contactHeadlineText.includes('kontakt')) {
         contactHeadline.remove();
       }
-    }
+    });
 
     // use id here, as there is no other way of identification
     const contactBlocks = sidebar.querySelectorAll('div.element-dce_dceuid2');

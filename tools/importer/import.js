@@ -54,10 +54,11 @@ const removeGenericContent = (main) => {
     '.breadcrumb',
     '.visible-xs',
     '.hidden-ma-button',
-    '.locations',
     '.route-link',
     '.hidden',
     '.hidden-md',
+    '.map-link',
+    '.margin-map',
   ]);
 };
 
