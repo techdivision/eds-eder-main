@@ -32,7 +32,13 @@ footer .footer p {
 
 footer .footer p a {
   display: inline-block;
+  padding-right: 0;
+  font-weight: var(--font-weight-regular);
   text-decoration: none;
+}
+
+footer .footer p a::after {
+  content: none;
 }
 
 footer .footer p a:any-link {

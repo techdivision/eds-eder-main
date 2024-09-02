@@ -287,6 +287,10 @@ main .section.highlight {
   text-align: right;
 }
 
+[data-align='justify'] {
+  text-align: justify;
+}
+
 /* background colors */
 .background-light-gray {
   background-color: var(--color-gray-light);
