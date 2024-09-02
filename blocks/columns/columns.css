@@ -56,10 +56,26 @@
   flex: 0 0 25%;
 }
 
+.columns.metrics > div > div {
+  margin-bottom: var(--spacing-simple);
+}
+
+.columns.metrics > div > div > p {
+  margin: 0;
+  font-size: var(--metrics-font-size);
+  line-height: var(--metrics-line-height);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+.columns.metrics > div > div > p:first-child {
+  font-size: var(--metrics-heading-font-size);
+  line-height: var(--metrics-heading-line-height);
+}
+
 /* styling desktop */
 @media (width >= 900px) {
   .columns > div {
-    width: var(--page-width);
     max-width: 100%;
     align-items: start;
     flex-direction: unset;
@@ -69,5 +85,9 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+
+  .columns.metrics > div {
+    width: var(--page-width);
   }
 }

@@ -50,6 +50,12 @@
   --body-line-height-s: 20px;
   --body-line-height-xs: 16px;
 
+  /* special font sizes and line heights */
+  --metrics-font-size: 30px;
+  --metrics-line-height: 35px;
+  --metrics-heading-font-size: 100px;
+  --metrics-heading-line-height: 110px;
+
   /* general */
   --page-width: 1200px;
 
