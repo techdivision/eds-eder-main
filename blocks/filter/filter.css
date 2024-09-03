@@ -80,4 +80,11 @@
       }
     }
   }
+
+  /* label */
+
+  .filter-label {
+    flex: none;
+    line-height: 45px;
+  }
 }
