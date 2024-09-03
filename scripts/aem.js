@@ -746,7 +746,7 @@ async function waitForLCP(lcpBlocks) {
       if (hasLCPBlock) await loadBlock(block);
       // added: images should be loaded eager as well
       lcpImages(block);
-    })
+    }),
   );
   // END CHANGE TechDivision
 
