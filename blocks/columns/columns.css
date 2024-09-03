@@ -19,7 +19,6 @@
 
 .columns > div {
   display: flex;
-  flex-direction: column;
 }
 
 .columns img {
