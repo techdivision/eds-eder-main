@@ -33,7 +33,7 @@
 
       .date {
         margin: 0 0 25px;
-        color: var(--color-red);
+        color: var(--link-color);
       }
 
       .title h3 {
