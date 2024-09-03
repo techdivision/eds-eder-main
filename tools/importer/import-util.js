@@ -1269,20 +1269,22 @@ export const handleReferenceRows = (main, document) => {
         const textDiv = row.querySelector('div.content-wrapper');
         const detailsDiv = row.querySelector('div.details-wrapper');
 
-        // extract image itself
-        const img = imageDiv.querySelector('img');
+        if (imageDiv && textDiv && detailsDiv) {
+          // extract image itself
+          const img = imageDiv.querySelector('img');
 
-        // remove any links from the main text-content
-        const links = textDiv.querySelectorAll('a');
+          // remove any links from the main text-content
+          const links = textDiv.querySelectorAll('a');
 
-        links.forEach((link) => {
-          link.outerHTML = link.innerHTML;
-        });
+          links.forEach((link) => {
+            link.outerHTML = link.innerHTML;
+          });
 
-        // combine text content
-        textDiv.append(detailsDiv);
+          // combine text content
+          textDiv.append(detailsDiv);
 
-        cells.push([img, textDiv]);
+          cells.push([img, textDiv]);
+        }
       });
 
       const resultTable = WebImporter.DOMUtils.createTable(cells, document);

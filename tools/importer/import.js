@@ -59,6 +59,7 @@ const removeGenericContent = (main) => {
     '.hidden-md',
     '.map-link',
     '.margin-map',
+    '.legend',
   ]);
 };
 
@@ -437,7 +438,9 @@ export const handleForm = (main, document) => {
     // get h1 if there is any
     const h1 = document.querySelector('h1');
 
-    result.append(h1);
+    if (h1) {
+      result.append(h1);
+    }
 
     // replace <form> from Typo3 by Embed-Block that must be manually filled
     const cells = [
@@ -578,6 +581,27 @@ export const handleProfiContact = (main, document) => {
   });
 };
 
+/**
+ * Replace <span>-tags with class "eder" by bold text
+ * @param main
+ * @param document
+ */
+export const handleClassEderSpans = (main, document) => {
+  const ederSpans = main.querySelectorAll('span.eder');
+
+  ederSpans.forEach((ederSpan) => {
+    const content = ederSpan.innerHTML;
+
+    // avoid adding <strong>-tags into each other
+    if (!content.includes('strong')) {
+      const boldElement = document.createElement('strong');
+      boldElement.append(content);
+
+      ederSpan.replaceWith(boldElement);
+    }
+  });
+};
+
 export default {
   /**
    * preprocess-method: access data before it is removed by the EDS-logic later-on
@@ -644,6 +668,7 @@ export default {
     // handle images for all other imports that follow
     handleImages(main);
 
+    handleClassEderSpans(main, document);
     handleForm(main, document);
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
