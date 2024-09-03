@@ -701,7 +701,7 @@ export default {
     // handle side-by-side cases at last to check for converted EDS Markup
     handleSideBySide(main, document);
 
-    // get regular metadata as its original done in WebImporter.rules.createMetadata
+    // get regular metadata as its originally done in WebImporter.rules.createMetadata
     const meta = WebImporter.Blocks.getMetadata(document);
 
     // check if a href-lang key was set by the preprocess-method
