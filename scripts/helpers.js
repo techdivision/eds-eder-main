@@ -356,7 +356,8 @@ function parseDate(input) {
  * @returns {string}
  */
 function getDayName(date) {
-  return parseDate(date).toLocaleDateString(defaultDateTimeLocale, { weekday: 'long' });
+  return parseDate(date)
+    .toLocaleDateString(defaultDateTimeLocale, { weekday: 'long' });
 }
 
 /**
@@ -369,6 +370,18 @@ function getTime(input) {
   const parts = input.match(/(\d+)/g);
 
   return `${parts[3]}:${parts[4]}`;
+}
+
+/**
+ * Set images to load as LCP
+ *
+ * @param {HTMLElement} parent
+ */
+function lcpImages(parent) {
+  parent.querySelectorAll('img')
+    .forEach((img) => {
+      img.setAttribute('loading', 'eager');
+    });
 }
 
 // export
@@ -392,4 +405,5 @@ export {
   hasBodyClass,
   getDayName,
   getTime,
+  lcpImages,
 };
