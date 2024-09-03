@@ -10,7 +10,7 @@
  */
 
 .filter {
-  min-height: 85px;
+  min-height: 95px;
 
   @media (width >= 900px) {
     display: flex;

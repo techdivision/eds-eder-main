@@ -75,7 +75,9 @@
 
 .cards > ul > li .cards-card-image img {
   width: 100%;
-  object-fit: cover;
+  height: 200px;
+  object-fit: contain;
+  background-color: var(--color-white);
 }
 
 .cards.teaser > ul > li {
