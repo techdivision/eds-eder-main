@@ -47,7 +47,7 @@
   font-weight: var(--font-weight-bold);
 }
 
-@media (width > 900px) {
+@media (width >= 900px) {
   .contacts.columns-3-cols > div {
     display: grid;
     grid-gap: var(--spacing-simple);

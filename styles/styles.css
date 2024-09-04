@@ -403,7 +403,7 @@ main .section-breadcrumbs {
 .breadcrumbs {
   height: var(--body-line-height-s);
 
-  @media screen and (width >= 900px) {
+  @media (width >= 900px) {
     position: absolute;
   }
 }

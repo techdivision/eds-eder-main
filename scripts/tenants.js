@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import { getCurrentUrl } from './helpers.js';
+import { getCurrentUrl, isLocal } from './helpers.js';
 import { defaultTenant } from './defaults.js';
 
 /**
@@ -62,7 +62,7 @@ function getTenantUrl(tenant, path) {
   // set environment
   if (tenantBaseUrl.includes('.hlx.live')) {
     if (getCurrentUrl().includes('.hlx.page')
-      || getCurrentUrl().includes('localhost')) {
+      || isLocal()) {
       tenantBaseUrl = tenantBaseUrl.replace('.hlx.live', '.hlx.page');
     }
   }

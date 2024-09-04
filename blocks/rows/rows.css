@@ -98,7 +98,7 @@
   margin-right: var(--spacing-simple);
 }
 
-@media (width > 900px) {
+@media (width >= 900px) {
   .rows > ul > li {
     display: grid;
     gap: var(--spacing-simple);

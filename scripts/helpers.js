@@ -169,6 +169,16 @@ function getCurrentUrl() {
 }
 
 /**
+ * Check if we are local
+ *
+ * @returns {boolean}
+ */
+function isLocal() {
+  return getCurrentUrl()
+    .includes('localhost');
+}
+
+/**
  * Check if we have a specific URL Param
  *
  * @param {string} field
@@ -381,6 +391,7 @@ export {
   getUrlParam,
   setUrlParam,
   getCurrentUrl,
+  isLocal,
   convertDate,
   getReadableDate,
   addBodyClass,

@@ -519,7 +519,7 @@ header nav .mobile-menu li.is-visible > ul {
   font-size: var(--body-font-size-s);
   background: none;
 
-  @media screen and (width >= 900px) {
+  @media (width >= 900px) {
     padding: 0 32px;
     position: absolute;
     top: var(--spacing-simple);
@@ -568,7 +568,7 @@ header nav .mobile-menu li.is-visible > ul {
 .header .search-bar-container {
   display: none;
 
-  @media screen and (width >= 900px) {
+  @media (width >= 900px) {
     display: block;
   }
 }
