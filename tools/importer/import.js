@@ -13,6 +13,7 @@
 
 import {
   determineEdsBaseUrl,
+  preprocessHrefLang,
   handleTable,
   handleTopImage,
   handleLinks,
@@ -602,6 +603,41 @@ export const handleClassEderSpans = (main, document) => {
   });
 };
 
+/**
+ * Replace small-text Content by EDS Small-Print Block
+ * @param main
+ * @param document
+ */
+export const handleSmallPrint = (main, document) => {
+  const smallTextSpans = main.querySelectorAll('span.small.text-muted');
+
+  smallTextSpans.forEach((smallTextSpan) => {
+    const result = document.createElement('div');
+    const { childNodes } = smallTextSpan;
+
+    // iterate child-nodes
+    childNodes.forEach((childNode) => {
+      // avoid <br>-tags, as they do not work properly EDS
+      if (childNode.tagName !== 'BR') {
+        // build <p> tag around each line of text
+        const paragraph = document.createElement('p');
+        paragraph.append(childNode);
+
+        result.append(paragraph);
+      }
+    });
+
+    const cells = [
+      ['Small-Print'],
+      [result],
+    ];
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    smallTextSpan.replaceWith(resultTable);
+  });
+};
+
 export default {
   /**
    * preprocess-method: access data before it is removed by the EDS-logic later-on
@@ -621,23 +657,7 @@ export default {
     });
 
     // extract href-lang x-default value from HTML-head
-    const xDefault = document.querySelector('link[hreflang="x-default"]');
-
-    if (xDefault && xDefault.hasAttribute('href')) {
-      const xDefaultValue = xDefault.getAttribute('href');
-
-      const xDefaultSections = xDefaultValue.split('/');
-
-      const lastEntry = xDefaultSections[xDefaultSections.length - 1];
-      const secondLastEntry = xDefaultSections[xDefaultSections.length - 2];
-
-      // last entry might be empty, due to a trailing slash
-      if (lastEntry !== '') {
-        params.hreflangKey = lastEntry;
-      } else {
-        params.hreflangKey = secondLastEntry;
-      }
-    }
+    preprocessHrefLang(document, params);
   },
   transform: ({
     document,
@@ -685,7 +705,6 @@ export default {
     handleTeaserRows(main, document);
     handleImagesInText(main, document);
     handleTextPic(main, document);
-    handleBrs(main, document);
     handleContacts(main, document);
     handleBlockquotes(main, document);
     handleShopData(main, document);
@@ -695,6 +714,10 @@ export default {
     handleSup(main, document);
     handleMetricsColumns(main, document);
     handleReferenceRows(main, document);
+    handleSmallPrint(main, document);
+
+    // handle <br> after the Blocks, as they only work outside of them
+    handleBrs(main, document);
 
     handleSidebar(main, document);
 

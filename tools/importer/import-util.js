@@ -138,6 +138,31 @@ export const formatTableData = (table, formats) => {
 };
 
 /**
+ * Preprocess method that extracts the hreflang=x-default value from the original HTML markup
+ * @param document
+ * @param params
+ */
+export const preprocessHrefLang = (document, params) => {
+  const xDefault = document.querySelector('link[hreflang="x-default"]');
+
+  if (xDefault && xDefault.hasAttribute('href')) {
+    const xDefaultValue = xDefault.getAttribute('href');
+
+    const xDefaultSections = xDefaultValue.split('/');
+
+    const lastEntry = xDefaultSections[xDefaultSections.length - 1];
+    const secondLastEntry = xDefaultSections[xDefaultSections.length - 2];
+
+    // last entry might be empty, due to a trailing slash
+    if (lastEntry !== '') {
+      params.hreflangKey = lastEntry;
+    } else {
+      params.hreflangKey = secondLastEntry;
+    }
+  }
+};
+
+/**
  * Handle HTML-Table by adding the respective headline in order to mark them as an EDS table block
  * @param main
  * @param document
@@ -1339,7 +1364,7 @@ export const handleSideBySide = (main, document) => {
         const result = document.createElement('div');
 
         // check if content contains a table = an EDS Block markup
-        if (row.innerHTML.includes('table')) {
+        if (row.innerHTML.includes('<table')) {
           // section-markup with side-by-side Metadata must be generated
           const sectionMetadata = [
             ['Section Metadata'],
