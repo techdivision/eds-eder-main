@@ -10,15 +10,14 @@
  */
 
 import { betterLoadScript } from './load-resource.js';
-import { getCurrentUrl } from './helpers.js';
+import { isLocal } from './helpers.js';
 
 /**
  * Define partytown config
  */
 function definePartytownConfig() {
   window.partytown = {
-    debug: getCurrentUrl()
-      .includes('localhost'),
+    debug: isLocal(),
     lib: '/scripts/vendor/partytown/',
     forward: [
       ['dataLayer.push', { preserveBehavior: true }],

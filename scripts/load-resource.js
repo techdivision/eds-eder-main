@@ -10,6 +10,8 @@
  */
 
 import ffetch from './vendor/ffetch.js';
+// eslint-disable-next-line import/no-cycle
+import { cssNestingIsSupported, cssNestingPolyfillLink } from './nested-css-polyfill.js';
 
 // fetch cache is valid for the current day only to ensure current content is being loaded
 const currentDate = new Date().toISOString()
@@ -55,11 +57,19 @@ async function betterLoadCSS(href) {
   return new Promise((resolve, reject) => {
     addResolver(href, resolve);
     if (!document.querySelector(`head > link[href="${href}"]`)) {
+      // create link
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = href;
       link.onload = () => resolveLoad(href);
       link.onerror = reject;
+
+      // check for nested CSS
+      if (!cssNestingIsSupported()) {
+        cssNestingPolyfillLink(link);
+      }
+
+      // append link
       document.head.append(link);
     }
   });

@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2024 TechDivision GmbH
+ * All rights reserved
+ *
+ * This product includes proprietary software developed at TechDivision GmbH, Germany
+ * For more information see https://www.techdivision.com/
+ *
+ * To obtain a valid license for using this software please contact us at
+ * license@techdivision.com
+ */
+.variants {
+  @media (width >= 900px) {
+    display: flex;
+  }
+
+  gap: 20px;
+
+  .variant {
+    position: relative;
+    flex: 1;
+    background-color: var(--color-gray-light);
+    border-radius: var(--card-border-radius);
+    padding: var(--spacing-simple) var(--spacing-simple) calc(var(--spacing-simple) + 70px);
+    margin: 0 0 var(--spacing-simple);
+
+    &.no-button {
+      padding: var(--spacing-simple);
+    }
+
+    .title {
+      font-weight: var(--font-weight-bold);
+      font-size: var(--heading-font-size-m);
+    }
+
+    .subtitle {
+      font-weight: var(--font-weight-bold);
+    }
+
+    .efficiency p {
+      margin: 0;
+      font-size: var(--body-font-size-s);
+    }
+
+    .title,
+    .subtitle,
+    .efficiency {
+      text-align: center;
+    }
+
+    .efficiency {
+      margin: var(--spacing-simple) 0;
+
+      .graph {
+        height: 16px;
+        background-color: var(--light-color);
+
+        .progress {
+          height: 100%;
+          background-color: var(--color-green-dark);
+        }
+      }
+    }
+
+    .list {
+      ul {
+        padding: 0;
+        margin: 0;
+
+        li {
+          list-style-type: none;
+          background-image: url('../../icons/checkmark-darkgreen.svg');
+          background-position: left center;
+          background-repeat: no-repeat;
+          background-size: 16px;
+          padding: 0 0 0 30px;
+          margin: 0 0 10px;
+        }
+      }
+
+      &.additional {
+        ul {
+          li {
+            background-image: url('../../icons/plus-darkgreen.svg');
+          }
+        }
+      }
+    }
+
+    .button-container {
+      position: absolute;
+      bottom: var(--spacing-simple);
+      left: var(--spacing-simple);
+      right: var(--spacing-simple);
+
+      p,
+      .button {
+        margin: 0;
+        width: 100%;
+      }
+    }
+  }
+}
