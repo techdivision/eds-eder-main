@@ -172,10 +172,14 @@ export const handleShopData = (main, document) => {
 
       openTimeRows.forEach((openTimeRow) => {
         const firstEntry = openTimeRow.querySelector('div.col-xs-3');
+        // make first entry bold
+        const boldFirstEntry = document.createElement('strong');
+        boldFirstEntry.append(firstEntry.innerText);
+
         const secondEntry = openTimeRow.querySelector('div.col-xs-9');
 
         if (firstEntry && secondEntry) {
-          openTimeRow.innerHTML = `${firstEntry.innerText} ${secondEntry.innerText}`;
+          openTimeRow.innerHTML = `${boldFirstEntry.outerHTML} ${secondEntry.innerText}`;
         }
       });
 
