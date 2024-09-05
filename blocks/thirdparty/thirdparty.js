@@ -10,7 +10,7 @@
  */
 
 import loadThirdPartyScript from '../../scripts/load-thirdparty-script.js';
-import { getCurrentUrl, transformRowsToData } from '../../scripts/helpers.js';
+import { getCurrentUrl, isLocal, transformRowsToData } from '../../scripts/helpers.js';
 import { betterLoadScript } from '../../scripts/load-resource.js';
 
 /**
@@ -70,7 +70,7 @@ function loadAdobeAnalytics(url) {
     // find current URL for environment
     adobeUrls.some((adobeUrl) => {
       if (adobeUrl.includes('development')) {
-        if (currentUrl.includes('localhost')) {
+        if (isLocal()) {
           loadScriptPromise = loadAdobeAnalytics(adobeUrl);
           return true;
         }
@@ -79,7 +79,7 @@ function loadAdobeAnalytics(url) {
           loadScriptPromise = loadAdobeAnalytics(adobeUrl);
           return true;
         }
-      } else if (!currentUrl.includes('localhost')
+      } else if (!isLocal()
         && !currentUrl.includes('hlx.page')) {
         loadScriptPromise = loadAdobeAnalytics(adobeUrl);
         return true;

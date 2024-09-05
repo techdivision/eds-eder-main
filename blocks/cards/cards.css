@@ -80,6 +80,11 @@
   background-color: var(--color-white);
 }
 
+.cards > ul > li .cards-card-image:first-child img {
+  height: 200px;
+  object-fit: cover;
+}
+
 .cards.teaser > ul > li {
   position: relative;
 }
@@ -87,6 +92,10 @@
 .cards.teaser > ul > li .cards-card-image img {
   aspect-ratio: auto;
   object-fit: contain;
+}
+
+.cards.teaser > ul > li .cards-card-image:first-child img {
+  object-fit: cover;
 }
 
 .cards.teaser > ul > li .cards-card-image:nth-of-type(2) {
@@ -130,7 +139,7 @@
   padding-top: var(--spacing-double);
 }
 
-@media (width > 600px) {
+@media (width >= 600px) {
   .cards > ul > li > .cards-card-body > .button-container {
     position: absolute;
   }

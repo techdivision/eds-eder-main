@@ -3,10 +3,17 @@
     "stylelint-config-standard"
   ],
   "plugins": [
-    "stylelint-plugin-license-header"
+    "stylelint-plugin-license-header",
+    "./dev/plugins/media-query-disallowed.js"
   ],
   "rules": {
     "no-descending-specificity": null,
-    "plugin/license-header": [true, { "license": "./dev/license-header.js" }]
+    "plugin/license-header": [
+      true,
+      {
+        "license": "./dev/license-header.js"
+      }
+    ],
+    "plugin/media-query-disallowed": true
   }
 }

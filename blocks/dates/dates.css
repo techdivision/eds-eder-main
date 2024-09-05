@@ -35,7 +35,7 @@
 }
 
 .dates-container .dates.block > div .date {
-  color: var(--color-red);
+  color: var(--link-color);
   font-size: var(--heading-font-size-m);
   line-height: var(--heading-line-height-m);
   font-weight: var(--font-weight-bold);

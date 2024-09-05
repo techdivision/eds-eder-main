@@ -36,6 +36,9 @@ import {
   handleMp4s,
   handleTeaserRows,
   handleSideBySide,
+  handleSup,
+  handleReferenceRows,
+  formatTableData,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -51,10 +54,12 @@ const removeGenericContent = (main) => {
     '.breadcrumb',
     '.visible-xs',
     '.hidden-ma-button',
-    '.locations',
     '.route-link',
     '.hidden',
     '.hidden-md',
+    '.map-link',
+    '.margin-map',
+    '.legend',
   ]);
 };
 
@@ -96,8 +101,16 @@ export const handleShopData = (main, document) => {
     const locationResult = document.createElement('div');
 
     // remove some specific data
-    shopAccordion.querySelector('p.gmap-distance').remove();
-    shopAccordion.querySelector('img + img').remove();
+    const mapDistance = shopAccordion.querySelector('p.gmap-distance');
+    if (mapDistance) {
+      mapDistance.remove();
+    }
+
+    const imagePlaceholder = shopAccordion.querySelector('img + img');
+
+    if (imagePlaceholder) {
+      imagePlaceholder.remove();
+    }
 
     // extract sections of the original content
     const headlineSection = shopAccordion.querySelector('div.headline');
@@ -425,7 +438,9 @@ export const handleForm = (main, document) => {
     // get h1 if there is any
     const h1 = document.querySelector('h1');
 
-    result.append(h1);
+    if (h1) {
+      result.append(h1);
+    }
 
     // replace <form> from Typo3 by Embed-Block that must be manually filled
     const cells = [
@@ -448,29 +463,68 @@ export const handleForm = (main, document) => {
 };
 
 /**
- * Handle different version of Contact-block that contains only links to contact-possibilities
+ * Handle metrics-box from Typo3 by replacing it by the metrics variation of the Columns block
  * @param main
  * @param document
  */
-export const handleContactWithoutPerson = (main, document) => {
+export const handleMetricsColumns = (main, document) => {
+  const metricBox = main.querySelector('div.metric-box');
+
+  if (metricBox) {
+    // create a custom table in order to allow formatting of entries
+    const resultTable = document.createElement('table');
+
+    // build headline-row
+    const headlineRow = document.createElement('tr');
+    const headlineCell = document.createElement('th');
+    headlineCell.setAttribute('colspan', 3);
+    headlineCell.append('Columns (metrics)');
+    headlineRow.append(headlineCell);
+
+    // build data-row
+    const dataRow = document.createElement('tr');
+
+    const columns = metricBox.querySelectorAll('div.col-sm-4');
+
+    columns.forEach((column) => {
+      const metricHeader = column.querySelector('div.metric-header');
+      const metricDescription = column.querySelector('div.metric-description');
+
+      const headerParagraph = document.createElement('p');
+      headerParagraph.append(metricHeader);
+
+      const descriptionParagraph = document.createElement('p');
+      descriptionParagraph.append(metricDescription);
+
+      const entry = document.createElement('div');
+      entry.append(metricHeader);
+      entry.append(metricDescription);
+
+      const tableCell = document.createElement('td');
+      tableCell.setAttribute('align', 'center');
+      tableCell.append(entry);
+
+      dataRow.append(tableCell);
+    });
+
+    resultTable.append(headlineRow);
+    resultTable.append(dataRow);
+
+    metricBox.replaceWith(resultTable);
+  }
+};
+
+/**
+ * Handle different version of Contact-block that contains both text and links,
+ * but no contact-person
+ * @param main
+ * @param document
+ */
+export const handleFeedstarContact = (main, document) => {
   const originalBlock = main.querySelector('div.element-dce_dceuid29');
 
   if (originalBlock) {
     const textOnlyBlock = originalBlock.cloneNode(true);
-
-    // center text
-    const paragraphs = textOnlyBlock.querySelectorAll('p, h3');
-
-    paragraphs.forEach((paragraph) => {
-      paragraph.setAttribute('style', 'text-align: center;');
-    });
-
-    // remove links from the text-only block
-    const linksInText = textOnlyBlock.querySelectorAll('a');
-
-    linksInText.forEach((linkInText) => {
-      linkInText.remove();
-    });
 
     // extract the links from the original block
     const links = originalBlock.querySelectorAll('a');
@@ -478,56 +532,84 @@ export const handleContactWithoutPerson = (main, document) => {
     const firstLink = links[0];
     const secondLink = links[1];
 
-    /*
-     * Build result-table, must be done manually here
-     * as the EDS DOMUtils does not support the required formatting
-    */
-    const resultTable = document.createElement('table');
+    // only continue if there are exactly two links
+    if (links.length === 2) {
+      // remove links from the text-only block
+      const linksInText = textOnlyBlock.querySelectorAll('a');
 
-    // build headline-row
-    const headlineRow = document.createElement('tr');
-    const headlineCell = document.createElement('th');
-    headlineCell.setAttribute('colspan', 2);
-    headlineCell.append('Columns');
-    headlineRow.append(headlineCell);
+      linksInText.forEach((linkInText) => {
+        linkInText.remove();
+      });
 
-    // build text-row
-    const textRow = document.createElement('tr');
-    const textCell = document.createElement('td');
-    textCell.setAttribute('align', 'center');
-    textCell.setAttribute('colspan', 2);
-    textCell.append(textOnlyBlock);
-    textRow.append(textCell);
+      const cells = [
+        ['Columns'],
+        [textOnlyBlock],
+        [firstLink, secondLink],
+      ];
 
-    // build link-row
-    const linkRow = document.createElement('tr');
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
-    const firstLinkCell = document.createElement('td');
-    firstLinkCell.setAttribute('align', 'right');
-    firstLinkCell.append(firstLink);
-    linkRow.append(firstLinkCell);
+      formatTableData(resultTable, ['center', 'right', 'left']);
 
-    const secondLinkCell = document.createElement('td');
-    secondLinkCell.setAttribute('align', 'left');
-    secondLinkCell.append(secondLink);
-    linkRow.append(secondLinkCell);
-
-    // build table with the different rows
-    resultTable.append(headlineRow);
-    resultTable.append(textRow);
-    resultTable.append(linkRow);
-
-    originalBlock.replaceWith(resultTable);
+      originalBlock.replaceWith(resultTable);
+    }
   }
+};
+
+export const handleProfiContact = (main, document) => {
+  const originalBlocks = main.querySelectorAll('div.ge_three_columns');
+
+  originalBlocks.forEach((originalBlock) => {
+    // extract the links from the original block
+    const links = originalBlock.querySelectorAll('a');
+
+    if (links.length === 2) {
+      const firstLink = links[0];
+      const secondLink = links[1];
+
+      const cells = [
+        ['Columns'],
+        [firstLink, secondLink],
+      ];
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      formatTableData(resultTable, ['right', 'left']);
+
+      originalBlock.replaceWith(resultTable);
+    }
+  });
+};
+
+/**
+ * Replace <span>-tags with class "eder" by bold text
+ * @param main
+ * @param document
+ */
+export const handleClassEderSpans = (main, document) => {
+  const ederSpans = main.querySelectorAll('span.eder');
+
+  ederSpans.forEach((ederSpan) => {
+    const content = ederSpan.innerHTML;
+
+    // avoid adding <strong>-tags into each other
+    if (!content.includes('strong')) {
+      const boldElement = document.createElement('strong');
+      boldElement.append(content);
+
+      ederSpan.replaceWith(boldElement);
+    }
+  });
 };
 
 export default {
   /**
-   * preprocess-method in order to convert empty italic tags to span tags,
-   * without the customizing the EDS-logic would remove those tags
+   * preprocess-method: access data before it is removed by the EDS-logic later-on
    * @param document
+   * @param params
    */
-  preprocess: ({ document }) => {
+  preprocess: ({ document, params }) => {
+    // convert empty italic tags to span tags
     const italicTagIcons = document.querySelectorAll('i.flaticon');
 
     italicTagIcons.forEach((italicTagIcon) => {
@@ -537,6 +619,25 @@ export default {
 
       italicTagIcon.replaceWith(spanTag);
     });
+
+    // extract href-lang x-default value from HTML-head
+    const xDefault = document.querySelector('link[hreflang="x-default"]');
+
+    if (xDefault && xDefault.hasAttribute('href')) {
+      const xDefaultValue = xDefault.getAttribute('href');
+
+      const xDefaultSections = xDefaultValue.split('/');
+
+      const lastEntry = xDefaultSections[xDefaultSections.length - 1];
+      const secondLastEntry = xDefaultSections[xDefaultSections.length - 2];
+
+      // last entry might be empty, due to a trailing slash
+      if (lastEntry !== '') {
+        params.hreflangKey = lastEntry;
+      } else {
+        params.hreflangKey = secondLastEntry;
+      }
+    }
   },
   transform: ({
     document,
@@ -567,9 +668,12 @@ export default {
     // handle images for all other imports that follow
     handleImages(main);
 
+    handleClassEderSpans(main, document);
     handleForm(main, document);
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
+    handleFeedstarContact(main, document);
+    handleProfiContact(main, document);
     handle2ColumnsGrid(main, document);
     handle3ColumnsGrid(main, document);
     handle4ColumnsGrid(main, document);
@@ -588,14 +692,28 @@ export default {
     handleNewsList(main, document, params);
     handleEventsList(main, document, params);
     handleContactBanner(main, document);
-    handleContactWithoutPerson(main, document);
+    handleSup(main, document);
+    handleMetricsColumns(main, document);
+    handleReferenceRows(main, document);
 
     handleSidebar(main, document);
 
     // handle side-by-side cases at last to check for converted EDS Markup
     handleSideBySide(main, document);
 
-    WebImporter.rules.createMetadata(main, document);
+    // get regular metadata as its originally done in WebImporter.rules.createMetadata
+    const meta = WebImporter.Blocks.getMetadata(document);
+
+    // check if a href-lang key was set by the preprocess-method
+    if (params.hreflangKey) {
+      meta.key = params.hreflangKey;
+    }
+
+    // create table for metadata and append it like it's done in WebImporter.rules.createMetadata
+    if (Object.keys(meta).length > 0) {
+      const block = WebImporter.Blocks.getMetadataBlock(document, meta);
+      main.append(block);
+    }
 
     // work-around for home-page (in case we want to take some data out of it)
     let { pathname } = new URL(url);

@@ -25,7 +25,7 @@ import {
   waitForLCP,
 } from './aem.js';
 import { getCurrentLanguage, tContent } from './i18n.js';
-import { addBodyClass, hasUrlParam } from './helpers.js';
+import { addBodyClass, hasUrlParam, isLocal } from './helpers.js';
 import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
 
@@ -56,7 +56,7 @@ function autolinkModals(element) {
 async function loadFonts() {
   await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
   try {
-    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+    if (!isLocal()) sessionStorage.setItem('fonts-loaded', 'true');
   } catch (e) {
     // do nothing
   }
@@ -220,17 +220,20 @@ export function decorateLinkedPictures(block) {
  * @param main
  */
 export function decorateLinkTarget(main) {
-  main.querySelectorAll('a').forEach((a) => {
-    const href = a.getAttribute('href');
-    if (href) {
-      const extension = href.split('.').pop().trim();
-      // check for external links or PDFs
-      if (!href.startsWith('/') || extension === 'pdf') {
-        // set target blank to open them in new tab
-        a.setAttribute('target', '_blank');
+  main.querySelectorAll('a')
+    .forEach((a) => {
+      const href = a.getAttribute('href');
+      if (href) {
+        const extension = href.split('.')
+          .pop()
+          .trim();
+        // check for external links or PDFs
+        if (!href.startsWith('/') || extension === 'pdf') {
+          // set target blank to open them in new tab
+          a.setAttribute('target', '_blank');
+        }
       }
-    }
-  });
+    });
 }
 
 /**
@@ -270,7 +273,8 @@ async function loadEager(doc) {
   // clear cache
   if (hasUrlParam('nocache')
     || hasUrlParam('clearcache')
-    || hasUrlParam('disablecache')) {
+    || hasUrlParam('disablecache')
+    || isLocal()) {
     await clearFetchCache();
   }
 

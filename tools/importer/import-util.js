@@ -90,6 +90,10 @@ export const shouldBeImported = (entry, originalUrl) => {
     'https://www.eder-gmbh.de': ['Überall', 'Profitechnik'],
     'https://www.eder-landtechnik.de': 'Landtechnik',
     'https://www.agratec-salching.de': 'Agratec',
+    'https://www.eder-baumaschinen.de': 'Baumaschinen',
+    'https://www.feedstar.com': 'Feedstar',
+    'https://www.eder-profi.de': 'Profibaumarkt',
+    'https://www.eder-anhaenger.de': 'Anhängercenter',
   };
 
   const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
@@ -112,6 +116,25 @@ export const shouldBeImported = (entry, originalUrl) => {
   }
 
   return true;
+};
+
+/**
+ * This method allows to set the alignment of data-cells of a table
+ * @param table
+ * @param formats
+ */
+export const formatTableData = (table, formats) => {
+  const tableDataCells = table.querySelectorAll('td');
+
+  let count = 0;
+
+  formats.forEach((format) => {
+    const tableDataCell = tableDataCells[count];
+
+    tableDataCell.setAttribute('align', format);
+
+    count += 1;
+  });
 };
 
 /**
@@ -268,6 +291,11 @@ export const handleLinks = (main, document, baseUrl) => {
       // remove links that triggered JS hide/show-logic
       if (href === '#/') {
         link.outerHTML = link.innerText;
+      }
+
+      // check for link to images - remove them as EDS does not support them
+      if (href.endsWith('.jpg') || href.endsWith('.png')) {
+        link.outerHTML = link.innerHTML;
       }
 
       if (isButton(link)) {
@@ -754,6 +782,8 @@ export const handleTextBoxes = (main, document) => {
 
       const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
+      formatTableData(resultTable, ['center']);
+
       redTextBox.replaceWith(resultTable);
     });
   }
@@ -768,6 +798,8 @@ export const handleTextBoxes = (main, document) => {
       ];
 
       const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      formatTableData(resultTable, ['center']);
 
       blueTextBox.replaceWith(resultTable);
     });
@@ -1059,15 +1091,15 @@ export const handleContacts = (main, document) => {
   // only consider Contacts within the sidebar
   if (sidebar) {
     // unfortunately there are several different Markups, and no unique identification
-    const contactHeadline = sidebar.querySelector('span, strong, h1, h2');
+    const possibleContactHeadlines = sidebar.querySelectorAll('span, strong, h1, h2');
 
-    if (contactHeadline) {
+    possibleContactHeadlines.forEach((contactHeadline) => {
       const contactHeadlineText = (contactHeadline.innerText).toLowerCase();
 
       if (contactHeadlineText.includes('kontakt')) {
         contactHeadline.remove();
       }
-    }
+    });
 
     // use id here, as there is no other way of identification
     const contactBlocks = sidebar.querySelectorAll('div.element-dce_dceuid2');
@@ -1214,6 +1246,75 @@ export const handleTeaserRows = (main, document) => {
     const lastRow = rows[rows.length - 1];
     lastRow.replaceWith(resultTable);
   }
+};
+
+/**
+ * Handle teaser-rows from Typo3 by converting them to an EDS Rows-Block
+ * @param main
+ * @param document
+ */
+export const handleReferenceRows = (main, document) => {
+  const referenceList = main.querySelector('div.element-news_pi1');
+
+  if (referenceList) {
+    const rows = referenceList.querySelectorAll('div.row');
+
+    if (rows.length > 0) {
+      const cells = [
+        ['Rows'],
+      ];
+
+      rows.forEach((row) => {
+        const imageDiv = row.querySelector('div.news-img-wrap');
+        const textDiv = row.querySelector('div.content-wrapper');
+        const detailsDiv = row.querySelector('div.details-wrapper');
+
+        if (imageDiv && textDiv && detailsDiv) {
+          // extract image itself
+          const img = imageDiv.querySelector('img');
+
+          // remove any links from the main text-content
+          const links = textDiv.querySelectorAll('a');
+
+          links.forEach((link) => {
+            link.outerHTML = link.innerHTML;
+          });
+
+          // combine text content
+          textDiv.append(detailsDiv);
+
+          cells.push([img, textDiv]);
+        }
+      });
+
+      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+      referenceList.replaceWith(resultTable);
+    }
+  }
+};
+
+/**
+ * Handle exponential numbers - ² and ³
+ * @param main
+ */
+export const handleSup = (main) => {
+  const sups = main.querySelectorAll('sup');
+
+  sups.forEach((sup) => {
+    const value = Number(sup.innerText);
+
+    // use the original value as a fallback
+    let result = value;
+
+    if (value === 2) {
+      result = '²';
+    } else if (value === 3) {
+      result = '³';
+    }
+
+    sup.replaceWith(result);
+  });
 };
 
 /**

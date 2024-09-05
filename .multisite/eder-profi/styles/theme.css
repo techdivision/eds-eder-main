@@ -8,6 +8,7 @@
  * To obtain a valid license for using this software please contact us at
  * license@techdivision.com
  */
+
 :root {
   /* colors */
   --color-red: #ed1c24;
@@ -20,8 +21,8 @@
   --color-gray-darker: #303030;
   --color-black: #000;
   --color-white: #fff;
-  --color-blue-agratec: #00529c;
-  --color-blue: var(--color-blue-agratec);
+  --color-blue-profi: #1f3c90;
+  --color-blue: var(--color-blue-profi);
   --background-color: var(--color-white);
   --light-color: #eee;
   --dark-color: #ccc;
