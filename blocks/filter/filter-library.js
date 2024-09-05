@@ -14,13 +14,16 @@
  *
  * @param {HTMLElement|Object} element
  * @param {string} filterField
- * @returns {string}
+ * @returns {Array}
  */
-function getFilterValueForElement(element, filterField) {
+function getFilterValuesForElement(element, filterField) {
+  let value;
   if (!(element instanceof HTMLElement)) {
-    return element[filterField];
+    value = element[filterField]?.toString();
+  } else {
+    value = element.getAttribute(`data-${filterField}`)?.toString();
   }
-  return element.getAttribute(`data-${filterField}`);
+  return value?.split(',') || [];
 }
 
 /**
@@ -31,7 +34,8 @@ function getFilterValueForElement(element, filterField) {
  * @returns {int}
  */
 function getNumericFilterValueForElement(element, filterField) {
-  return parseInt(getFilterValueForElement(element, filterField), 10);
+  const values = getFilterValuesForElement(element, filterField);
+  return parseInt(values[0], 10);
 }
 
 /**
@@ -63,10 +67,8 @@ function retrieveOptionsForFilterField(filter, filterField) {
 
   // retrieve all options
   filter.elements.forEach((element) => {
-    const value = getFilterValueForElement(element, filterField);
-    if (value) {
-      values.add(value);
-    }
+    const filterValues = getFilterValuesForElement(element, filterField);
+    filterValues.forEach((item) => values.add(item));
   });
   values = Array.from(values);
 
@@ -111,7 +113,7 @@ function getDecorationTextValue(decoration) {
 
 export {
   getNumericFilterValueForElement,
-  getFilterValueForElement,
+  getFilterValuesForElement,
   retrieveOptionsForFilterField,
   getDecorationTextValue,
 };

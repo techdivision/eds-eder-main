@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import { getDecorationTextValue, getFilterValueForElement } from '../filter-library.js';
+import { getDecorationTextValue, getFilterValuesForElement } from '../filter-library.js';
 import { toClassName } from '../../../scripts/aem.js';
 import { isEmpty } from '../../../scripts/helpers.js';
 
@@ -67,10 +67,10 @@ function getSelectedValues(checkboxes) {
  * @returns {boolean}
  */
 function elementMatches(filter, element) {
-  const elementValue = getFilterValueForElement(element, filter.filterFields[0]);
+  const elementValues = getFilterValuesForElement(element, filter.filterFields[0]);
   return isEmpty(filter.value)
-    || isEmpty(elementValue)
-    || filter.value.includes(elementValue);
+    || isEmpty(elementValues)
+    || elementValues.some((elementValue) => filter.value.includes(elementValue));
 }
 
 /**

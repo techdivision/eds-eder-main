@@ -10,13 +10,18 @@
  */
 
 import {
-  getUrlParam, isEmpty, replaceWhitespaces, setUrlParam, transformRowsToData,
+  getUrlParam,
+  isEmpty,
+  replaceWhitespaces,
+  setUrlParam,
+  transformRowsToData,
 } from '../../scripts/helpers.js';
 import { build as decorateSliderFilter } from './types/slider.js';
 import { build as decorateDropdownFilter } from './types/dropdown.js';
 import { build as decorateCheckboxFilter } from './types/checkbox.js';
 import { retrieveOptionsForFilterField } from './filter-library.js';
 import { setCurrentPage } from '../../scripts/list.js';
+import { tContent } from '../../scripts/i18n.js';
 
 /**
  * Process filters
@@ -72,7 +77,17 @@ function handleHtmlElementsVisibility(block) {
  * @param {Array} filters
  */
 function renderFilters(block, filters) {
+  // remove block content
   block.textContent = '';
+
+  // add filter label
+  const label = document.createElement('span');
+  label.classList.add('filter-label', 'filter-item');
+  tContent(label, 'Filter by:')
+    .then();
+  block.append(label);
+
+  // process filters
   filters.forEach((filter) => {
     // add elements
     filter.elements = block.filterItems;
