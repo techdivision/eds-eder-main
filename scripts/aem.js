@@ -23,7 +23,7 @@
 
 /* eslint-env browser */
 
-import { getCurrentUrl } from './helpers.js';
+import { getCurrentUrl, lcpImages } from './helpers.js';
 import { betterLoadCSS, betterLoadScript, cachedFetch } from './load-resource.js';
 
 /**
@@ -737,9 +737,18 @@ async function loadFooter(footer) {
  * @param {Array} lcpBlocks Array of blocks
  */
 async function waitForLCP(lcpBlocks) {
-  const block = document.querySelector('.block');
-  const hasLCPBlock = block && lcpBlocks.includes(block.dataset.blockName);
-  if (hasLCPBlock) await loadBlock(block);
+  // BEGIN CHANGE TechDivision
+  // bugfix: only worked if the LCP block is the first block
+  const blocks = document.querySelectorAll('.block');
+  await Promise.all(
+    [...blocks].map(async (block) => {
+      const hasLCPBlock = block && lcpBlocks.includes(block.dataset.blockName);
+      if (hasLCPBlock) await loadBlock(block);
+      // added: images should be loaded eager as well
+      lcpImages(block);
+    }),
+  );
+  // END CHANGE TechDivision
 
   document.body.style.display = null;
   const lcpCandidate = document.querySelector('main img');

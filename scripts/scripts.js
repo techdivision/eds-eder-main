@@ -29,7 +29,9 @@ import { addBodyClass, hasUrlParam, isLocal } from './helpers.js';
 import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
 
-const LCP_BLOCKS = []; // add your LCP blocks to the list
+const LCP_BLOCKS = [
+  'cards',
+]; // add your LCP blocks to the list
 
 /**
  * Auto-link modals

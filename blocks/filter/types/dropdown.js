@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import { getFilterValueForElement } from '../filter-library.js';
+import { getFilterValuesForElement } from '../filter-library.js';
 import { isEmpty } from '../../../scripts/helpers.js';
 
 /**
@@ -34,9 +34,9 @@ function buildOption(name, value) {
  * @returns {boolean}
  */
 function elementMatches(filter, element) {
-  const elementValue = getFilterValueForElement(element, filter.filterFields[0]);
+  const elementValues = getFilterValuesForElement(element, filter.filterFields[0]);
   return isEmpty(filter.value)
-    || elementValue === filter.value;
+    || elementValues.some((elementValue) => filter.value.includes(elementValue));
 }
 
 /**
