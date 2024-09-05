@@ -642,6 +642,38 @@ export const handleSmallPrint = (main, document) => {
   });
 };
 
+/**
+ * Convert variant-cards from Typo3 to EDS Variants-Block
+ * @param main
+ * @param document
+ */
+export const handleVariants = (main, document) => {
+  const variantCards = main.querySelectorAll('div.variant-card-content');
+
+  variantCards.forEach((variantCard) => {
+    const productTitle = variantCard.querySelector('p.product-title');
+
+    // extract percentage from the styling
+    const productEfficiencyDiv = variantCard.querySelector('div.product-efficiency-value');
+    const efficiencyValue = productEfficiencyDiv.getAttribute('style').replace('width: ', '');
+
+    const listPoints = variantCard.querySelectorAll('ul.variant-listpoints');
+
+    const cells = [
+      ['Variants'],
+      [productTitle],
+      [''],
+      [efficiencyValue],
+      [listPoints[0]],
+      [listPoints[1] || ''],
+    ];
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    variantCard.replaceWith(resultTable);
+  });
+};
+
 export default {
   /**
    * preprocess-method: access data before it is removed by the EDS-logic later-on
@@ -719,6 +751,7 @@ export default {
     handleMetricsColumns(main, document);
     handleReferenceRows(main, document);
     handleSmallPrint(main, document);
+    handleVariants(main, document);
 
     // handle <br> after the Blocks, as they only work outside of them
     handleBrs(main, document);
