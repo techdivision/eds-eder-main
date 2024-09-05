@@ -379,8 +379,7 @@ export const handleContactBanner = (main, document) => {
         'Klaus Mayer',
         'EDER LANDTECHNIK',
         'RTK-Experten',
-        'AGRATEC LANDTECHNIKZENTRUM',
-        'Stefan Buchner',
+        'AGRATEC Landtechnik',
         'EDER Baumaschinen',
       ];
 
