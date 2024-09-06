@@ -13,6 +13,10 @@ footer {
   font-size: var(--body-font-size-s);
 }
 
+footer .block {
+  margin-bottom: 0;
+}
+
 footer .section {
   padding: var(--spacing-simple);
 }
