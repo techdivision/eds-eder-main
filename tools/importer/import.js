@@ -372,23 +372,25 @@ export const handleContactBanner = (main, document) => {
 
     // handle special cases, where no name is given
     if (names.length === 0) {
-      names = [];
-      // names to look for
+      let name;
+      // names to look for - priority: "last match wins"
       const namesToCheck = [
-        'Daniel Strehle',
-        'Klaus Mayer',
         'EDER LANDTECHNIK',
-        'RTK-Experten',
         'AGRATEC Landtechnik',
         'EDER Baumaschinen',
+        'RTK-Experten',
+        'Daniel Strehle',
+        'Klaus Mayer',
       ];
 
       // check if name can be extracted from the text
       namesToCheck.forEach((nameToCheck) => {
         if (originalContactBlock.innerText.includes(nameToCheck)) {
-          names.push(nameToCheck);
+          name = nameToCheck;
         }
       });
+
+      names = [name];
     }
 
     if (names.length > 0) {
