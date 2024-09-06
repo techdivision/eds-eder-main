@@ -63,7 +63,7 @@ async function loadFonts() {
 }
 
 // When there is a sidebar, build a hero image
-function buildSidebar(main) {
+function buildSidebarAndHero(main) {
   // check for sidebar
   const allSectionMetadata = main.querySelectorAll('.section-metadata');
   const hasSidebar = [...allSectionMetadata]
@@ -71,22 +71,35 @@ function buildSidebar(main) {
     .map((metadata) => metadata.style === 'sidebar')
     .reduce((prev, current) => prev || current, false);
 
+  // get both the first picture and the first headline
+  const picture = main.querySelector('picture');
+  const headline = main.querySelector('h1, h2');
+
+  /*
+  * check if both an image and a headline are present,
+  * and the first headline follows after the first picture
+  */
+  // eslint-disable-next-line no-bitwise,max-len
+  const hasHero = headline && picture && (headline.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING);
+
   // if we have a sidebar
   if (hasSidebar) {
     addBodyClass('has-sidebar');
 
-    // check for hero image
-    const picture = main.querySelector('picture');
-    if (picture) {
-      // if the first element contains the picture, it is a hero image across both sections
-      if (main.children[0].contains(picture)) {
-        const section = document.createElement('div');
-        section.classList.add('section', 'sidebar-hero');
-        section.append(picture);
-        main.prepend(section);
-        addBodyClass('has-sidebar-hero');
-      }
+    // if there is both a sidebar and a hero-image: it should cover both content and sidebar
+    if (hasHero) {
+      const section = document.createElement('div');
+      section.classList.add('section', 'sidebar-hero');
+      section.append(picture);
+      main.prepend(section);
+      addBodyClass('has-sidebar-hero');
     }
+    // if there is no sidebar, but a hero image
+  } else if (hasHero) {
+    const section = document.createElement('div');
+    section.classList.add('section', 'hero');
+    section.append(picture);
+    main.prepend(section);
   }
 }
 
@@ -98,8 +111,7 @@ function buildSidebar(main) {
 function buildAutoBlocks(main) {
   try {
     // BEGIN CHANGE TechDivision
-    // removed auto blocking for hero blocks
-    buildSidebar(main);
+    buildSidebarAndHero(main);
     // END CHANGE TechDivision
   } catch (error) {
     // eslint-disable-next-line no-console

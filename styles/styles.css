@@ -321,7 +321,7 @@ main .section.highlight {
 }
 
 /* hero image */
-main .sidebar-hero {
+main .sidebar-hero, .hero {
   @media (width >= 900px) {
     padding-top: var(--spacing-double);
     padding-bottom: var(--spacing-double);
