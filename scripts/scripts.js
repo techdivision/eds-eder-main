@@ -82,6 +82,9 @@ function buildSidebarAndHero(main) {
   // eslint-disable-next-line no-bitwise,max-len
   const hasHero = headline && picture && (headline.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING);
 
+  // check for event hero
+  const hasEventHero = main.querySelector('div.events-hero');
+
   // if we have a sidebar
   if (hasSidebar) {
     addBodyClass('has-sidebar');
@@ -94,8 +97,8 @@ function buildSidebarAndHero(main) {
       main.prepend(section);
       addBodyClass('has-sidebar-hero');
     }
-    // if there is no sidebar, but a hero image
-  } else if (hasHero) {
+    // if there is no sidebar, but a hero image; and no events-hero (that is handled differently)
+  } else if (hasHero && !hasEventHero) {
     const section = document.createElement('div');
     section.classList.add('section', 'hero');
     section.append(picture);
