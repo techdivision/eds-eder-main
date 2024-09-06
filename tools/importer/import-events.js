@@ -14,6 +14,7 @@
 import {
   determineEdsBaseUrl,
   shouldBeImported,
+  preprocessHrefLang,
   handleTable,
   handleTopImage,
   handleLinks,
@@ -65,8 +66,9 @@ const initAdditionalData = () => {
  * @param main
  * @param document
  * @param event
+ * @param params
  */
-const handleMetadata = (main, document, event) => {
+const handleMetadata = (main, document, event, params) => {
   // get regular metadata as its original done in WebImporter.rules.createMetadata
   const meta = WebImporter.Blocks.getMetadata(document);
 
@@ -82,6 +84,11 @@ const handleMetadata = (main, document, event) => {
   }
 
   meta.section = event.section || '';
+
+  // add "key"-entry for multi-language domains
+  if (params.hreflangKey) {
+    meta.key = params.hreflangKey;
+  }
 
   // create table for metadata and append it like it's done in WebImporter.rules.createMetadata
   if (Object.keys(meta).length > 0) {
@@ -165,11 +172,19 @@ const handleDates = (main, document) => {
 };
 
 export default {
+  /**
+   * preprocess-method: access data before it is removed by the EDS-logic later-on
+   * @param document
+   * @param params
+   */
+  preprocess: ({ document, params }) => {
+    // extract href-lang x-default value from HTML-head
+    preprocessHrefLang(document, params);
+  },
   transform: ({
     url,
     document,
     params,
-    html,
   }) => {
     // load additional data (the data that is not present in the HTML-markup)
     if (!window.eventsList) {
@@ -234,7 +249,7 @@ export default {
     handleDates(main, document);
 
     // handle both custom and default metadata
-    handleMetadata(main, document, event, html);
+    handleMetadata(main, document, event, params);
 
     // get target document-path like it is done during the 1:1 import
     const path = generateDocumentPath(url);

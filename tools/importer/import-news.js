@@ -14,6 +14,7 @@
 import {
   determineEdsBaseUrl,
   shouldBeImported,
+  preprocessHrefLang,
   handleTable,
   handleTopImage,
   handleLinks,
@@ -70,7 +71,7 @@ const initAdditionalData = () => {
  * @param news
  * @param html
  */
-const handleMetadata = (main, document, news, html) => {
+const handleMetadata = (main, document, news, html, params) => {
   // get regular metadata as its original done in WebImporter.rules.createMetadata
   const meta = WebImporter.Blocks.getMetadata(document);
 
@@ -118,6 +119,11 @@ const handleMetadata = (main, document, news, html) => {
 
   meta.location = news.location || '';
 
+  // add "key"-entry for multi-language domains
+  if (params.hreflangKey) {
+    meta.key = params.hreflangKey;
+  }
+
   // create table for metadata and append it like it's done in WebImporter.rules.createMetadata
   if (Object.keys(meta).length > 0) {
     const block = WebImporter.Blocks.getMetadataBlock(document, meta);
@@ -142,6 +148,15 @@ const generateDocumentPath = (url) => {
 };
 
 export default {
+  /**
+   * preprocess-method: access data before it is removed by the EDS-logic later-on
+   * @param document
+   * @param params
+   */
+  preprocess: ({ document, params }) => {
+    // extract href-lang x-default value from HTML-head
+    preprocessHrefLang(document, params);
+  },
   transform: ({
     url,
     document,
@@ -209,7 +224,7 @@ export default {
     handleContacts(main, document);
 
     // handle both custom and default metadata
-    handleMetadata(main, document, news, html);
+    handleMetadata(main, document, news, html, params);
 
     // get target document-path like it is done during the 1:1 import
     const path = generateDocumentPath(url);

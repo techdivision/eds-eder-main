@@ -49,8 +49,8 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
   // extract link from entry
   let href = linkEntry.getAttribute('href');
 
-  // check for '#' as link target
-  if (href === '#') {
+  // check for empty href or '#' as link target
+  if ((!href) || href === '#') {
     // return only the text of the link
     return linkEntry.innerText;
   }
@@ -167,8 +167,11 @@ export default {
     // add metadata-table
     main.append(table);
 
-    // set target-path to "nav" instead of the path of the original page
-    const path = '/nav';
+    // handle multi-language cases
+    const originalUrl = new URL(params.originalURL);
+
+    // set "nav" as the document-name
+    const path = `${originalUrl.pathname}/nav`;
 
     return [{
       element: main,

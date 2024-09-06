@@ -13,6 +13,7 @@
 
 import {
   determineEdsBaseUrl,
+  preprocessHrefLang,
   handleTable,
   handleTopImage,
   handleLinks,
@@ -171,10 +172,14 @@ export const handleShopData = (main, document) => {
 
       openTimeRows.forEach((openTimeRow) => {
         const firstEntry = openTimeRow.querySelector('div.col-xs-3');
+        // make first entry bold
+        const boldFirstEntry = document.createElement('strong');
+        boldFirstEntry.append(firstEntry.innerText);
+
         const secondEntry = openTimeRow.querySelector('div.col-xs-9');
 
         if (firstEntry && secondEntry) {
-          openTimeRow.innerHTML = `${firstEntry.innerText} ${secondEntry.innerText}`;
+          openTimeRow.innerHTML = `${boldFirstEntry.outerHTML} ${secondEntry.innerText}`;
         }
       });
 
@@ -367,24 +372,25 @@ export const handleContactBanner = (main, document) => {
 
     // handle special cases, where no name is given
     if (names.length === 0) {
-      names = [];
-      // names to look for
+      let name;
+      // names to look for - priority: "last match wins"
       const namesToCheck = [
+        'EDER LANDTECHNIK',
+        'AGRATEC Landtechnik',
+        'EDER Baumaschinen',
+        'RTK-Experten',
         'Daniel Strehle',
         'Klaus Mayer',
-        'EDER LANDTECHNIK',
-        'RTK-Experten',
-        'AGRATEC LANDTECHNIKZENTRUM',
-        'Stefan Buchner',
-        'EDER Baumaschinen',
       ];
 
       // check if name can be extracted from the text
       namesToCheck.forEach((nameToCheck) => {
         if (originalContactBlock.innerText.includes(nameToCheck)) {
-          names.push(nameToCheck);
+          name = nameToCheck;
         }
       });
+
+      names = [name];
     }
 
     if (names.length > 0) {
@@ -602,6 +608,73 @@ export const handleClassEderSpans = (main, document) => {
   });
 };
 
+/**
+ * Replace small-text Content by EDS Small-Print Block
+ * @param main
+ * @param document
+ */
+export const handleSmallPrint = (main, document) => {
+  const smallTextSpans = main.querySelectorAll('span.small.text-muted');
+
+  smallTextSpans.forEach((smallTextSpan) => {
+    const result = document.createElement('div');
+    const { childNodes } = smallTextSpan;
+
+    // iterate child-nodes
+    childNodes.forEach((childNode) => {
+      // avoid <br>-tags, as they do not work properly EDS
+      if (childNode.tagName !== 'BR') {
+        // build <p> tag around each line of text
+        const paragraph = document.createElement('p');
+        paragraph.append(childNode);
+
+        result.append(paragraph);
+      }
+    });
+
+    const cells = [
+      ['Small-Print'],
+      [result],
+    ];
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    smallTextSpan.replaceWith(resultTable);
+  });
+};
+
+/**
+ * Convert variant-cards from Typo3 to EDS Variants-Block
+ * @param main
+ * @param document
+ */
+export const handleVariants = (main, document) => {
+  const variantCards = main.querySelectorAll('div.variant-card-content');
+
+  variantCards.forEach((variantCard) => {
+    const productTitle = variantCard.querySelector('p.product-title');
+
+    // extract percentage from the styling
+    const productEfficiencyDiv = variantCard.querySelector('div.product-efficiency-value');
+    const efficiencyValue = productEfficiencyDiv.getAttribute('style').replace('width: ', '');
+
+    const listPoints = variantCard.querySelectorAll('ul.variant-listpoints');
+
+    const cells = [
+      ['Variants'],
+      [productTitle],
+      [''],
+      [efficiencyValue],
+      [listPoints[0]],
+      [listPoints[1] || ''],
+    ];
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    variantCard.replaceWith(resultTable);
+  });
+};
+
 export default {
   /**
    * preprocess-method: access data before it is removed by the EDS-logic later-on
@@ -621,23 +694,7 @@ export default {
     });
 
     // extract href-lang x-default value from HTML-head
-    const xDefault = document.querySelector('link[hreflang="x-default"]');
-
-    if (xDefault && xDefault.hasAttribute('href')) {
-      const xDefaultValue = xDefault.getAttribute('href');
-
-      const xDefaultSections = xDefaultValue.split('/');
-
-      const lastEntry = xDefaultSections[xDefaultSections.length - 1];
-      const secondLastEntry = xDefaultSections[xDefaultSections.length - 2];
-
-      // last entry might be empty, due to a trailing slash
-      if (lastEntry !== '') {
-        params.hreflangKey = lastEntry;
-      } else {
-        params.hreflangKey = secondLastEntry;
-      }
-    }
+    preprocessHrefLang(document, params);
   },
   transform: ({
     document,
@@ -685,7 +742,6 @@ export default {
     handleTeaserRows(main, document);
     handleImagesInText(main, document);
     handleTextPic(main, document);
-    handleBrs(main, document);
     handleContacts(main, document);
     handleBlockquotes(main, document);
     handleShopData(main, document);
@@ -695,6 +751,11 @@ export default {
     handleSup(main, document);
     handleMetricsColumns(main, document);
     handleReferenceRows(main, document);
+    handleSmallPrint(main, document);
+    handleVariants(main, document);
+
+    // handle <br> after the Blocks, as they only work outside of them
+    handleBrs(main, document);
 
     handleSidebar(main, document);
 
