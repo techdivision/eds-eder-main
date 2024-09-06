@@ -294,6 +294,9 @@ export const handleLinks = (main, document, baseUrl) => {
       // replace relative urls
       if (href.charAt(0) === '/') {
         href = baseUrl + href;
+
+        // remove possible parameters from internal links
+        href = href.replace(/\?.*/, '');
       }
 
       // replace http- by https-urls
