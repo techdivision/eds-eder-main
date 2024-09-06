@@ -1,4 +1,9 @@
 # Readme about Import/Migration
+
+## Links to documentation:
+- high-level documentation: https://www.aem.live/developer/importer
+- more in-depth technical documentation: https://github.com/adobe/helix-importer-ui/blob/main/importer-guidelines.md
+
 ## File structure:
 - `import-util.js`: provides some generic functionalities that are common to all (or most) of the imports
 - `import.js`: Import of main content
