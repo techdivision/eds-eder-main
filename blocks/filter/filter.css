@@ -18,6 +18,12 @@
     gap: 10px;
   }
 
+  /* stylelint-disable selector-class-pattern */
+  .noUi-connect {
+    background: var(--color-gray-dark);
+  }
+  /* stylelint-enable selector-class-pattern */
+
   /* a single filter */
 
   .filter-item {
@@ -29,7 +35,7 @@
     /* slider filter */
 
     &.filter-type-slider {
-      padding: 10px 20px;
+      padding: 0 20px;
       min-height: 55px;
 
       .filter-decoration p {
@@ -75,8 +81,35 @@
 
       img {
         height: 30px;
+        display: inline-block;
         aspect-ratio: 3 / 1;
         object-fit: contain;
+      }
+
+      .filter-option {
+        margin-right: var(--spacing-simple);
+      }
+
+      [type="checkbox"] {
+        display: none;
+      }
+
+      [type="checkbox"] + label::before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--color-gray);
+        float: left;
+        margin-right: var(--spacing-half);
+        z-index: 5;
+        position: relative;
+      }
+
+      input[type="checkbox"]:checked+label::before {
+        content: '✔';
+        font-size: var(--heading-font-size-xl);
+        color: var(--color-gray-dark);
       }
     }
   }
@@ -85,6 +118,5 @@
 
   .filter-label {
     flex: none;
-    line-height: 45px;
   }
 }
