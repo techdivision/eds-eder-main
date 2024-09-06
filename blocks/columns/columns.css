@@ -72,6 +72,14 @@
   line-height: var(--metrics-heading-line-height);
 }
 
+.columns.dynamic-width > div {
+  justify-content: center;
+}
+
+.columns.dynamic-width > div > div {
+  flex: auto;
+}
+
 /* styling desktop */
 @media (width >= 900px) {
   .columns > div {

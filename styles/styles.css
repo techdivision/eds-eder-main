@@ -193,6 +193,7 @@ a:hover {
 
 a.button:any-link,
 button {
+  max-width: 100%;
   font-family: var(--body-font-family);
   display: inline-block;
   box-sizing: border-box;
@@ -205,9 +206,8 @@ button {
   color: var(--button-color);
   background-color: var(--button-background);
   margin: 16px 0;
-  white-space: nowrap;
+  word-wrap: break-word;
   overflow: hidden;
-  text-overflow: ellipsis;
   border-radius: 0;
   border: 2px solid var(--button-border);
   user-select: none;
@@ -331,8 +331,6 @@ main .sidebar-hero {
   img {
     width: 100%;
     height: auto;
-    aspect-ratio: 6 / 1;
-    object-fit: cover;
     display: block;
   }
 }

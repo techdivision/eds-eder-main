@@ -77,7 +77,12 @@
   padding: 0 var(--spacing-simple);
 }
 
+.rows .content > h3 {
+  max-width: calc(100% - 150px);
+}
+
 .rows .content .logo {
+  max-width: 150px;
   position: absolute;
   right: var(--spacing-simple);
   top: 0;
