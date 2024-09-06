@@ -18,9 +18,11 @@
     gap: 10px;
   }
 
+  /* stylelint-disable selector-class-pattern */
   .noUi-connect {
     background: var(--color-gray-dark);
   }
+  /* stylelint-enable selector-class-pattern */
 
   /* a single filter */
 
