@@ -93,6 +93,7 @@
       [type="checkbox"] {
         display: none;
       }
+
       [type="checkbox"] + label::before {
         content: '';
         display: block;
