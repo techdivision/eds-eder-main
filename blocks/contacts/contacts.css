@@ -18,6 +18,10 @@
   margin-bottom: 5px;
 }
 
+.contacts.columns-2-cols > div {
+  display: flex;
+}
+
 .contacts a.has-chevron::after {
   content: none;
 }
