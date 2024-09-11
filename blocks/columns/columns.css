@@ -17,12 +17,16 @@
   align-self: flex-end;
 }
 
-.columns > div {
-  display: flex;
-}
+/*.columns > div {*/
+/*  display: flex;*/
+/*}*/
 
 .columns img {
   width: 100%;
+}
+
+.columns > div {
+  column-gap: var(--spacing-simple);
 }
 
 .columns > div > div {
@@ -81,6 +85,12 @@
 }
 
 /* styling desktop */
+@media (width >= 600px) {
+  .columns > div {
+    display: flex;
+  }
+}
+
 @media (width >= 900px) {
   .columns > div {
     max-width: 100%;

@@ -53,6 +53,14 @@ footer .footer p a:hover {
   text-decoration: underline;
 }
 
+footer .section:nth-child(1) .columns > div {
+  column-gap: var(--spacing-half);
+}
+
+footer .section:nth-child(1) .columns > div > div {
+  padding-bottom: var(--spacing-half);
+}
+
 footer .section:nth-child(2) .columns > div > div {
   padding-bottom: var(--spacing-simple);
   font-size: var(--body-font-size-m);
@@ -108,6 +116,12 @@ footer .section:nth-child(2) span.icon {
 }
 
 /* styling desktop */
+@media (width >= 600px) {
+  footer .section:nth-child(1) .columns > div > div {
+    padding-bottom: 0;
+  }
+}
+
 @media (width >= 900px) {
   footer .section {
     padding-top: var(--spacing-simple);

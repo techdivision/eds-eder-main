@@ -47,10 +47,6 @@ export default function decorate(block) {
         [...brandColumn.querySelectorAll('a')].forEach((link) => {
           link.classList.remove('button');
 
-          if (link.textContent === 'weitere Infos') {
-            link.classList.add('info-link');
-          }
-
           linkContainer.append(link);
         });
 
