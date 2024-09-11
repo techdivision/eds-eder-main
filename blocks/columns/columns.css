@@ -17,10 +17,6 @@
   align-self: flex-end;
 }
 
-/*.columns > div {*/
-/*  display: flex;*/
-/*}*/
-
 .columns img {
   width: 100%;
 }
