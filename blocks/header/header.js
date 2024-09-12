@@ -81,7 +81,6 @@ function toggleMenu(nav, navSections, button, forceExpanded = null) {
   navSections?.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   if (button) {
-    button.setAttribute('role', 'button');
     button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
     button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   }
@@ -90,14 +89,12 @@ function toggleMenu(nav, navSections, button, forceExpanded = null) {
   if (isDesktop.matches) {
     navDrops.forEach((drop) => {
       if (!drop.hasAttribute('tabindex')) {
-        drop.setAttribute('role', 'button');
         drop.setAttribute('tabindex', '0');
         drop.addEventListener('focus', focusNavSection);
       }
     });
   } else {
     navDrops.forEach((drop) => {
-      drop.removeAttribute('role');
       drop.removeAttribute('tabindex');
       drop.removeEventListener('focus', focusNavSection);
     });
