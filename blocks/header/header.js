@@ -81,7 +81,6 @@ function toggleMenu(nav, navSections, button, forceExpanded = null) {
   navSections?.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   if (button) {
-    // button.setAttribute('role', 'button');
     button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
     button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   }
