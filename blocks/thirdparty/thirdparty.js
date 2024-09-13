@@ -107,9 +107,12 @@ function loadAdobeAnalytics(url) {
   // FIXME use "loadThirdPartyScript" as soon as Adobe Analytics uses the correct CORS headers
   // FIXME we use setTimeout here to enhance the LH score
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(betterLoadScript(url));
-    }, 2000);
+    setTimeout(
+      () => {
+        resolve(betterLoadScript(url, { defer: '' }));
+      },
+      2000,
+    );
   });
 }
 
