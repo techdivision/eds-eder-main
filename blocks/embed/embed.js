@@ -19,6 +19,7 @@
  */
 
 import { betterLoadScript } from '../../scripts/load-resource.js';
+import { handleTranslate } from '../../scripts/i18n.js';
 
 const getDefaultEmbed = (url, block) => {
   // Set default height and width
@@ -36,6 +37,7 @@ const getDefaultEmbed = (url, block) => {
       width = `${className.substring(6)}px`;
     }
   });
+  // noinspection HtmlDeprecatedAttribute
   return `<div style="left: 0; width: ${width}; height: ${containerHeight}; position: relative; padding-bottom: 56.25%;">
     <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: ${width}; height: ${iFrameHeight};
     position: absolute;" allowfullscreen=""
@@ -52,6 +54,7 @@ const embedYoutube = (url, autoplay) => {
   if (url.origin.includes('youtu.be')) {
     [, vid] = url.pathname.split('/');
   }
+  // noinspection HtmlDeprecatedAttribute
   return `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
       <iframe src="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"
       allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; picture-in-picture" allowfullscreen="" scrolling="no" title="Content from Youtube" loading="lazy"></iframe>
@@ -61,6 +64,7 @@ const embedYoutube = (url, autoplay) => {
 const embedVimeo = (url, autoplay) => {
   const [, video] = url.pathname.split('/');
   const suffix = autoplay ? '?muted=1&autoplay=1' : '';
+  // noinspection HtmlDeprecatedAttribute
   return `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
       <iframe src="https://player.vimeo.com/video/${video}${suffix}"
       style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"
@@ -109,14 +113,32 @@ const loadEmbed = (block, link, autoplay) => {
 
 export default function decorate(block) {
   const placeholder = block.querySelector('picture');
-  const link = block.querySelector('a').href;
+  const link = block.querySelector('a')?.href || block.textContent.trim();
   block.textContent = '';
 
   if (placeholder) {
+    // define wrapper
     const wrapper = document.createElement('div');
-    wrapper.className = 'embed-placeholder';
-    wrapper.innerHTML = '<div class="embed-placeholder-play"><button type="button" title="Play"></button></div>';
+    wrapper.classList.add('embed-placeholder');
+
+    // add play placeholder
+    const playPlaceholder = document.createElement('div');
+    playPlaceholder.classList.add('embed-placeholder-play');
     wrapper.prepend(placeholder);
+
+    // add button
+    const button = document.createElement('button');
+    button.setAttribute('type', 'button');
+    handleTranslate(
+      (translation) => {
+        button.setAttribute('title', translation);
+      },
+      'Play',
+    )
+      .then();
+    playPlaceholder.prepend(button);
+    wrapper.prepend(playPlaceholder);
+
     wrapper.addEventListener('click', () => {
       loadEmbed(block, link, true);
     });
