@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2024 TechDivision GmbH
+ * All rights reserved
+ *
+ * This product includes proprietary software developed at TechDivision GmbH, Germany
+ * For more information see https://www.techdivision.com/
+ *
+ * To obtain a valid license for using this software please contact us at
+ * license@techdivision.com
+ */
+.block.whatsapp {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1001;
+    margin: 0;
+
+  a {
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    content: url('../../icons/whatsapp.svg');
+  }
+}
