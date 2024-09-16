@@ -9,9 +9,11 @@
  * license@techdivision.com
  */
 
-import loadThirdPartyScript from '../../scripts/load-thirdparty-script.js';
+import {
+  loadThirdPartyScript,
+  loadThirdPartyScriptWithoutPartytown,
+} from '../../scripts/load-thirdparty-script.js';
 import { getCurrentUrl, isLocal, transformRowsToData } from '../../scripts/helpers.js';
-import { betterLoadScript } from '../../scripts/load-resource.js';
 
 /**
  * Load usercentrics
@@ -30,6 +32,19 @@ function loadUsercentrics(id) {
       id: 'usercentrics-cmp',
       'data-settings-id': id,
     },
+  );
+}
+
+/**
+ * Load userlike
+ *
+ * @param {String} id
+ * @returns {Promise}
+ */
+function loadUserlike(id) {
+  // FIXME we already contacted userlike to provide support for partytown
+  return loadThirdPartyScriptWithoutPartytown(
+    `https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/${id}.js`
   );
 }
 
@@ -105,15 +120,7 @@ function loadAdobeAnalytics(url) {
 
   // load URL
   // FIXME use "loadThirdPartyScript" as soon as Adobe Analytics uses the correct CORS headers
-  // FIXME we use setTimeout here to enhance the LH score
-  return new Promise((resolve) => {
-    setTimeout(
-      () => {
-        resolve(betterLoadScript(url, { defer: '' }));
-      },
-      2000,
-    );
-  });
+  return loadThirdPartyScriptWithoutPartytown(url);
 }
 
 /**
@@ -137,6 +144,10 @@ export default function decorate(block) {
     switch (script.platform.toLowerCase()) {
       case 'usercentrics':
         loadUsercentrics(script.config)
+          .then();
+        break;
+      case 'userlike':
+        loadUserlike(script.config)
           .then();
         break;
       case 'google analytics':
