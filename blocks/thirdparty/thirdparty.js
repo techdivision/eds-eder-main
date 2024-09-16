@@ -44,7 +44,7 @@ function loadUsercentrics(id) {
 function loadUserlike(id) {
   // FIXME we already contacted userlike to provide support for partytown
   return loadThirdPartyScriptWithoutPartytown(
-    `https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/${id}.js`
+    `https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/${id}.js`,
   );
 }
 

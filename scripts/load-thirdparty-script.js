@@ -62,7 +62,6 @@ function loadThirdPartyScript(script, attrs) {
     });
 }
 
-
 /**
  * Load third party script without partytown
  *
