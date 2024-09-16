@@ -73,7 +73,7 @@ function buildSidebarAndHero(main) {
 
   // get both the first picture and the first headline
   const picture = main.querySelector('picture');
-  const headline = main.querySelector('h1, h2');
+  const headline = main.querySelector('h1');
 
   /*
   * check if both an image and a headline are present,
