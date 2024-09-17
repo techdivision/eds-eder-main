@@ -30,6 +30,9 @@ import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
 
 const LCP_BLOCKS = [
+  'events-hero',
+  'hero',
+  'hero-video',
   'cards',
 ]; // add your LCP blocks to the list
 
