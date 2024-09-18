@@ -55,13 +55,33 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
     return linkEntry.innerText;
   }
 
-  // check if the target of the link is relative: add EDS base-url
+  // check if the target of the link is relative: handle EDS-specific url-conversions
   if (href.charAt(0) === '/') {
+    // add base-url
     href = baseUrl + href;
-  }
 
-  // remove trailing slash
-  href = href.replace(/\/$/, '');
+    // remove possible parameters
+    href = href.replace(/\?.*/, '');
+
+    // remove trailing slash
+    href = href.replace(/\/$/, '');
+
+    // handle leading hyphens in document-names, that are not supported in EDS
+    const urlSections = href.split('/');
+
+    let documentName = urlSections[urlSections.length - 1];
+
+    // check for leading hyphen in document-name
+    if (documentName && documentName.charAt(0) === '-') {
+      // remove first character = the hyphen
+      documentName = documentName.substring(1);
+
+      urlSections[urlSections.length - 1] = documentName;
+
+      // re-build url
+      href = urlSections.join('/');
+    }
+  }
 
   linkEntry.setAttribute('href', href);
 

@@ -390,7 +390,9 @@ export const handleContactBanner = (main, document) => {
         }
       });
 
-      names = [name];
+      if (name) {
+        names = [name];
+      }
     }
 
     if (names.length > 0) {
