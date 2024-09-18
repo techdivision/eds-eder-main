@@ -12,7 +12,7 @@
 .video {
   width: unset;
   text-align: center;
-  margin: 32px auto;
+  margin: 0 auto;
 }
 
 .video.lazy-loading {
