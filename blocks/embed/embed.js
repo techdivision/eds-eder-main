@@ -24,7 +24,7 @@ import { handleTranslate } from '../../scripts/i18n.js';
 const getDefaultEmbed = (url, block) => {
   // Set default height and width
   let iFrameHeight = '100%';
-  let containerHeight = 0;
+  let containerHeight = '600px';
   let width = '100%';
 
   // Get iFrame and Container size from class
@@ -38,10 +38,10 @@ const getDefaultEmbed = (url, block) => {
     }
   });
   // noinspection HtmlDeprecatedAttribute
-  return `<div style="left: 0; width: ${width}; height: ${containerHeight}; position: relative; padding-bottom: 56.25%;">
+  return `<div style="left: 0; width: ${width}; height: ${containerHeight}; position: relative;">
     <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: ${width}; height: ${iFrameHeight};
     position: absolute;" allowfullscreen=""
-      scrolling="no" allow="encrypted-media" title="Content from ${url.hostname}" loading="lazy">
+      allow="encrypted-media" title="Content from ${url.hostname}" loading="lazy">
     </iframe>
   </div>`;
 };
