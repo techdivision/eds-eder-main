@@ -32,6 +32,7 @@
 
 .columns > div > .columns-img-col {
   order: 0;
+  margin-bottom: var(--spacing-half);
 }
 
 .columns > div > .columns-img-col img {
@@ -50,6 +51,10 @@
 .columns.usp > div:first-child p strong {
   font-size: var(--heading-font-size-m);
   line-height: var(--heading-line-height-m);
+}
+
+.columns.one-quarter-three-quarter > div {
+  display: flex;
 }
 
 .columns.one-quarter-three-quarter > div > div:first-child {
@@ -82,15 +87,10 @@
 }
 
 /* styling desktop */
-@media (width >= 600px) {
-  .columns > div {
-    display: flex;
-  }
-}
-
 @media (width >= 900px) {
   .columns > div {
     max-width: 100%;
+    display: flex;
     align-items: start;
     flex-direction: unset;
     gap: var(--spacing-simple);

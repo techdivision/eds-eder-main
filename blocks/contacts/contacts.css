@@ -20,6 +20,7 @@
 
 .contacts.columns-2-cols > div {
   display: flex;
+  gap: var(--spacing-half);
 }
 
 .contacts a.has-chevron::after {
@@ -31,6 +32,7 @@
 }
 
 .contacts .section .columns-wrapper > .columns > div {
+  display: flex;
   align-items: start;
   flex-direction: unset;
   gap: var(--spacing-half);
