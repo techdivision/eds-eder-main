@@ -60,16 +60,18 @@ function embedVideo(video, target) {
     )
       .then();
 
-      const iframe = target.querySelector('iframe');
-      let observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
+    const iframe = target.querySelector('iframe');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
             iframe.src = iframe.src.replace('about:blank#', '');
-            observer.disconnect();
-          }
-        });
+          }, 500);
+          observer.disconnect();
+        }
       });
-      observer.observe(iframe);
+    });
+    observer.observe(iframe);
   } else if (video.videoUrl) {
     target.innerHTML = `<video autoplay loop muted playsinline preload="none">
         <source src="${video.videoUrl}" type="video/mp4">
