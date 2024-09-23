@@ -49,17 +49,22 @@ function embedVideo(video, target) {
 
   // embed video
   if (youTubeId) {
-    // noinspection HtmlDeprecatedAttribute
-    target.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${youTubeId}?playlist=${youTubeId}&autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&rel=0&disablekb=1&modestbranding=1&mute=1" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" allow="encrypted-media" loading="lazy"></iframe>`;
-    handleTranslate(
-      (translation) => {
-        target.querySelector('iframe').title = translation;
-      },
-      'Hero Video',
-    )
-      .then();
+    setTimeout(() => {
+      // noinspection HtmlDeprecatedAttribute
+      target.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${youTubeId}?playlist=${youTubeId}&autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&rel=0&disablekb=1&modestbranding=1&mute=1"
+            frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" allow="encrypted-media" loading="lazy"></iframe>`;
+      handleTranslate(
+        (translation) => {
+          target.querySelector('iframe').title = translation;
+        },
+        'Hero Video',
+      )
+        .then();
+    }, 300);
   } else if (video.videoUrl) {
-    target.innerHTML = `<video autoplay loop muted playsinline><source src="${video.videoUrl}" type="video/mp4"></video>`;
+    target.innerHTML = `<video autoplay loop muted playsinline preload="none">
+        <source src="${video.videoUrl}" type="video/mp4">
+      </video>`;
   }
 
   // append poster
