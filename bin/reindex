@@ -7,4 +7,4 @@ send_request() {
     printf '%.0s\n' {1..3}
 }
 
-source $(dirname $0)/parts/for-all-sites
+source "$(dirname "$0")/parts/for-all-sites"
