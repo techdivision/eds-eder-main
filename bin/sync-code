@@ -3,7 +3,7 @@
 # send request
 send_request() {
     local REPO_NAME=$1
-    curl --request POST --url "https://admin.hlx.page/index/techdivision/$REPO_NAME/main/*"
+    curl --request POST --url "https://admin.hlx.page/code/techdivision/$REPO_NAME/main/*"
     printf '%.0s\n' {1..3}
 }
 
