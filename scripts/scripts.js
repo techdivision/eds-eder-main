@@ -282,13 +282,13 @@ export function decorateMain(main) {
  */
 function updateMetaTitle(doc) {
   const pageName = getMetadata('page-name');
-
-  if (!pageName) {
-    return;
-  }
-
   const metaTitleTag = doc.querySelector('meta[property="og:title"]');
-  const metaTitle = metaTitleTag.content;
+  let metaTitle = metaTitleTag.content;
+
+  if (!getMetadata('title')) {
+    metaTitle = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+    metaTitle.replaceAll('-', ' ');
+  }
 
   if (metaTitle.endsWith(pageName)) {
     return;
