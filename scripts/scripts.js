@@ -274,6 +274,29 @@ export function decorateMain(main) {
 }
 
 /**
+ * Add the page name to the meta title.
+ * @param {HTMLElement|Element|Document} doc The container element
+ */
+function updateMetaTitle(doc) {
+  const pageName = getMetadata('page-name');
+
+  if (!pageName) {
+    return;
+  }
+
+  const metaTitleTag = doc.querySelector('meta[property="og:title"]');
+  const metaTitle = metaTitleTag.content;
+
+  if (metaTitle.endsWith(pageName)) {
+    return;
+  }
+
+  const newTitle = `${metaTitle} | ${pageName}`;
+  metaTitleTag.content = newTitle;
+  doc.title = newTitle;
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {HTMLElement|Element|Document} doc The container element
  */
@@ -283,6 +306,7 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   renderCanonical();
   renderHrefLang();
+  updateMetaTitle(doc);
   document.addEventListener('changedLanguages', renderHrefLang);
 
   // clear cache
