@@ -20,3 +20,15 @@ sites:
   eder-anhaenger:
     origin: https://github.com/techdivision/eds-eder-anhaenger
     port: 3007
+  eder-stapler:
+    origin: https://github.com/techdivision/eds-eder-stapler
+    port: 3008
+  lelycenterinbayern:
+    origin: https://github.com/techdivision/eds-lelycenterinbayern
+    port: 3009
+  eder-kommunal:
+    origin: https://github.com/techdivision/eds-eder-kommunal
+    port: 3010
+  eder-stalltechnik:
+    origin: https://github.com/techdivision/eds-eder-stalltechnik
+    port: 3011

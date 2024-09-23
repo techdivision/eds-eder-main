@@ -21,7 +21,7 @@
   /* side by side */
 
   > div {
-    @media (width >= 600px) {
+    @media (width >= 900px) {
       display: flex;
       gap: var(--spacing-simple);
 
@@ -34,7 +34,7 @@
     > div {
       min-height: 300px;
 
-      @media (width >= 600px) {
+      @media (width >= 900px) {
         flex: 1;
         max-width: 50%;
       }

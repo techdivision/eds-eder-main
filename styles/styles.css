@@ -118,7 +118,7 @@ h6 {
   font-family: var(--heading-font-family);
   font-weight: var(--font-weight-regular);
   margin-bottom: 0.5em;
-  margin-top: 0;
+  margin-top: var(--spacing-simple);
   scroll-margin: calc(var(--nav-height) + 1em);
 }
 
@@ -146,13 +146,28 @@ h4 {
   font-weight: var(--font-weight-black);
 }
 
+/* remove margin-top in some cases */
+.columns,
+.section.side-by-side {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
 p,
 dl,
 ol,
 ul,
 pre,
 blockquote {
-  margin-top: 1em;
+  margin-top: 0;
   margin-bottom: 1em;
 }
 
@@ -262,12 +277,12 @@ main img {
 /* sections */
 main .section {
   position: relative;
-  padding: var(--spacing-double) var(--spacing-half);
+  padding: 0 var(--spacing-half);
 }
 
 @media (width >= 600px) {
   main .section {
-    padding: var(--spacing-double) var(--spacing-simple);
+    padding: 0 var(--spacing-simple);
   }
 }
 
@@ -321,7 +336,11 @@ main .section.highlight {
 }
 
 /* hero image */
-main .sidebar-hero, .hero {
+main .sidebar-hero,
+main .hero {
+  padding-top: var(--spacing-simple);
+  padding-bottom: var(--spacing-simple);
+
   @media (width >= 900px) {
     padding-top: var(--spacing-double);
     padding-bottom: var(--spacing-double);

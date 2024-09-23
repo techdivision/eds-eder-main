@@ -520,11 +520,7 @@ header nav .mobile-menu li.is-visible > ul {
   background: none;
 
   @media (width >= 900px) {
-    padding: 0 32px;
-    position: absolute;
-    top: var(--spacing-simple);
-    left: 0;
-    right: 0;
+    padding: 0 var(--spacing-simple);
   }
 }
 
