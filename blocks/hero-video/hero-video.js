@@ -12,6 +12,7 @@
 // noinspection HtmlDeprecatedAttribute
 
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { handleTranslate } from '../../scripts/i18n.js';
 
 /**
  * Read config by row name
@@ -23,12 +24,18 @@ function getConfigRow(rows, name) {
 }
 
 /**
- * Add overlay content
- * @param overlay
+ * Get youtube video ID
+ *
+ * @param {string} url
+ * @returns {string|null}
  */
-function decorateOverlay(overlay) {
-  overlay.firstElementChild.remove();
-  overlay.classList.add('overlay-content');
+function getYouTubeVideoId(url) {
+  if (!url) {
+    return null;
+  }
+  const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regExp);
+  return (match && match[1]) ? match[1] : null;
 }
 
 /**
@@ -36,22 +43,31 @@ function decorateOverlay(overlay) {
  * @param video
  * @param target
  */
-function embedYoutube(video, target) {
-  let videoKey = null;
-  if (video.videoUrl) {
-    const checkParam = video.videoUrl.lastIndexOf('?v=');
-    const index = (checkParam < 0) ? video.videoUrl.lastIndexOf('/') : checkParam;
-    const offset = (checkParam < 0) ? 1 : 3;
-    videoKey = video.videoUrl.substring(index + offset);
+function embedVideo(video, target) {
+  // get youtube ID
+  const youTubeId = getYouTubeVideoId(video.videoUrl);
+
+  // embed video
+  if (youTubeId) {
+    // noinspection HtmlDeprecatedAttribute
+    target.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${youTubeId}?playlist=${youTubeId}&autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&rel=0&disablekb=1&modestbranding=1&mute=1"
+            frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" allow="encrypted-media" loading="lazy"></iframe>`;
+    handleTranslate(
+      (translation) => {
+        target.querySelector('iframe').title = translation;
+      },
+      'Hero Video',
+    )
+      .then();
+  } else if (video.videoUrl) {
+    target.innerHTML = `<video autoplay loop muted playsinline preload="none" poster="${video.poster?.src || ''}">
+        <source src="${video.videoUrl}" type="video/mp4">
+      </video>`;
   }
-  const poster = (video.poster) ? createOptimizedPicture(video.poster.src) : null;
-  if (videoKey) {
-    target.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&rel=0&playlist=wucRttS1ZjQ&disablekb=1&modestbranding=1&mute=1" allowfullscreen=""
-      scrolling="no" allow="encrypted-media" title="Content from ${video.hostname}" loading="lazy">
-    </iframe>`;
-  }
-  if (!target.querySelector('picture')) {
-    target.append(poster);
+
+  // append poster
+  if (video.poster && !target.querySelector('picture')) {
+    target.append(createOptimizedPicture(video.poster.src, video.poster.alt || 'Hero Video'));
   }
 }
 
@@ -66,36 +82,26 @@ export default function decorate(block) {
     [desktopVideoRow, 'desktop'],
   ].map(([row, typeHint]) => {
     const poster = row.querySelector('img');
-
     return {
       type: typeHint,
-      videoUrl: row.querySelector('a')?.innerText,
+      videoUrl: row.querySelector('a')?.href,
       poster,
-      title: (poster && poster.getAttribute('alt')) || 'hero video',
     };
   });
 
   const mobileVideoContainer = document.createElement('div');
-  mobileVideoContainer.classList.add('video-mobile');
+  mobileVideoContainer.classList.add('video-container', 'video-mobile');
   mobileVideoRow.replaceWith(mobileVideoContainer);
 
   const desktopVideoContainer = document.createElement('div');
-  desktopVideoContainer.classList.add('video-desktop');
+  desktopVideoContainer.classList.add('video-container', 'video-desktop');
   desktopVideoRow.replaceWith(desktopVideoContainer);
 
-  const addVideos = (e) => {
-    if (e.matches) {
-      embedYoutube(desktopVideo, desktopVideoContainer);
-    } else {
-      embedYoutube(mobileVideo, mobileVideoContainer);
-    }
-  };
-
   if (overlayRow) {
-    decorateOverlay(overlayRow);
+    overlayRow.firstElementChild.remove();
+    overlayRow.classList.add('overlay-content');
   }
 
-  const mql = window.matchMedia('only screen and (min-width: 900px)');
-  mql.onchange = addVideos;
-  addVideos(mql);
+  embedVideo(mobileVideo, mobileVideoContainer);
+  embedVideo(desktopVideo, desktopVideoContainer);
 }

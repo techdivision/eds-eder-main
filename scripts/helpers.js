@@ -394,6 +394,31 @@ function lcpImages(parent) {
     });
 }
 
+/**
+ * Execute functions based on a breakpoint
+ *
+ * @param {function} mobileExecutor
+ * @param {function} desktopExecutor
+ * @param {int} [breakpoint]
+ * @returns {MediaQueryList}
+ */
+function executeOnBreakpoint(mobileExecutor, desktopExecutor, breakpoint) {
+  // define basic executor
+  const executor = (event) => {
+    if (event.matches) {
+      desktopExecutor();
+    } else {
+      mobileExecutor();
+    }
+  };
+
+  // execute and add listener
+  const mql = window.matchMedia(`(width >= ${breakpoint || 900}px)`);
+  mql.addEventListener('change', executor);
+  executor(mql);
+  return mql;
+}
+
 // export
 export {
   isEmpty,
@@ -417,4 +442,5 @@ export {
   getDayName,
   getTime,
   lcpImages,
+  executeOnBreakpoint,
 };
