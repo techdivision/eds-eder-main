@@ -49,18 +49,27 @@ function embedVideo(video, target) {
 
   // embed video
   if (youTubeId) {
-    setTimeout(() => {
-      // noinspection HtmlDeprecatedAttribute
-      target.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${youTubeId}?playlist=${youTubeId}&autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&rel=0&disablekb=1&modestbranding=1&mute=1"
+    // noinspection HtmlDeprecatedAttribute
+    target.innerHTML = `<iframe src="about:blank#https://www.youtube-nocookie.com/embed/${youTubeId}?playlist=${youTubeId}&autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&rel=0&disablekb=1&modestbranding=1&mute=1"
             frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" allow="encrypted-media" loading="lazy"></iframe>`;
-      handleTranslate(
-        (translation) => {
-          target.querySelector('iframe').title = translation;
-        },
-        'Hero Video',
-      )
-        .then();
-    }, 300);
+    handleTranslate(
+      (translation) => {
+        target.querySelector('iframe').title = translation;
+      },
+      'Hero Video',
+    )
+      .then();
+
+      const iframe = target.querySelector('iframe');
+      let observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            iframe.src = iframe.src.replace('about:blank#', '');
+            observer.disconnect();
+          }
+        });
+      });
+      observer.observe(iframe);
   } else if (video.videoUrl) {
     target.innerHTML = `<video autoplay loop muted playsinline preload="none">
         <source src="${video.videoUrl}" type="video/mp4">
