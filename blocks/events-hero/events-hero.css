@@ -73,6 +73,7 @@ main .events-hero-container {
       top: 0;
       left: 0;
       z-index: -1;
+      filter: brightness(50%);
     }
   }
 
