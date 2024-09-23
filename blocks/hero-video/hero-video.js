@@ -59,21 +59,8 @@ function embedVideo(video, target) {
       'Hero Video',
     )
       .then();
-
-    const iframe = target.querySelector('iframe');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            iframe.src = iframe.src.replace('about:blank#', '');
-          }, 500);
-          observer.disconnect();
-        }
-      });
-    });
-    observer.observe(iframe);
   } else if (video.videoUrl) {
-    target.innerHTML = `<video autoplay loop muted playsinline preload="none">
+    target.innerHTML = `<video autoplay loop muted playsinline preload="none" poster="${video.poster?.src || ''}">
         <source src="${video.videoUrl}" type="video/mp4">
       </video>`;
   }
