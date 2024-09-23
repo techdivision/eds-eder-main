@@ -16,8 +16,9 @@ import { handleTranslate } from '../../scripts/i18n.js';
 
 /**
  * Read config by row name
- * @param rows
- * @param name
+ *
+ * @param {HTMLElement[]} rows
+ * @param {string} name
  */
 function getConfigRow(rows, name) {
   return rows.find((row) => row.children[0].textContent.toLowerCase() === name);
@@ -40,8 +41,9 @@ function getYouTubeVideoId(url) {
 
 /**
  * Add an embedded YouTube video to a target
- * @param video
- * @param target
+ *
+ * @param {Object} video
+ * @param {HTMLElement} target
  */
 function embedVideo(video, target) {
   // get youtube ID
