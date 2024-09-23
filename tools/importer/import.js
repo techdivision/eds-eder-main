@@ -25,7 +25,7 @@ import {
   handleIcons,
   handleIframes,
   handleAccordions,
-  handleGallerySlider,
+  handleGallerySliders,
   handleTextBoxes,
   handleFilterAndRows,
   handleImagesInText,
@@ -172,13 +172,13 @@ export const handleShopData = (main, document) => {
 
       openTimeRows.forEach((openTimeRow) => {
         const firstEntry = openTimeRow.querySelector('div.col-xs-3');
-        // make first entry bold
-        const boldFirstEntry = document.createElement('strong');
-        boldFirstEntry.append(firstEntry.innerText);
-
         const secondEntry = openTimeRow.querySelector('div.col-xs-9');
 
         if (firstEntry && secondEntry) {
+          // make first entry bold
+          const boldFirstEntry = document.createElement('strong');
+          boldFirstEntry.append(firstEntry.innerText);
+
           openTimeRow.innerHTML = `${boldFirstEntry.outerHTML} ${secondEntry.innerText}`;
         }
       });
@@ -381,6 +381,7 @@ export const handleContactBanner = (main, document) => {
         'RTK-Experten',
         'Daniel Strehle',
         'Klaus Mayer',
+        'Johann Pritzl',
       ];
 
       // check if name can be extracted from the text
@@ -722,7 +723,7 @@ export default {
     removeGenericContent(main);
 
     // handle image-slider before modifying image-urls in general
-    handleGallerySlider(main, document, baseUrl);
+    handleGallerySliders(main, document, baseUrl);
 
     // handle images for all other imports that follow
     handleImages(main);

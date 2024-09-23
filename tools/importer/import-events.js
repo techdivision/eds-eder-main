@@ -24,7 +24,7 @@ import {
   handleIcons,
   handleIframes,
   handleAccordions,
-  handleGallerySlider,
+  handleGallerySliders,
   handleContacts,
   handlePdfs,
 } from './import-util.js';
@@ -233,7 +233,7 @@ export default {
     handleTable(main, document);
 
     // handle image-slider before modifying image-urls in general
-    handleGallerySlider(main, document, baseUrl);
+    handleGallerySliders(main, document, baseUrl);
 
     handleTopImage(main, document);
     handleLinks(main, document, baseUrl);
