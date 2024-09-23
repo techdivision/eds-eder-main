@@ -62,4 +62,25 @@ function loadThirdPartyScript(script, attrs) {
     });
 }
 
-export default loadThirdPartyScript;
+/**
+ * Load third party script without partytown
+ *
+ * @param {String} url
+ * @returns {Promise}
+ */
+function loadThirdPartyScriptWithoutPartytown(url) {
+  // FIXME we use setTimeout here to enhance the LH score
+  return new Promise((resolve) => {
+    setTimeout(
+      () => {
+        resolve(betterLoadScript(url, { defer: '' }));
+      },
+      2000,
+    );
+  });
+}
+
+export {
+  loadThirdPartyScript,
+  loadThirdPartyScriptWithoutPartytown,
+};
