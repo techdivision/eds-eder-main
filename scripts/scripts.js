@@ -296,9 +296,9 @@ function updateMetaTitle(doc) {
       .replace(/\b\w/g, (char) => char.toUpperCase());
 
   // check if title ends with page name
-  const pageName = getMetadata('page-name');
-  if (!metaTitle.endsWith(pageName)) {
-    metaTitle = `${metaTitle} | ${pageName}`;
+  const tenantName = getMetadata('tenant-name');
+  if (!metaTitle.endsWith(tenantName)) {
+    metaTitle = `${metaTitle} | ${tenantName}`;
   }
 
   // update title
