@@ -377,6 +377,7 @@ export const handleContactBanner = (main, document) => {
       const namesToCheck = [
         'EDER LANDTECHNIK',
         'AGRATEC Landtechnik',
+        'AGRATEC LANDTECHNIKZENTRUM',
         'EDER Baumaschinen',
         'RTK-Experten',
         'Daniel Strehle',
