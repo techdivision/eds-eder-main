@@ -6,7 +6,7 @@ callSendRequestForAllSites() {
   # check if yq is installed
   if ! command -v yq &> /dev/null
   then
-      echo "yq could not be found, please install it first."
+      echo "yq could not be found, please install it first: brew install yq"
       exit 1
   fi
 
