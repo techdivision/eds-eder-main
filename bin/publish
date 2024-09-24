@@ -34,4 +34,5 @@ JSON_PAYLOAD=$(jq -n --argjson PATHS "$(printf '%s\n' "${PATHS[@]}" | jq -R . | 
   "delete": false
 }')
 
+echo "$JSON_PAYLOAD"
 curl -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" --url "$PUBLISH_URL"
