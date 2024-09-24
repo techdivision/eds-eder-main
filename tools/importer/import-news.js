@@ -53,7 +53,7 @@ const initAdditionalData = () => {
   const request = new XMLHttpRequest();
   request.open(
     'GET',
-    'https://main--eds-eder-main--techdivision.hlx.page/migration/news-metadata.json',
+    'https://main--eds-eder-main--techdivision.aem.page/migration/news-metadata.json',
     false,
   );
   request.overrideMimeType('text/json; UTF-8');

@@ -4,8 +4,8 @@ Your project's description...
 
 ## Environments
 
-- Preview: https://main--eds-eder-main--techdivision.hlx.page/
-- Live: https://main--eds-eder-main--techdivision.hlx.live/
+- Preview: https://main--eds-eder-main--techdivision.aem.page/
+- Live: https://main--eds-eder-main--techdivision.aem.live/
 
 ## Installation
 

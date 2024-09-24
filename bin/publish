@@ -14,7 +14,7 @@ else
 fi
 
 # fetch query index
-QUERY_INDEX="https://$BRANCH--$PROJECT--$REPO_OWNER.hlx.live/query-index.json"
+QUERY_INDEX="https://$BRANCH--$PROJECT--$REPO_OWNER.aem.live/query-index.json"
 TMP_QUERY_INDEX="/tmp/query-index.json"
 curl -s "$QUERY_INDEX" -o "$TMP_QUERY_INDEX"
 
