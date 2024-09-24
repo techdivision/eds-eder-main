@@ -26,13 +26,13 @@ if [ ${#PATHS[@]} -eq 0 ]; then
     exit 1
 fi
 
-# publish
-PUBLISH_URL="https://admin.hlx.page/live/$REPO_OWNER/$PROJECT/$BRANCH/*"
+# preview and publish
+PREVIEW_URL="https://admin.hlx.page/preview/$REPO_OWNER/$PROJECT/$BRANCH/*"
+PUBLISH_URL="https://admin.hlx.page/publish/$REPO_OWNER/$PROJECT/$BRANCH/*"
 JSON_PAYLOAD=$(jq -n --argjson PATHS "$(printf '%s\n' "${PATHS[@]}" | jq -R . | jq -s .)" '{
   "forceUpdate": true,
   "paths": $PATHS,
   "delete": false
 }')
-
-echo "$JSON_PAYLOAD"
-curl -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" --url "$PUBLISH_URL"
+curl -i -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" --url "$PREVIEW_URL"
+curl -i -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" --url "$PUBLISH_URL"
