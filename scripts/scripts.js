@@ -287,22 +287,31 @@ export function decorateMain(main) {
  * @param {HTMLElement|Element|Document} doc The container element
  */
 function updateMetaTitle(doc) {
+  // get title
+  let metaTitle = getMetadata('og:title')
+    || getMetadata('title')
+    || window.location.pathname.split('/')
+      .pop()
+      .replaceAll('-', ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  // check if title ends with page name
   const pageName = getMetadata('page-name');
-  const metaTitleTag = doc.querySelector('meta[property="og:title"]');
-  let metaTitle = metaTitleTag.content;
-
-  if (!getMetadata('title')) {
-    metaTitle = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
-    metaTitle.replaceAll('-', ' ');
+  if (!metaTitle.endsWith(pageName)) {
+    metaTitle = `${metaTitle} | ${pageName}`;
   }
 
-  if (metaTitle.endsWith(pageName)) {
-    return;
-  }
+  // update title
+  doc.title = metaTitle;
 
-  const newTitle = `${metaTitle} | ${pageName}`;
-  metaTitleTag.content = newTitle;
-  doc.title = newTitle;
+  // update meta title
+  let metaTitleTag = doc.querySelector('meta[property="og:title"]');
+  if (!metaTitleTag) {
+    metaTitleTag = doc.createElement('meta');
+    metaTitleTag.setAttribute('property', 'og:title');
+    document.querySelector('head').append(metaTitleTag);
+  }
+  metaTitleTag.content = metaTitle;
 }
 
 /**
