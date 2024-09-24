@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# configuration
+PROJECT="eds-eder-main"
+REPO_OWNER="techdivision"
+BRANCH="main"
+
+# fetch query index
+QUERY_INDEX="https://$BRANCH--$PROJECT--$REPO_OWNER.hlx.live/query-index.json"
+TMP_QUERY_INDEX="/tmp/query-index.json"
+curl -s "$QUERY_INDEX" -o "$TMP_QUERY_INDEX"
+
+# check if the JSON file was fetched successfully
+if [ ! -f "$TMP_QUERY_INDEX" ]; then
+    echo "Failed to fetch query index JSON data."
+    exit 1
+fi
+
+# extract paths from the JSON data and store them in an array
+PATHS=()
+while IFS= read -r line; do
+  PATHS+=("$line")
+done < <(jq -r '.data[].path' "$TMP_QUERY_INDEX")
+if [ ${#PATHS[@]} -eq 0 ]; then
+    echo "No paths found in query index."
+    exit 1
+fi
+
+# publish
+PUBLISH_URL="https://admin.hlx.page/live/$REPO_OWNER/$PROJECT/$BRANCH/*"
+JSON_PAYLOAD=$(jq -n --argjson PATHS "$(printf '%s\n' "${PATHS[@]}" | jq -R . | jq -s .)" '{
+  "forceUpdate": true,
+  "paths": $PATHS,
+  "delete": false
+}')
+
+curl -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" --url "$PUBLISH_URL"
