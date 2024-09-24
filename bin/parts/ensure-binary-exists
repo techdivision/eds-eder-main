@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ensureBinaryExists() {
+    if ! command -v "$1" &> /dev/null; then
+        echo -e "${RED}$1 could not be found, please install it first: ${CYAN}brew install $1${NC}"
+        exit 1
+    fi
+}

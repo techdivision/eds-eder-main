@@ -13,12 +13,17 @@ NC='\033[0m' # no color
 
 # add environment configuration
 if [ -f "$ROOT"/.env ]; then
-  source "$ROOT"/.env
+  source "$ROOT"/.env || exit
 else
   echo ".env file not found! Copy .env.dist to .env and configure accordingly."
   exit 1
 fi
 
 # include functions
-source "$PARTS"/call-admin-api
-source "$PARTS"/for-all-sites
+source "$PARTS"/ensure-binary-exists || exit
+source "$PARTS"/call-admin-api || exit
+source "$PARTS"/for-all-sites || exit
+
+# check if requirements are installed
+ensureBinaryExists "yq" || exit
+ensureBinaryExists "jq" || exit
