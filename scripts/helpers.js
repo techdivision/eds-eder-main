@@ -169,13 +169,24 @@ function getCurrentUrl() {
 }
 
 /**
+ * Get TLD
+ *
+ * @param {string} [url]
+ * @returns {string}
+ */
+function getTLD(url) {
+  return new URL(typeof (url) === 'undefined' ? getCurrentUrl() : url).hostname.split(/\./)
+    .slice(-2)
+    .join('.');
+}
+
+/**
  * Check if we are local
  *
  * @returns {boolean}
  */
 function isLocal() {
-  return getCurrentUrl()
-    .includes('localhost');
+  return getTLD() === 'localhost';
 }
 
 /**
@@ -184,9 +195,7 @@ function isLocal() {
  * @returns {boolean}
  */
 function isTest() {
-  return getCurrentUrl()
-    .includes('hlx.page') || getCurrentUrl()
-    .includes('aem.page');
+  return ['hlx.page', 'aem.page'].includes(getTLD());
 }
 
 /**
@@ -440,6 +449,7 @@ export {
   getUrlParam,
   setUrlParam,
   getCurrentUrl,
+  getTLD,
   isLocal,
   isTest,
   convertDate,

@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import { isLocal, isTest } from './helpers.js';
+import { getTLD, isLocal, isTest } from './helpers.js';
 import { defaultTenant } from './defaults.js';
 
 /**
@@ -68,10 +68,13 @@ function getTenantUrl(tenant, path) {
   let tenantBaseUrl = tenants[tenant];
 
   // set environment
-  if (tenantBaseUrl.includes('.aem.live')) {
-    if (isLocal() || isTest()) {
+  if (getTLD(tenantBaseUrl) === 'aem.live') {
+    if (isLocal()) {
       tenantBaseUrl = tenantBaseUrl
-        .replace('.aem.live', '.aem.page');
+        .replace('aem.live', 'aem.page');
+    } else if (isTest()) {
+      tenantBaseUrl = tenantBaseUrl
+        .replace('aem.live', getTLD());
     }
   }
 
