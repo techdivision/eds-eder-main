@@ -25,7 +25,13 @@ import {
   waitForLCP,
 } from './aem.js';
 import { getCurrentLanguage, tContent } from './i18n.js';
-import { addBodyClass, hasUrlParam, isLocal } from './helpers.js';
+import {
+  addBodyClass,
+  getCurrentUrl,
+  getTLD,
+  hasUrlParam,
+  isLocal,
+} from './helpers.js';
 import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
 
@@ -304,6 +310,13 @@ function updateMetaTitle(doc) {
  * @param {HTMLElement|Element|Document} doc The container element
  */
 async function loadEager(doc) {
+  // ensure correct domain
+  if (['hlx.page', 'hlx.live'].includes(getTLD())) {
+    window.location.href = getCurrentUrl()
+      .replace('hlx.page', 'aem.page')
+      .replace('hlx.live', 'aem.live');
+  }
+
   // head and body tags
   document.documentElement.lang = getCurrentLanguage();
   decorateTemplateAndTheme();
