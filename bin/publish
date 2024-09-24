@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # configuration
-PROJECT="eds-eder-main"
+PROJECT="eds-eder-gmbh"
 REPO_OWNER="techdivision"
 BRANCH="main"
+USE_LOCAL_FILE=false
+LOCAL_FILE_PATH="/tmp/query-index.json"
 
 # add environment configuration
 if [ -f .env ]; then
@@ -14,12 +16,13 @@ else
 fi
 
 # fetch query index
-QUERY_INDEX="https://$BRANCH--$PROJECT--$REPO_OWNER.aem.live/query-index.json"
-TMP_QUERY_INDEX="/tmp/query-index.json"
-curl -s "$QUERY_INDEX" -o "$TMP_QUERY_INDEX"
+if [ "$USE_LOCAL_FILE" = false ]; then
+  QUERY_INDEX="https://$BRANCH--$PROJECT--$REPO_OWNER.aem.page/query-index.json"
+  curl -s "$QUERY_INDEX" -o "$LOCAL_FILE_PATH"
+fi
 
 # check if the JSON file was fetched successfully
-if [ ! -f "$TMP_QUERY_INDEX" ]; then
+if [ ! -f "$LOCAL_FILE_PATH" ]; then
     echo "Failed to fetch query index JSON data."
     exit 1
 fi
@@ -28,7 +31,7 @@ fi
 PATHS=()
 while IFS= read -r line; do
   PATHS+=("$line")
-done < <(jq -r '.data[].path' "$TMP_QUERY_INDEX")
+done < <(jq -r '.data[].path' "$LOCAL_FILE_PATH")
 if [ ${#PATHS[@]} -eq 0 ]; then
     echo "No paths found in query index."
     exit 1
@@ -36,20 +39,20 @@ fi
 
 # preview and publish
 PREVIEW_URL="https://admin.hlx.page/preview/$REPO_OWNER/$PROJECT/$BRANCH/*"
-PUBLISH_URL="https://admin.hlx.page/publish/$REPO_OWNER/$PROJECT/$BRANCH/*"
+PUBLISH_URL="https://admin.hlx.page/live/$REPO_OWNER/$PROJECT/$BRANCH/*"
 JSON_PAYLOAD=$(jq -n --argjson PATHS "$(printf '%s\n' "${PATHS[@]}" | jq -R . | jq -s .)" '{
   "forceUpdate": true,
   "paths": $PATHS,
   "delete": false
 }')
 
-curl -i -X POST \
+curl -X POST \
   -H "Content-Type: application/json" \
   -H "x-auth-token: $TOKEN" \
   -d "$JSON_PAYLOAD"  \
   --url "$PREVIEW_URL"
 
-curl -i -X POST \
+curl -X POST \
   -H "Content-Type: application/json" \
   -H "x-auth-token: $TOKEN" \
   -d "$JSON_PAYLOAD"  \
