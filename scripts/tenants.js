@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import { getCurrentUrl, isLocal } from './helpers.js';
+import { isLocal, isTest } from './helpers.js';
 import { defaultTenant } from './defaults.js';
 
 /**
@@ -19,8 +19,16 @@ import { defaultTenant } from './defaults.js';
  */
 const tenants = {
   [defaultTenant]: 'https://main--eds-eder-gmbh--techdivision.hlx.live/',
-  'eder-landtechnik': 'https://main--eds-eder-landtechnik--techdivision.hlx.live/',
   'agratec-salching': 'https://main--eds-agratec-salching--techdivision.hlx.live/',
+  'eder-anhaenger': 'https://main--eds-eder-anhaenger--techdivision.hlx.live/',
+  'eder-baumaschinen': 'https://main--eds-eder-baumaschinen--techdivision.hlx.live/',
+  'eder-kommunal': 'https://main--eds-eder-kommunal--techdivision.hlx.live/',
+  'eder-landtechnik': 'https://main--eds-eder-landtechnik--techdivision.hlx.live/',
+  'eder-profi': 'https://main--eds-eder-profi--techdivision.hlx.live/',
+  'eder-stalltechnik': 'https://main--eds-eder-stalltechnik--techdivision.hlx.live/',
+  'eder-stapler': 'https://main--eds-eder-stapler--techdivision.hlx.live/',
+  feedstar: 'https://main--eds-feedstar--techdivision.hlx.live/',
+  lelycenterinbayern: 'https://main--eds-lelycenterinbayern--techdivision.hlx.live/',
 };
 
 /**
@@ -61,8 +69,7 @@ function getTenantUrl(tenant, path) {
 
   // set environment
   if (tenantBaseUrl.includes('.hlx.live')) {
-    if (getCurrentUrl().includes('.hlx.page')
-      || isLocal()) {
+    if (isLocal() || isTest()) {
       tenantBaseUrl = tenantBaseUrl.replace('.hlx.live', '.hlx.page');
     }
   }

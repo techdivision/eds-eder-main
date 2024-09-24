@@ -5,6 +5,14 @@ PROJECT="eds-eder-main"
 REPO_OWNER="techdivision"
 BRANCH="main"
 
+# add environment configuration
+if [ -f .env ]; then
+  source .env
+else
+  echo ".env file not found! Copy .env.dist to .env and configure accordingly."
+  exit 1
+fi
+
 # fetch query index
 QUERY_INDEX="https://$BRANCH--$PROJECT--$REPO_OWNER.hlx.live/query-index.json"
 TMP_QUERY_INDEX="/tmp/query-index.json"
@@ -34,5 +42,15 @@ JSON_PAYLOAD=$(jq -n --argjson PATHS "$(printf '%s\n' "${PATHS[@]}" | jq -R . | 
   "paths": $PATHS,
   "delete": false
 }')
-curl -i -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" --url "$PREVIEW_URL"
-curl -i -X POST -H "Content-Type: application/json" -d "$JSON_PAYLOAD" --url "$PUBLISH_URL"
+
+curl -i -X POST \
+  -H "Content-Type: application/json" \
+  -H "x-auth-token: $TOKEN" \
+  -d "$JSON_PAYLOAD"  \
+  --url "$PREVIEW_URL"
+
+curl -i -X POST \
+  -H "Content-Type: application/json" \
+  -H "x-auth-token: $TOKEN" \
+  -d "$JSON_PAYLOAD"  \
+  --url "$PUBLISH_URL"

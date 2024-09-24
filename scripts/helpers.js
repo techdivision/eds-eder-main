@@ -179,6 +179,17 @@ function isLocal() {
 }
 
 /**
+ * Check if we are on the test system
+ *
+ * @returns {boolean}
+ */
+function isTest() {
+  return getCurrentUrl()
+    .includes('hlx.page') || getCurrentUrl()
+    .includes('aem.page');
+}
+
+/**
  * Check if we have a specific URL Param
  *
  * @param {string} field
@@ -430,6 +441,7 @@ export {
   setUrlParam,
   getCurrentUrl,
   isLocal,
+  isTest,
   convertDate,
   getReadableDate,
   addBodyClass,
