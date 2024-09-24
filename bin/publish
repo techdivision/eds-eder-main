@@ -3,9 +3,9 @@
 # configuration
 PROJECT="eds-eder-gmbh"
 REPO_OWNER="techdivision"
-BRANCH="main"
-USE_LOCAL_FILE=false
-LOCAL_FILE_PATH="/tmp/query-index.json"
+BRANCH="main" # should stay main
+USE_LOCAL_FILE=false # set to true if you have placed a custom index.json to LOCAL_FILE_PATH and don't want to overwrite
+LOCAL_FILE_PATH="/tmp/query-index.json" # file to custom index.json OR file where the server's index will be downloaded to
 
 # add environment configuration
 if [ -f .env ]; then
