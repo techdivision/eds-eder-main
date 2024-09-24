@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# shellcheck disable=SC2034
+
+# define root path
+PARTS="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+ROOT="$(realpath "$PARTS/../..")"
+
+# define colors
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+NC='\033[0m' # no color
+
+# add environment configuration
+if [ -f "$ROOT"/.env ]; then
+  source "$ROOT"/.env
+else
+  echo ".env file not found! Copy .env.dist to .env and configure accordingly."
+  exit 1
+fi
+
+# include functions
+source "$PARTS"/call-admin-api
+source "$PARTS"/for-all-sites

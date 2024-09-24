@@ -1,19 +1,12 @@
 #!/bin/bash
+source "$(dirname "$0")/parts/bootstrap"
 
 # configuration
-PROJECT="eds-eder-gmbh"
+PROJECT="eds-eder-main"
 REPO_OWNER="techdivision"
 BRANCH="main" # should stay main
 USE_LOCAL_FILE=false # set to true if you have placed a custom index.json to LOCAL_FILE_PATH and don't want to overwrite
 LOCAL_FILE_PATH="/tmp/query-index.json" # file to custom index.json OR file where the server's index will be downloaded to
-
-# add environment configuration
-if [ -f .env ]; then
-  source .env
-else
-  echo ".env file not found! Copy .env.dist to .env and configure accordingly."
-  exit 1
-fi
 
 # fetch query index
 if [ "$USE_LOCAL_FILE" = false ]; then
@@ -46,14 +39,7 @@ JSON_PAYLOAD=$(jq -n --argjson PATHS "$(printf '%s\n' "${PATHS[@]}" | jq -R . | 
   "delete": false
 }')
 
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "x-auth-token: $TOKEN" \
-  -d "$JSON_PAYLOAD"  \
-  --url "$PREVIEW_URL"
+callAdminApi "$PREVIEW_URL" "$JSON_PAYLOAD"
+printf '%.0s\n' {1..3}
 
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "x-auth-token: $TOKEN" \
-  -d "$JSON_PAYLOAD"  \
-  --url "$PUBLISH_URL"
+callAdminApi "$PUBLISH_URL" "$JSON_PAYLOAD"

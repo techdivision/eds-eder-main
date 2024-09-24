@@ -1,6 +1,5 @@
 #!/bin/bash
-CYAN='\033[0;36m'
-NC='\033[0m' # no color
+source "$(dirname "$0")/parts/bootstrap"
 
 # get url from argument
 if [ -z "$1" ]; then
@@ -9,22 +8,21 @@ if [ -z "$1" ]; then
 fi
 
 # extract parts from the input URL
-input_url=$1
-pattern='https:\/\/([a-zA-Z0-9-]+)--([a-zA-Z0-9-]+)--([a-zA-Z0-9-]+)\.hlx\.([a-zA-Z]+)/(.*)'
+INPUT_URL=$1
+PATTERN='https:\/\/([a-zA-Z0-9-]+)--([a-zA-Z0-9-]+)--([a-zA-Z0-9-]+)\.hlx\.([a-zA-Z]+)/(.*)'
 
 # check if URL matches the pattern
-if [[ $input_url =~ $pattern ]]; then
-  site="${BASH_REMATCH[1]}"
-  branch="${BASH_REMATCH[2]}"
-  org="${BASH_REMATCH[3]}"
-  env="page" # "${BASH_REMATCH[4]}"
-  path="${BASH_REMATCH[5]}"
-  method="cache"
+if [[ $INPUT_URL =~ $PATTERN ]]; then
+  URL_SITE="${BASH_REMATCH[1]}"
+  URL_BRANCH="${BASH_REMATCH[2]}"
+  URL_ORG="${BASH_REMATCH[3]}"
+  URL_ENV="page" # "${BASH_REMATCH[4]}"
+  URL_PATH="${BASH_REMATCH[5]}"
+  URL_METHOD="cache"
 
   # call API
-  transformed_url="https://admin.hlx.${env}/${method}/${org}/${branch}/${site}/${path}"
-  echo -e "Calling API via ${CYAN}curl --request POST --url ${transformed_url}${NC}"
-  curl --request POST --url "$transformed_url"
+  TRANSFORMED_URL="https://admin.hlx.${URL_ENV}/${URL_METHOD}/${URL_ORG}/${URL_BRANCH}/${URL_SITE}/${URL_PATH}"
+  callAdminApi "$TRANSFORMED_URL"
 else
   echo "URL format is not recognized."
   exit 1

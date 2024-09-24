@@ -1,10 +1,10 @@
 #!/bin/bash
+source "$(dirname "$0")/parts/bootstrap"
 
-# send request
-send_request() {
+sendRequest() {
     local REPO_NAME=$1
-    curl --request POST --url "https://admin.hlx.page/code/techdivision/$REPO_NAME/main/*"
+    callAdminApi "https://admin.hlx.page/code/techdivision/$REPO_NAME/main/*"
     printf '%.0s\n' {1..3}
 }
 
-source "$(dirname "$0")/parts/for-all-sites"
+callSendRequestForAllSites;
