@@ -20,15 +20,15 @@ import { defaultTenant } from './defaults.js';
 const tenants = {
   [defaultTenant]: 'https://main--eds-eder-gmbh--techdivision.aem.live/',
   'agratec-salching': 'https://main--eds-agratec-salching--techdivision.aem.live/',
-  //'eder-anhaenger': 'https://main--eds-eder-anhaenger--techdivision.aem.live/',
-  //'eder-baumaschinen': 'https://main--eds-eder-baumaschinen--techdivision.aem.live/',
-  //'eder-kommunal': 'https://main--eds-eder-kommunal--techdivision.aem.live/',
+  // 'eder-anhaenger': 'https://main--eds-eder-anhaenger--techdivision.aem.live/',
+  // 'eder-baumaschinen': 'https://main--eds-eder-baumaschinen--techdivision.aem.live/',
+  // 'eder-kommunal': 'https://main--eds-eder-kommunal--techdivision.aem.live/',
   'eder-landtechnik': 'https://main--eds-eder-landtechnik--techdivision.aem.live/',
-  //'eder-profi': 'https://main--eds-eder-profi--techdivision.aem.live/',
-  //'eder-stalltechnik': 'https://main--eds-eder-stalltechnik--techdivision.aem.live/',
-  //'eder-stapler': 'https://main--eds-eder-stapler--techdivision.aem.live/',
+  // 'eder-profi': 'https://main--eds-eder-profi--techdivision.aem.live/',
+  // 'eder-stalltechnik': 'https://main--eds-eder-stalltechnik--techdivision.aem.live/',
+  // 'eder-stapler': 'https://main--eds-eder-stapler--techdivision.aem.live/',
   feedstar: 'https://main--eds-feedstar--techdivision.aem.live/',
-  //lelycenterinbayern: 'https://main--eds-lelycenterinbayern--techdivision.aem.live/',
+  // lelycenterinbayern: 'https://main--eds-lelycenterinbayern--techdivision.aem.live/',
 };
 
 /**
