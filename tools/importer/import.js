@@ -25,7 +25,7 @@ import {
   handleIcons,
   handleIframes,
   handleAccordions,
-  handleGallerySlider,
+  handleGallerySliders,
   handleTextBoxes,
   handleFilterAndRows,
   handleImagesInText,
@@ -172,13 +172,13 @@ export const handleShopData = (main, document) => {
 
       openTimeRows.forEach((openTimeRow) => {
         const firstEntry = openTimeRow.querySelector('div.col-xs-3');
-        // make first entry bold
-        const boldFirstEntry = document.createElement('strong');
-        boldFirstEntry.append(firstEntry.innerText);
-
         const secondEntry = openTimeRow.querySelector('div.col-xs-9');
 
         if (firstEntry && secondEntry) {
+          // make first entry bold
+          const boldFirstEntry = document.createElement('strong');
+          boldFirstEntry.append(firstEntry.innerText);
+
           openTimeRow.innerHTML = `${boldFirstEntry.outerHTML} ${secondEntry.innerText}`;
         }
       });
@@ -377,10 +377,12 @@ export const handleContactBanner = (main, document) => {
       const namesToCheck = [
         'EDER LANDTECHNIK',
         'AGRATEC Landtechnik',
+        'AGRATEC LANDTECHNIKZENTRUM',
         'EDER Baumaschinen',
         'RTK-Experten',
         'Daniel Strehle',
         'Klaus Mayer',
+        'Johann Pritzl',
       ];
 
       // check if name can be extracted from the text
@@ -677,6 +679,26 @@ export const handleVariants = (main, document) => {
   });
 };
 
+/**
+ * Add userlike-Block if there was any in Typo3.
+ * @param main
+ * @param document
+ */
+export const handleUserlike = (main, document, params) => {
+  const { userlikeKey } = params;
+
+  if (userlikeKey) {
+    const cells = [
+      ['Thirdparty'],
+      ['Userlike', userlikeKey],
+    ];
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+
+    main.append(resultTable);
+  }
+};
+
 export default {
   /**
    * preprocess-method: access data before it is removed by the EDS-logic later-on
@@ -693,6 +715,23 @@ export default {
       spanTag.className = className;
 
       italicTagIcon.replaceWith(spanTag);
+    });
+
+    // check for Userlike-script in Document
+    const scripts = document.querySelectorAll('script');
+
+    scripts.forEach((script) => {
+      const src = script.getAttribute('src');
+
+      if (src && src.startsWith('https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/')) {
+        // extract id from code
+        const urlSections = src.split('/');
+
+        const originalFilename = urlSections[urlSections.length - 1];
+
+        // set userlikeKey to params-array, so it can be accessed by the transform-method
+        params.userlikeKey = originalFilename.replace('.js', '');
+      }
     });
 
     // extract href-lang x-default value from HTML-head
@@ -722,7 +761,7 @@ export default {
     removeGenericContent(main);
 
     // handle image-slider before modifying image-urls in general
-    handleGallerySlider(main, document, baseUrl);
+    handleGallerySliders(main, document, baseUrl);
 
     // handle images for all other imports that follow
     handleImages(main);
@@ -763,6 +802,9 @@ export default {
 
     // handle side-by-side cases at last to check for converted EDS Markup
     handleSideBySide(main, document);
+
+    // add possible userlike-Block at the very last
+    handleUserlike(main, document, params);
 
     // get regular metadata as its originally done in WebImporter.rules.createMetadata
     const meta = WebImporter.Blocks.getMetadata(document);

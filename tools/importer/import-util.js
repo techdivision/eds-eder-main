@@ -25,6 +25,10 @@ export const determineEdsBaseUrl = (params) => {
     'https://www.feedstar.com': 'https://main--eds-feedstar--techdivision.aem.page',
     'https://www.eder-profi.de': 'https://main--eds-eder-profi--techdivision.aem.page',
     'https://www.eder-anhaenger.de': 'https://main--eds-eder-anhaenger--techdivision.aem.page',
+    'https://www.eder-stapler.de': 'https://main--eds-eder-stapler--techdivision.aem.page',
+    'https://lelycenterinbayern.de': 'https://main--eds-lelycenterinbayern--techdivision.aem.page',
+    'https://www.eder-kommunal.de': 'https://main--eds-eder-kommunal--techdivision.aem.page',
+    'https://www.eder-stalltechnik.de': 'https://main--eds-eder-stalltechnik--techdivision.aem.page',
   };
 
   const originalUrl = new URL(params.originalURL);
@@ -297,6 +301,15 @@ export const handleLinks = (main, document, baseUrl) => {
 
         // remove possible parameters from internal links
         href = href.replace(/\?.*/, '');
+
+        // remove trailing slash from internal links
+        href = href.replace(/\/$/, '');
+
+        // check for links to index.php that does not exist anymore in EDS
+        if (href.endsWith('index.php')) {
+          // remove the link, keep the content
+          link.outerHTML = link.innerHTML;
+        }
       }
 
       // replace http- by https-urls
@@ -691,7 +704,7 @@ export const handleIframes = (main, document) => {
         // handle height of iframe
         let height = iframe.getAttribute('height');
 
-        if (height) {
+        if (height && height.includes('px')) {
           height = height.replace('px', '');
 
           blockClasses.push(`height-${height}`);
@@ -700,7 +713,7 @@ export const handleIframes = (main, document) => {
         // handle width of iframe
         let width = iframe.getAttribute('width');
 
-        if (width) {
+        if (width && width.includes('px')) {
           width = width.replace('px', '');
           blockClasses.push(`width-${width}`);
         }
@@ -767,10 +780,10 @@ export const handleAccordions = (main, document) => {
   }
 };
 
-export const handleGallerySlider = (main, document, baseUrl) => {
-  const gallerySlider = main.querySelector('div.flexslider, div.element-t3sbs_gallery');
+export const handleGallerySliders = (main, document, baseUrl) => {
+  const gallerySliders = main.querySelectorAll('div.flexslider, div.element-t3sbs_gallery');
 
-  if (gallerySlider) {
+  gallerySliders.forEach((gallerySlider) => {
     const cells = [
       ['Slider (Autostart, Desktop-1-Mobile-1)'],
     ];
@@ -795,11 +808,11 @@ export const handleGallerySlider = (main, document, baseUrl) => {
     const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
     gallerySlider.replaceWith(resultTable);
-  }
+  });
 };
 
 export const handleTextBoxes = (main, document) => {
-  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865');
+  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865, div.custom-style-46916, div.custom-style-8085, div.custom-style-37473, div.custom-style-37503, div.custom-style-21924, div.custom-style-42828, div.custom-style-39502, div.custom-style-21926, div.custom-style-21927, div.custom-style-21928, div.custom-style-21929, div.custom-style-49293');
 
   if (redTextBoxes) {
     redTextBoxes.forEach((redTextBox) => {
