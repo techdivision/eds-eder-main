@@ -27,7 +27,7 @@ const tenants = {
   // 'eder-profi': 'https://main--eds-eder-profi--techdivision.aem.live/',
   // 'eder-stalltechnik': 'https://main--eds-eder-stalltechnik--techdivision.aem.live/',
   // 'eder-stapler': 'https://main--eds-eder-stapler--techdivision.aem.live/',
-  feedstar: 'https://main--eds-feedstar--techdivision.aem.live/',
+  // feedstar: 'https://main--eds-feedstar--techdivision.aem.live/',
   // lelycenterinbayern: 'https://main--eds-lelycenterinbayern--techdivision.aem.live/',
 };
 
