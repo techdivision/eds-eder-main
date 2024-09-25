@@ -124,6 +124,10 @@ function sampleRUM(checkpoint, data) {
       }
     }
     if (window.hlx.rum && window.hlx.rum.isSelected && checkpoint) {
+      // BEGIN CHANGE TechDivision
+      return;
+      // END CHANGE TechDivision
+      // eslint-disable-next-line no-unreachable
       window.hlx.rum.collector(checkpoint, data, timeShift());
     }
     document.dispatchEvent(new CustomEvent('rum', { detail: { checkpoint, data } }));
@@ -202,7 +206,7 @@ function readBlockConfig(block) {
         if (cols[1]) {
           const col = cols[1];
           const name = toClassName(cols[0].textContent);
-          let value = '';
+          let value;
           if (col.querySelector('a')) {
             const as = [...col.querySelectorAll('a')];
             if (as.length === 1) {
@@ -684,8 +688,8 @@ async function waitForFirstImage(section) {
 /**
  * Loads all blocks in a section.
  * @param {Element} section The section element
+ * @param {Function} [loadCallback]
  */
-
 async function loadSection(section, loadCallback) {
   const status = section.dataset.sectionStatus;
   if (!status || status === 'initialized') {
@@ -705,7 +709,6 @@ async function loadSection(section, loadCallback) {
  * Loads all sections.
  * @param {Element} element The parent element of sections to load
  */
-
 async function loadSections(element) {
   const sections = [...element.querySelectorAll('div.section')];
   for (let i = 0; i < sections.length; i += 1) {
