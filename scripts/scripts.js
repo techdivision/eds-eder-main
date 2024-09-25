@@ -61,6 +61,8 @@ function autolinkModals(element) {
   });
 }
 
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element
