@@ -317,6 +317,11 @@ export const handleLinks = (main, document, baseUrl) => {
         href = `https://${href.slice('7')}`;
       }
 
+      // remove trailing slash from internal links
+      if (href.includes(baseUrl)) {
+        href = href.replace(/\/$/, '');
+      }
+
       link.setAttribute('href', href);
 
       // remove link from collapse links as they cause an error in Sharepoint

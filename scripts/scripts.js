@@ -25,11 +25,20 @@ import {
   waitForLCP,
 } from './aem.js';
 import { getCurrentLanguage, tContent } from './i18n.js';
-import { addBodyClass, hasUrlParam, isLocal } from './helpers.js';
+import {
+  addBodyClass,
+  getCurrentUrl,
+  getTLD,
+  hasUrlParam,
+  isLocal,
+} from './helpers.js';
 import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
 
 const LCP_BLOCKS = [
+  'events-hero',
+  'hero',
+  'hero-video',
   'cards',
 ]; // add your LCP blocks to the list
 
@@ -274,15 +283,55 @@ export function decorateMain(main) {
 }
 
 /**
+ * Add the page name to the meta title.
+ * @param {HTMLElement|Element|Document} doc The container element
+ */
+function updateMetaTitle(doc) {
+  // get title
+  let metaTitle = getMetadata('og:title')
+    || getMetadata('title')
+    || window.location.pathname.split('/')
+      .pop()
+      .replaceAll('-', ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  // check if title ends with page name
+  const tenantName = getMetadata('tenant-name');
+  if (!metaTitle.endsWith(tenantName)) {
+    metaTitle = `${metaTitle} | ${tenantName}`;
+  }
+
+  // update title
+  doc.title = metaTitle;
+
+  // update meta title
+  let metaTitleTag = doc.querySelector('meta[property="og:title"]');
+  if (!metaTitleTag) {
+    metaTitleTag = doc.createElement('meta');
+    metaTitleTag.setAttribute('property', 'og:title');
+    document.querySelector('head').append(metaTitleTag);
+  }
+  metaTitleTag.content = metaTitle;
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {HTMLElement|Element|Document} doc The container element
  */
 async function loadEager(doc) {
+  // ensure correct domain
+  if (['hlx.page', 'hlx.live'].includes(getTLD())) {
+    window.location.href = getCurrentUrl()
+      .replace('hlx.page', 'aem.page')
+      .replace('hlx.live', 'aem.live');
+  }
+
   // head and body tags
   document.documentElement.lang = getCurrentLanguage();
   decorateTemplateAndTheme();
   renderCanonical();
   renderHrefLang();
+  updateMetaTitle(doc);
   document.addEventListener('changedLanguages', renderHrefLang);
 
   // clear cache

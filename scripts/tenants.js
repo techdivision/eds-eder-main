@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import { getCurrentUrl, isLocal } from './helpers.js';
+import { getTLD, isLocal, isTest } from './helpers.js';
 import { defaultTenant } from './defaults.js';
 
 /**
@@ -18,9 +18,17 @@ import { defaultTenant } from './defaults.js';
  * @type {Object}
  */
 const tenants = {
-  [defaultTenant]: 'https://main--eds-eder-gmbh--techdivision.hlx.live/',
-  'eder-landtechnik': 'https://main--eds-eder-landtechnik--techdivision.hlx.live/',
-  'agratec-salching': 'https://main--eds-agratec-salching--techdivision.hlx.live/',
+  [defaultTenant]: 'https://main--eds-eder-gmbh--techdivision.aem.live/',
+  'agratec-salching': 'https://main--eds-agratec-salching--techdivision.aem.live/',
+  // 'eder-anhaenger': 'https://main--eds-eder-anhaenger--techdivision.aem.live/',
+  // 'eder-baumaschinen': 'https://main--eds-eder-baumaschinen--techdivision.aem.live/',
+  // 'eder-kommunal': 'https://main--eds-eder-kommunal--techdivision.aem.live/',
+  'eder-landtechnik': 'https://main--eds-eder-landtechnik--techdivision.aem.live/',
+  // 'eder-profi': 'https://main--eds-eder-profi--techdivision.aem.live/',
+  // 'eder-stalltechnik': 'https://main--eds-eder-stalltechnik--techdivision.aem.live/',
+  // 'eder-stapler': 'https://main--eds-eder-stapler--techdivision.aem.live/',
+  feedstar: 'https://main--eds-feedstar--techdivision.aem.live/',
+  // lelycenterinbayern: 'https://main--eds-lelycenterinbayern--techdivision.aem.live/',
 };
 
 /**
@@ -60,10 +68,13 @@ function getTenantUrl(tenant, path) {
   let tenantBaseUrl = tenants[tenant];
 
   // set environment
-  if (tenantBaseUrl.includes('.hlx.live')) {
-    if (getCurrentUrl().includes('.hlx.page')
-      || isLocal()) {
-      tenantBaseUrl = tenantBaseUrl.replace('.hlx.live', '.hlx.page');
+  if (getTLD(tenantBaseUrl) === 'aem.live') {
+    if (isLocal()) {
+      tenantBaseUrl = tenantBaseUrl
+        .replace('aem.live', 'aem.page');
+    } else if (isTest()) {
+      tenantBaseUrl = tenantBaseUrl
+        .replace('aem.live', getTLD());
     }
   }
 

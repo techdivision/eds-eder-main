@@ -1,0 +1,45 @@
+#!/bin/bash
+source "$(dirname "$0")/parts/bootstrap"
+
+# configuration
+PROJECT="eds-eder-main"
+REPO_OWNER="techdivision"
+BRANCH="main" # should stay main
+USE_LOCAL_FILE=false # set to true if you have placed a custom index.json to LOCAL_FILE_PATH and don't want to overwrite
+LOCAL_FILE_PATH="/tmp/query-index.json" # file to custom index.json OR file where the server's index will be downloaded to
+
+# fetch query index
+if [ "$USE_LOCAL_FILE" = false ]; then
+  QUERY_INDEX="https://$BRANCH--$PROJECT--$REPO_OWNER.aem.page/query-index.json"
+  curl -s "$QUERY_INDEX" -o "$LOCAL_FILE_PATH"
+fi
+
+# check if the JSON file was fetched successfully
+if [ ! -f "$LOCAL_FILE_PATH" ]; then
+    echo "Failed to fetch query index JSON data."
+    exit 1
+fi
+
+# extract paths from the JSON data and store them in an array
+PATHS=()
+while IFS= read -r line; do
+  PATHS+=("$line")
+done < <(jq -r '.data[].path' "$LOCAL_FILE_PATH")
+if [ ${#PATHS[@]} -eq 0 ]; then
+    echo "No paths found in query index."
+    exit 1
+fi
+
+# preview and publish
+PREVIEW_URL="https://admin.hlx.page/preview/$REPO_OWNER/$PROJECT/$BRANCH/*"
+PUBLISH_URL="https://admin.hlx.page/live/$REPO_OWNER/$PROJECT/$BRANCH/*"
+JSON_PAYLOAD=$(jq -n --argjson PATHS "$(printf '%s\n' "${PATHS[@]}" | jq -R . | jq -s .)" '{
+  "forceUpdate": true,
+  "paths": $PATHS,
+  "delete": false
+}')
+
+callAdminApi "$PREVIEW_URL" "$JSON_PAYLOAD"
+printf '%.0s\n' {1..3}
+
+callAdminApi "$PUBLISH_URL" "$JSON_PAYLOAD"

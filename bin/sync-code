@@ -3,7 +3,7 @@ source "$(dirname "$0")/parts/bootstrap"
 
 sendRequest() {
     local REPO_NAME=$1
-    callAdminApi "https://admin.hlx.page/index/techdivision/$REPO_NAME/main/*"
+    callAdminApi "https://admin.hlx.page/code/techdivision/$REPO_NAME/main/*"
     printf '%.0s\n' {1..3}
 }
 

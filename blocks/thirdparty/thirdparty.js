@@ -13,7 +13,12 @@ import {
   loadThirdPartyScript,
   loadThirdPartyScriptWithoutPartytown,
 } from '../../scripts/load-thirdparty-script.js';
-import { getCurrentUrl, isLocal, transformRowsToData } from '../../scripts/helpers.js';
+import {
+  getCurrentUrl,
+  isLocal,
+  isTest,
+  transformRowsToData,
+} from '../../scripts/helpers.js';
 
 /**
  * Load usercentrics
@@ -90,12 +95,11 @@ function loadAdobeAnalytics(url) {
           return true;
         }
       } else if (adobeUrl.includes('staging')) {
-        if (currentUrl.includes('hlx.page')) {
+        if (isTest()) {
           loadScriptPromise = loadAdobeAnalytics(adobeUrl);
           return true;
         }
-      } else if (!isLocal()
-        && !currentUrl.includes('hlx.page')) {
+      } else if (!isLocal() && !isTest()) {
         loadScriptPromise = loadAdobeAnalytics(adobeUrl);
         return true;
       }

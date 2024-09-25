@@ -169,13 +169,33 @@ function getCurrentUrl() {
 }
 
 /**
+ * Get TLD
+ *
+ * @param {string} [url]
+ * @returns {string}
+ */
+function getTLD(url) {
+  return new URL(typeof (url) === 'undefined' ? getCurrentUrl() : url).hostname.split(/\./)
+    .slice(-2)
+    .join('.');
+}
+
+/**
  * Check if we are local
  *
  * @returns {boolean}
  */
 function isLocal() {
-  return getCurrentUrl()
-    .includes('localhost');
+  return getTLD() === 'localhost';
+}
+
+/**
+ * Check if we are on the test system
+ *
+ * @returns {boolean}
+ */
+function isTest() {
+  return ['hlx.page', 'aem.page'].includes(getTLD());
 }
 
 /**
@@ -394,6 +414,31 @@ function lcpImages(parent) {
     });
 }
 
+/**
+ * Execute functions based on a breakpoint
+ *
+ * @param {function} mobileExecutor
+ * @param {function} desktopExecutor
+ * @param {int} [breakpoint]
+ * @returns {MediaQueryList}
+ */
+function executeOnBreakpoint(mobileExecutor, desktopExecutor, breakpoint) {
+  // define basic executor
+  const executor = (event) => {
+    if (event.matches) {
+      desktopExecutor();
+    } else {
+      mobileExecutor();
+    }
+  };
+
+  // execute and add listener
+  const mql = window.matchMedia(`(width >= ${breakpoint || 900}px)`);
+  mql.addEventListener('change', executor);
+  executor(mql);
+  return mql;
+}
+
 // export
 export {
   isEmpty,
@@ -404,7 +449,9 @@ export {
   getUrlParam,
   setUrlParam,
   getCurrentUrl,
+  getTLD,
   isLocal,
+  isTest,
   convertDate,
   getReadableDate,
   addBodyClass,
@@ -417,4 +464,5 @@ export {
   getDayName,
   getTime,
   lcpImages,
+  executeOnBreakpoint,
 };

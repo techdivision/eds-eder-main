@@ -1,0 +1,26 @@
+#!/bin/bash
+
+callAdminApi() {
+    local URL=$1
+    local DATA=$2
+
+    echo -e "Calling Admin API: ${CYAN}${URL}${NC}"
+
+    RESPONSE=$(curl \
+      -X POST \
+      -s \
+      -w "%{http_code}" \
+      -H "${DATA:+Content-Type: application/json}" \
+      -H "${TOKEN:+x-auth-token: ${TOKEN}}" \
+      -d "${DATA:-''}" \
+      --url "$URL")
+
+    RESPONSE_CODE="${RESPONSE: -3}" # last 3 characters for the status code
+    RESPONSE_BODY="${RESPONSE%???}" # everything except the last 3 characters
+
+    if [[ "$RESPONSE_CODE" != 2* ]]; then
+        echo -e "${RED}Failed: Response code is $RESPONSE_CODE${NC}"
+        exit 1
+    fi
+    echo "$RESPONSE_BODY"
+}

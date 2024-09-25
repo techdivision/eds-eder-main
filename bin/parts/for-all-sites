@@ -1,0 +1,19 @@
+#!/bin/bash
+
+callSendRequestForAllSites() {
+  CONFIG_FILE="$ROOT/.multisite/config.yaml"
+
+  # read sites from the config file
+  SITES=$(yq e '.sites | keys' "$CONFIG_FILE" | sed 's/- //g')
+
+  # send request for default repository
+  sendRequest "eds-eder-main"
+
+  # iterate over each site and send request
+  for SITE in $SITES; do
+      ORIGIN=$(yq e ".sites.$SITE.origin" "$CONFIG_FILE")
+      REPO_NAME=$(basename "$ORIGIN" .git)
+
+      sendRequest "$REPO_NAME"
+  done
+}
