@@ -18,11 +18,11 @@ agratec-salching
 - Preview: https://main--eds-agratec-salching--techdivision.aem.page
 - Live: https://main--eds-agratec-salching--techdivision.aem.live
 
-feedstar:
+feedstar
 - Preview: https://main--eds-feedstar--techdivision.aem.page
 - Live: https://main--eds-feedstar--techdivision.aem.live
 
-eder-baumaschinen:
+eder-baumaschinen
 - Preview: https://main--eds-eder-baumaschinen--techdivision.aem.page
 - Live: https://main--eds-eder-baumaschinen--techdivision.aem.live
 
