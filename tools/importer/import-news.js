@@ -181,9 +181,8 @@ export default {
 
     // make sure additional data is present
     if (!news) {
-      /* eslint-disable no-console */
+      // eslint-disable-next-line no-console
       console.log(`No import can take place as no additional data was found for the news with path-segment '${pathSegment}'`);
-      /* eslint-enable no-console */
       return [];
     }
 

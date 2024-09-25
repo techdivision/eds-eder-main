@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-/* eslint-disable no-restricted-syntax,  no-await-in-loop */
+/* eslint-disable no-restricted-syntax, no-await-in-loop */
 
 async function* request(url, context) {
   const { chunkSize, sheetName, fetch } = context;

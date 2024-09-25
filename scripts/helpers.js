@@ -403,18 +403,6 @@ function getTime(input) {
 }
 
 /**
- * Set images to load as LCP
- *
- * @param {HTMLElement} parent
- */
-function lcpImages(parent) {
-  parent.querySelectorAll('img')
-    .forEach((img) => {
-      img.setAttribute('loading', 'eager');
-    });
-}
-
-/**
  * Execute functions based on a breakpoint
  *
  * @param {function} mobileExecutor
@@ -463,6 +451,5 @@ export {
   hasBodyClass,
   getDayName,
   getTime,
-  lcpImages,
   executeOnBreakpoint,
 };

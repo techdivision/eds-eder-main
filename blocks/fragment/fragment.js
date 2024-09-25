@@ -17,7 +17,7 @@
  */
 
 import { decorateMain } from '../../scripts/scripts.js';
-import { loadBlocks } from '../../scripts/aem.js';
+import { loadSections } from '../../scripts/aem.js';
 import { getCurrentUrl } from '../../scripts/helpers.js';
 import { cachedHtmlFetch } from '../../scripts/load-resource.js';
 
@@ -50,7 +50,7 @@ export async function loadFragment(path) {
       resetAttributeBase('source', 'srcset');
 
       decorateMain(main);
-      await loadBlocks(main);
+      await loadSections(main);
       return main;
     }
   }

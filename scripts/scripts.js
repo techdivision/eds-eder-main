@@ -10,19 +10,21 @@
  */
 
 import {
+  buildBlock,
   decorateBlocks,
   decorateButtons,
   decorateIcons,
   decorateSections,
   decorateTemplateAndTheme,
   getMetadata,
-  loadBlocks,
   loadCSS,
   loadFooter,
   loadHeader,
+  loadSection,
+  loadSections,
   readBlockConfig,
   sampleRUM,
-  waitForLCP,
+  waitForFirstImage,
 } from './aem.js';
 import { getCurrentLanguage, tContent } from './i18n.js';
 import {
@@ -57,6 +59,23 @@ function autolinkModals(element) {
       openModal(origin.href);
     }
   });
+}
+
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
+/**
+ * Builds hero block and prepends to main in a new section.
+ * @param {Element} main The container element
+ */
+function buildHeroBlock(main) {
+  const h1 = main.querySelector('h1');
+  const picture = main.querySelector('picture');
+  // eslint-disable-next-line no-bitwise
+  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
+    const section = document.createElement('div');
+    section.append(buildBlock('hero', { elems: [picture, h1] }));
+    main.prepend(section);
+  }
 }
 
 /**
@@ -232,6 +251,11 @@ function decorateEvents(main) {
   addOverviewLink(main, 'More events', '.sidebar', true);
 }
 
+/**
+ * Decorate linked pictures
+ *
+ * @param {HTMLElement} block
+ */
 export function decorateLinkedPictures(block) {
   block.querySelectorAll('picture')
     .forEach((picture) => {
@@ -283,7 +307,8 @@ export function decorateMain(main) {
 }
 
 /**
- * Add the page name to the meta title.
+ * Add the page name to the meta title
+ *
  * @param {HTMLElement|Element|Document} doc The container element
  */
 function updateMetaTitle(doc) {
@@ -309,7 +334,8 @@ function updateMetaTitle(doc) {
   if (!metaTitleTag) {
     metaTitleTag = doc.createElement('meta');
     metaTitleTag.setAttribute('property', 'og:title');
-    document.querySelector('head').append(metaTitleTag);
+    document.querySelector('head')
+      .append(metaTitleTag);
   }
   metaTitleTag.content = metaTitle;
 }
@@ -347,8 +373,20 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    await waitForLCP(LCP_BLOCKS);
+
+    // set LCP blocks' images to eager instead of lazy load
+    document.querySelectorAll(
+      LCP_BLOCKS.map((block) => `.block.${block} img`)
+        .join(', '),
+    )
+      .forEach((img) => {
+        img.setAttribute('loading', 'eager');
+      });
+
+    await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
+
+  sampleRUM.enhance();
 
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
@@ -369,7 +407,7 @@ async function loadLazy(doc) {
   autolinkModals(doc);
 
   const main = doc.querySelector('main');
-  await loadBlocks(main);
+  await loadSections(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
@@ -384,10 +422,6 @@ async function loadLazy(doc) {
     .then();
   loadFonts()
     .then();
-
-  sampleRUM('lazy');
-  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
-  sampleRUM.observe(main.querySelectorAll('picture > img'));
 }
 
 /**

@@ -113,9 +113,8 @@ export const shouldBeImported = (entry, originalUrl) => {
 
   // do not import if the section of the news does not match the section of the import
   if (entry.section !== targetSection && !targetSection.includes(entry.section)) {
-    /* eslint-disable no-console */
+    // eslint-disable-next-line no-console
     console.log(`This entry will not be imported, as its section '${entry.section}' does not match the section '${targetSection}' of the current import`);
-    /* eslint-enable no-console */
     return false;
   }
 

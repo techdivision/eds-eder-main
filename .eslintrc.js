@@ -25,12 +25,9 @@ module.exports = {
     'license-header',
   ],
   rules: {
-    // allow reassigning param
-    'no-param-reassign': [2, { props: false }],
-    'linebreak-style': ['error', 'unix'],
-    'import/extensions': ['error', {
-      js: 'always',
-    }],
+    'import/extensions': ['error', { js: 'always' }], // require js file extensions in imports
+    'linebreak-style': ['error', 'unix'], // enforce unix linebreaks
+    'no-param-reassign': [2, { props: false }], // allow modifying properties of param
     'license-header/header': ['error', './dev/license-header.js'],
   },
 };
