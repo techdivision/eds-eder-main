@@ -10,7 +10,7 @@
 - `import-header.js`: Import of header/navigation
 - `import-news.js`: Import of news-entries
 - `import-events.js`: Import of event-entries
-- `import-contacts.js`: Import of contacts from pages like https://www.eder-landtechnik.de/standort-ubersicht/tuntenhausen/?detail=1&no_cache=1
+- `import-contacts.js`: Import of contacts (= employees)
 
 ---
 ## IMPORTANT INFORMATION
@@ -25,12 +25,19 @@ In order to optimize the url-structure of the websites the trailing slash from T
 
 ---
 
+# General migration process
+- Each domain in Typo3 provides an index-sitemap at /sitemap.xml (e.g. https://www.eder-gmbh.de/sitemap.xml)
+- That index-sitemap contains a list of (sub-)sitemaps that are separated by their content: pages, news, events (the number of sitemaps depends on the available content of the domain)
+- The content of the sub-sitemaps is transferred to a Google Spreadsheet to remove the trailing slashed from original urls, and allows creation for redirects between old and new urls: https://docs.google.com/spreadsheets/d/1Zefr-Y_OJ2Nimv2-1Orgk7kNHA5Vf5NZ-ARNIIZtX3E/edit?gid=1715714500#gid=1715714500
+- The import web-ui opens up by executing `aem up` locally in the command-line within the `eder-eds-main` folder
+- By using either the `Import - Workbench` or `Import - Bulk` a docx-file (and folder-structure) is generated in the local file-system that must be than transferred to Sharepoint
+- Do not forget to preview and publish the .docx
 
-# Migration of additional data
+# Migration of news/events: additional data
 "additional data" = data that is not contained in the HTML-markup of the page and thus must be added from an additional data source
 
 ## Workflow:
-- A dump of the Typo3 database is every night, see Bitwarden for credentials
+- A dump of the Typo3 database is created every night, see Bitwarden for credentials
 - The additional data for both news and events is extracted by
   - importing the Typo3 db-dump into a local database
   - executing the below-mentioned SQL-queries
@@ -38,6 +45,19 @@ In order to optimize the url-structure of the websites the trailing slash from T
     - News: https://edergmbh3.sharepoint.com/:x:/r/sites/MarketingEDSWebseiten/_layouts/15/Doc.aspx?sourcedoc=%7B62BE7191-6841-49B1-B203-660806DDE6D0%7D&file=news-metadata.xlsx&action=default&mobileredirect=true
     - Events: https://edergmbh3.sharepoint.com/:x:/r/sites/MarketingEDSWebseiten/_layouts/15/Doc.aspx?sourcedoc=%7BC1B2A0B6-6251-402D-B95C-1EA058E2AED0%7D&file=events-metadata.xlsx&action=default&mobileredirect=true
 - Do not forget to publish each of those sheets after updating their content
+
+# Migration of Locations/Contacts
+- In Typo3 two variations of location/shop-pages exist:
+   - the ones contained in the sitemap.xml, e.g. https://www.eder-landtechnik.de/standort-ubersicht/tuntenhausen/ that do not contain any employee-information, and should **not** be used for the migration
+   - the ones used on the website, e.g. https://www.eder-landtechnik.de/standort-ubersicht/tuntenhausen/?detail=1&no_cache=1&cHash=e6e59576d1d577131451ac075396abfc that contain the employee-information those are the ones **to be used** for the migration
+- The location-pages must be migrated "twice"
+   - using `import.js` in order to import the general data of the location and the assignment of employees
+   - using `import-contacts.js` in order to import the data about each individual employee - a file for each employee is generated at `contacts/{firstname}-{lastname}.docx`
+
+# Migration of Menu/nav
+- Make sure to use either
+   - the homepage itself - for all domains that are only available in one language, e.g. `https://www.eder-landtechnik.de` which generated a `nav.docx`
+   - the homepage of the desired language, e.g. https://www.feedstar.com/en to allow the generation of an `en/nav.docx` which contains the translated menu-data for the english part of the website
 
 ## Collection of scripts
 
@@ -70,6 +90,7 @@ WHERE news_tbl.uid = category_assignment_tbl.uid_foreign
 AND category_assignment_tbl.tablenames = 'tx_news_domain_model_news'
 AND category_tbl.uid = category_assignment_tbl.uid_local
 AND category_tbl.parent IN (8563, 8960)
+AND path_segment NOT LIKE '%m-w%' # avoid jobs, and thus reaching the limit of entries in EDS
 GROUP BY news_tbl.uid
 ORDER BY news_tbl.tstamp DESC;
 
