@@ -355,10 +355,12 @@ async function loadEager(doc) {
   }
 
   // scroll to anchor
-  setTimeout(() => document.querySelector(
-    decodeURIComponent(window.location.hash),
-  )
-    .scrollIntoView(), 300);
+  if (window.location.hash) {
+    setTimeout(() => document.querySelector(
+      decodeURIComponent(window.location.hash),
+    )
+      ?.scrollIntoView(), 300);
+  }
 
   // head and body tags
   document.documentElement.lang = getCurrentLanguage();
