@@ -12,6 +12,10 @@
 .text-box {
   padding: var(--spacing-half) var(--spacing-simple);
   color: var(--color-white);
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .text-box.red a,

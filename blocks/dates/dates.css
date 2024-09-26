@@ -14,30 +14,35 @@
   align-items: center;
   justify-content: space-around;
   background-color: var(--color-gray-light);
-}
+  padding: var(--spacing-half) 0;
 
-.dates-container .dates.block > div {
-  position: relative;
-  padding-left: var(--spacing-double);
-}
+  p {
+    margin: 0;
+  }
 
-.dates-container .dates.block > div::before {
-  content: url('../../icons/arrow-right.svg');
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 30px;
-  transform: translateY(-50%);
-}
+  & > div {
+    position: relative;
+    padding-left: var(--spacing-double);
 
-.dates-container .dates.block > div:first-child::before {
-  content: url('../../icons/calendar.svg');
-}
+    &::before {
+      content: url('../../icons/arrow-right.svg');
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 30px;
+      transform: translateY(-50%);
+    }
 
-.dates-container .dates.block > div .date {
-  color: var(--link-color);
-  font-size: var(--heading-font-size-m);
-  line-height: var(--heading-line-height-m);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+    &:first-child::before {
+      content: url('../../icons/calendar.svg');
+    }
+
+    .date {
+      color: var(--link-color);
+      font-size: var(--heading-font-size-m);
+      line-height: var(--heading-line-height-m);
+      font-weight: var(--font-weight-bold);
+      text-transform: uppercase;
+    }
+  }
 }
