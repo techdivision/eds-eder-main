@@ -355,10 +355,10 @@ async function loadEager(doc) {
   }
 
   // scroll to anchor
-  document.querySelector(
+  setTimeout(() => document.querySelector(
     decodeURIComponent(window.location.hash),
   )
-    .scrollIntoView();
+    .scrollIntoView(), 300);
 
   // head and body tags
   document.documentElement.lang = getCurrentLanguage();
