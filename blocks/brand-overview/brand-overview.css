@@ -114,7 +114,7 @@ main .section.brand-overview-container {
       /* button wrapper */
 
       .button-wrapper {
-        gap: var(--spacing-simple);
+        gap: var(--spacing-half);
 
         @media (width >= 1200px) {
           display: flex;

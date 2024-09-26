@@ -224,7 +224,9 @@ function buildBreadcrumbs(breadcrumbsElement) {
   const ol = document.createElement('ol');
   ol.append(...crumbs.map((item) => {
     const li = document.createElement('li');
-    if (item['aria-current']) li.setAttribute('aria-current', item['aria-current']);
+    if (item['aria-current']) {
+      li.setAttribute('aria-current', item['aria-current']);
+    }
     if (item.url) {
       const a = document.createElement('a');
       a.href = item.url;

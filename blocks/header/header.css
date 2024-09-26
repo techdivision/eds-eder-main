@@ -249,7 +249,6 @@ header nav .nav-sections {
   display: none;
   visibility: hidden;
   grid-area: sections;
-  padding: 0 var(--spacing-simple);
 }
 
 header nav .nav-sections ul {
@@ -269,8 +268,9 @@ header nav .nav-sections[aria-expanded='true'] {
 }
 
 header nav .nav-sections .default-content-wrapper > ul {
-  max-height: calc(100vh - (2 * var(--nav-height)));
+  max-height: calc(100vh - (1 * var(--nav-height)));
   overflow-y: auto;
+  padding: 0 var(--spacing-simple);
 }
 
 header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul > li {
@@ -282,10 +282,15 @@ header nav .mobile-menu > li {
   padding-top: var(--spacing-half);
 }
 
+
+header nav .mobile-menu li > span {
+  padding-right: var(--spacing-half);
+  cursor: pointer;
+}
+
 header nav .mobile-menu > li > span {
   font-weight: var(--font-weight-bold);
   position: relative;
-  padding-right: var(--spacing-half);
 }
 
 header nav .mobile-menu > li > span::after {
@@ -301,6 +306,11 @@ header nav .mobile-menu > li > span::after {
   border-style: solid;
   border-color: currentcolor;
   border-width: 2px 2px 0 0;
+}
+
+header nav .mobile-menu > li ul {
+  margin-top: 5px;
+  padding-left: var(--spacing-half);
 }
 
 header nav .mobile-menu > li > ul {
@@ -512,52 +522,45 @@ header nav .mobile-menu li.is-visible > ul {
 
 /* breadcrumbs */
 .breadcrumbs {
-  width: 100%;
   max-width: var(--page-width);
-  overflow: hidden;
   margin: 0 auto;
   font-size: var(--body-font-size-s);
-  background: none;
+  line-height: var(--body-line-height-s);
 
-  @media (width >= 900px) {
-    padding: 0 var(--spacing-simple);
+  ol {
+    display: flex;
+    flex-flow: wrap;
+    list-style: none;
+    padding: 0;
+    gap: 1ch;
+
+    li {
+      padding-inline-start: 0;
+      opacity: 0.7;
+
+      &:not(:last-child)::after {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        transform: rotate(45deg);
+        border-radius: 0 1px 0 0;
+        border-style: solid;
+        border-color: currentcolor;
+        border-width: 2px 2px 0 0;
+      }
+
+      &:last-of-type {
+        opacity: 1;
+      }
+
+      a:any-link,
+      span {
+        color: var(--text-color);
+        margin-right: 4px;
+      }
+    }
   }
-}
-
-.breadcrumbs ol {
-  display: flex;
-  flex-flow: wrap;
-  list-style: none;
-  padding: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  gap: 1ch;
-}
-
-.breadcrumbs ol li {
-  padding-inline-start: 0;
-  opacity: 0.7;
-
-  a:any-link, span {
-    color: var(--text-color);
-    margin-right: 4px;
-  }
-}
-
-.breadcrumbs ol li:not(:last-child)::after {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  transform: rotate(45deg);
-  border-radius: 0 1px 0 0;
-  border-style: solid;
-  border-color: currentcolor;
-  border-width: 2px 2px 0 0;
-}
-
-.breadcrumbs ol li:last-of-type {
-  opacity: 1;
 }
 
 /* search */
@@ -567,8 +570,8 @@ header nav .mobile-menu li.is-visible > ul {
   @media (width >= 900px) {
     display: block;
   }
-}
 
-.header .search-bar-container .block {
-  margin-bottom: 0;
+  .block {
+    margin-bottom: 0;
+  }
 }

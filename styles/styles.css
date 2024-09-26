@@ -230,9 +230,7 @@ button {
 }
 
 a.button:hover,
-a.button:focus,
-button:hover,
-button:focus {
+button:hover {
   cursor: pointer;
   background-color: var(--button-background-hover);
   color: var(--button-color-hover);
@@ -372,6 +370,7 @@ main .hero {
         grid-column: 2;
         grid-row: 1 / span 10000;
         border-left: 1px dashed var(--color-gray-light);
+        padding-top: var(--spacing-simple);
       }
 
       /* section over both cells */
@@ -415,13 +414,9 @@ header .nav-logo picture + br + a {
 main .section-breadcrumbs {
   padding-top: var(--spacing-half);
   padding-bottom: var(--spacing-half);
-}
 
-.breadcrumbs {
-  height: var(--body-line-height-s);
-
-  @media (width >= 900px) {
-    position: absolute;
+  .breadcrumbs {
+    height: var(--body-line-height-s);
   }
 }
 
@@ -548,19 +543,29 @@ a.has-chevron {
   }
 
   /* sections with inline images */
-  .section.images-inline-right .default-content-wrapper,
-  .section.images-inline-left .default-content-wrapper {
-    clear: both;
+  .section.images-inline-left,
+  .section.images-inline-right {
+    .default-content-wrapper {
+      overflow: hidden;
+    }
   }
 
-  .section.images-inline-right .default-content-wrapper p:first-child {
-    float: right;
-    margin: 0 0 0 var(--spacing-half);
+  .section.images-inline-left {
+    .default-content-wrapper {
+      p:first-child {
+        float: left;
+        margin: 0 var(--spacing-half) 0 0;
+      }
+    }
   }
 
-  .section.images-inline-left .default-content-wrapper p:first-child {
-    float: left;
-    margin: 0 var(--spacing-half) 0 0;
+  .section.images-inline-right {
+    .default-content-wrapper {
+      p:first-child {
+        float: right;
+        margin: 0 0 0 var(--spacing-half);
+      }
+    }
   }
 
   .section.location {

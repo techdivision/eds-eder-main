@@ -102,7 +102,15 @@ function buildSidebarAndHero(main) {
 
   // get both the first picture and the first headline
   const picture = main.querySelector('picture');
-  const headline = main.querySelector('h1');
+  let headline = main.querySelector('h1');
+
+  /* workaround for not existing h1 */
+  if (!headline && picture) {
+    const img = picture.querySelector('img');
+    if (img?.width > img?.height) {
+      headline = main.querySelector('h2');
+    }
+  }
 
   /*
   * check if both an image and a headline are present,
@@ -322,13 +330,15 @@ function updateMetaTitle(doc) {
       .replace(/\b\w/g, (char) => char.toUpperCase());
 
   // check if title ends with page name
-  const tenantName = getMetadata('tenant-name');
+  const tenantName = getMetadata('tenant_name');
   if (!metaTitle.endsWith(tenantName)) {
     metaTitle = `${metaTitle} | ${tenantName}`;
   }
 
   // update title
-  doc.title = metaTitle;
+  if (doc.title !== metaTitle) {
+    doc.title = metaTitle;
+  }
 
   // update meta title
   let metaTitleTag = doc.querySelector('meta[property="og:title"]');

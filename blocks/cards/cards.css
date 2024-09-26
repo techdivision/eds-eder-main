@@ -49,6 +49,10 @@
   line-height: var(--body-line-height-m);
   color: var(--color-white);
   background-color: var(--color-red);
+
+  &::after {
+    bottom: 0.5em;
+  }
 }
 
 .cards .cards-card-body {
