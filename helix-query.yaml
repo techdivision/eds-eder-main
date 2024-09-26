@@ -30,6 +30,14 @@ indices:
   # search
   search:
     target: /query-index-search.xlsx
+    exclude:
+      - /brand-nav
+      - /nav
+      - /footer
+      - /contacts/**
+      - /drafts/**
+      - /tools/**
+      - /suche
     properties:
       title:
         select: head > meta[property="og:title"]
