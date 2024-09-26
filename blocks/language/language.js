@@ -71,6 +71,7 @@ export default async function decorate(block) {
 
   const currentLanguageText = document.createElement('p');
   currentLanguageText.innerHTML = possibleLanguages[currentLanguage].label;
+  currentLanguageText.classList.add('current-language-text');
   block.append(currentLanguageText);
 
   const languageSelectorList = document.createElement('ul');
