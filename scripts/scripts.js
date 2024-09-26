@@ -62,6 +62,7 @@ function autolinkModals(element) {
 }
 
 /* eslint-disable no-unused-vars */
+
 // noinspection JSUnusedLocalSymbols
 /**
  * Builds hero block and prepends to main in a new section.
@@ -350,7 +351,14 @@ async function loadEager(doc) {
     window.location.href = getCurrentUrl()
       .replace('hlx.page', 'aem.page')
       .replace('hlx.live', 'aem.live');
+    return;
   }
+
+  // scroll to anchor
+  document.querySelector(
+    decodeURIComponent(window.location.hash),
+  )
+    .scrollIntoView();
 
   // head and body tags
   document.documentElement.lang = getCurrentLanguage();
