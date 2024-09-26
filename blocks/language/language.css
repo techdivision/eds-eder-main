@@ -12,11 +12,30 @@
 .language {
   cursor: pointer;
   position: relative;
+  padding-right: 64px;
+
+  .current-language-text {
+    font-weight: var(--font-weight-bold);
+  }
 
   img {
-    width: 32px;
-    height: 20px;
+    width: 16px;
+    height: 10px;
     padding-right: 5px;
+    padding-left: 20px;
+  }
+
+  p::after {
+    content: '';
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%) rotate(135deg);
+    width: 9px;
+    height: 9px;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    transition: transform 0.2s;
+    margin-left: 12px;
   }
 
   p {
@@ -26,17 +45,29 @@
 
   .language-list {
     display: none;
-    background-color: var(--background-color);
+    background-color: var(--color-gray-dark);
     margin: 0;
-    padding: 5px 20px 5px 10px;
+    padding: 20px 20px 5px 0;
     position: absolute;
+    width: 200px;
 
     li {
       list-style-type: none;
+      padding-bottom: 6px;
+
+      span {
+        margin-left: var(--spacing-half);
+      }
     }
   }
 
-  &:hover .language-list {
-    display: block;
+  &:hover {
+    .language-list {
+      display: block;
+    }
+
+    p::after {
+      transform: translateY(-20%) rotate(314deg);
+    }
   }
 }
