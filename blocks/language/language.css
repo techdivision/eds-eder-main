@@ -71,3 +71,43 @@
     }
   }
 }
+
+.language.mobile {
+  display: block;
+  padding-left: 45px;
+  margin-bottom: 0;
+
+  img {
+    padding-left: 0;
+  }
+
+  &:hover {
+    p::after {
+      transform: translateY(-50%) rotate(135deg);
+      top: 10px;
+    }
+
+    .language-list {
+      display: none;
+    }
+  }
+
+  .language-list {
+    position: unset;
+  }
+
+  &.show {
+    .language-list {
+      display: block;
+    }
+    p::after {
+      transform: translateY(-20%) rotate(314deg);
+    }
+  }
+}
+
+@media (width >= 900px) {
+  .language.mobile {
+    display: none;
+  }
+}
