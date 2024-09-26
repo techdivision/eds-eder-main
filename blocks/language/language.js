@@ -59,6 +59,17 @@ function addLanguageItems(languageSelectorList, possibleLanguagesList) {
     });
 }
 
+/**
+ * @param{HTMLElement} block
+ */
+function toggleLanguageListMobile(block) {
+  if (block.classList.contains('show')) {
+    block.classList.remove('show');
+  } else {
+    block.classList.add('show');
+  }
+}
+
 export default async function decorate(block) {
   const possibleLanguages = getLanguageData(block);
   block.innerHTML = '';
@@ -83,5 +94,10 @@ export default async function decorate(block) {
     addLanguageItems(languageSelectorList, possibleLanguages);
   });
   setAvailableLanguages(Object.keys(possibleLanguages));
+
+  if (block.classList.contains('mobile')) {
+    block.addEventListener('click', () => toggleLanguageListMobile(block));
+  }
+
   return block;
 }
