@@ -107,7 +107,7 @@ function buildSidebarAndHero(main) {
   /* workaround for not existing h1 */
   if (!headline && picture) {
     const img = picture.querySelector('img');
-    if (img?.width > 2 * img?.height) {
+    if (parseInt(img?.width, 10) > 3 * parseInt(img?.height, 10)) {
       headline = main.querySelector('h2');
     }
   }
