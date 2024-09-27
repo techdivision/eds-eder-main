@@ -195,7 +195,7 @@ indices:
       h1:
         select: h1:first-of-type
         value: |
-          attribute(el, 'content')
+          textContent(el)
       meta-title:
         select: head > meta[property="og:title"]
         value: |
