@@ -188,3 +188,26 @@ indices:
         select: none
         value: |
           parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+  # content-report: only for support of content-administration
+  content-report:
+    target: /content-report.xlsx
+    properties:
+      h1:
+        select: h1
+        value: |
+          attribute(el, 'content')
+      meta-title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      meta-description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
+    exclude:
+      - /brand-nav
+      - /nav
+      - /footer
+      - /contacts/**
+      - /drafts/**
+      - /tools/**
