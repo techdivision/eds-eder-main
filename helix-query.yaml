@@ -193,7 +193,7 @@ indices:
     target: /content-report.xlsx
     properties:
       h1:
-        select: h1
+        select: h1:first-of-type
         value: |
           attribute(el, 'content')
       meta-title:
