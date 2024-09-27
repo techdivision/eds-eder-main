@@ -19,17 +19,17 @@
   max-width: 100%;
   border-collapse: collapse;
   font-size: var(--body-font-size-xs);
-}
 
-@media (width >= 600px) {
-  .table table {
+  @media (width >= 600px) {
     font-size: var(--body-font-size-s);
   }
-}
 
-@media (width >= 900px) {
-  .table table {
+  @media (width >= 900px) {
     font-size: var(--body-font-size-m);
+  }
+
+  p:last-of-type {
+    margin-bottom: 0;
   }
 }
 
