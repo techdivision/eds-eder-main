@@ -3,6 +3,8 @@ on: [ push, workflow_dispatch ]
 
 jobs:
   build:
+    # because this repo is synced to other repositories, we need to specify the repository where we explicitly want this action to run
+    if: github.event.repository.name == 'eds-eder-main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
