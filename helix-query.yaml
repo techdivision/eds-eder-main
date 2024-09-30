@@ -77,10 +77,8 @@ indices:
       - /events/**/**
       - /newstermine/veranstaltungen/detail/**
       - /newstermine/veranstaltungen/detail/**/**
-      - /aktuelles/agratec-aktuell/termine/**
       - /aktuelles/agratec-aktuell/termine/detail/**
       - /aktuelles/agratec-aktuell/termine/detail/**/**
-      - /aktuelles/landtechnik-aktuell/termine/**
       - /aktuelles/landtechnik-aktuell/termine/detail/**
       - /aktuelles/landtechnik-aktuell/termine/detail/**/**
     target: /query-index-events.xlsx
@@ -140,10 +138,8 @@ indices:
       - /news/**/**
       - /newstermine/pressemeldungen/detail/**
       - /newstermine/pressemeldungen/detail/**/**
-      - /aktuelles/agratec-aktuell/news/**
       - /aktuelles/agratec-aktuell/news/artikel/**
       - /aktuelles/agratec-aktuell/news/artikel/**/**
-      - /aktuelles/landtechnik-aktuell/news/**
       - /aktuelles/landtechnik-aktuell/news/artikel/**
       - /aktuelles/landtechnik-aktuell/news/artikel/**/**
     target: /query-index-news.xlsx

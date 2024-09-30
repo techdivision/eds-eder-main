@@ -69,6 +69,7 @@ function renderItem(item) {
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   config.classes = [...block.classList];
+
   decorateList(block, config, 'events', renderItem, manipulateEventItems)
     .then();
 }

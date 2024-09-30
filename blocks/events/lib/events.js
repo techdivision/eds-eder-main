@@ -49,7 +49,7 @@ function getDateRange(item) {
  * @returns {Array}
  */
 function manipulateEventItems(items) {
-  return items.filter((item) => {
+  const filteredItems = items.filter((item) => {
     // check if event has ended
     if (!isCurrentEvent(item)) {
       return false;
@@ -67,6 +67,9 @@ function manipulateEventItems(items) {
     ).outerHTML;
     return true;
   });
+
+  // reverse items
+  return filteredItems.reverse();
 }
 
 export default manipulateEventItems;
