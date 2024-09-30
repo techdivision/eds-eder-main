@@ -151,6 +151,24 @@ export const formatTableData = (table, formats) => {
 };
 
 /**
+ * Sanitize pathname by removing leading and trailing dashes from each section of the url
+ * @param pathname
+ * @returns {string}
+ */
+export const sanitizePathname = (pathname) => {
+  const modifiedPathnameSections = [];
+
+  // handle leading or trailing dashes in url-sections, that are not allowed (anymore) in EDS
+  const pathnameSections = pathname.split('/');
+
+  pathnameSections.forEach((pathnameSection) => {
+    modifiedPathnameSections.push(pathnameSection.replace(/^-+|-+$/g, ''));
+  });
+
+  return modifiedPathnameSections.join('/');
+};
+
+/**
  * Preprocess method that extracts the hreflang=x-default value from the original HTML markup
  * @param document
  * @param params
@@ -306,6 +324,8 @@ export const handleLinks = (main, document, baseUrl) => {
 
       // replace relative urls
       if (href.charAt(0) === '/') {
+        href = sanitizePathname(href);
+
         href = baseUrl + href;
 
         // remove possible parameters from internal links

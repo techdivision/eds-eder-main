@@ -40,6 +40,7 @@ import {
   handleSup,
   handleReferenceRows,
   formatTableData,
+  sanitizePathname
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -867,7 +868,7 @@ export default {
 
     results.push({
       element: main,
-      path: pathname,
+      path: sanitizePathname(pathname),
     });
 
     return results;
