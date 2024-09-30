@@ -699,6 +699,43 @@ export const handleUserlike = (main, document, params) => {
   }
 };
 
+/**
+ * Replace centered text by Columns-Block with centered formatting
+ * @param main
+ * @param document
+ */
+export const handleTextCentered = (main, document) => {
+  const centeredElements = document.querySelectorAll('p.text-center, h3.text-center');
+
+  if (centeredElements.length > 1) {
+    const centeredCells = [
+      ['Columns'],
+    ];
+
+    let elementsCount = 0;
+
+    centeredElements.forEach((centeredElement) => {
+      // add clone of original entry to avoid any issues with replaceWith later-on
+      centeredCells.push([centeredElement.cloneNode(true)]);
+
+      // remove all entries, but not the last one
+      if (elementsCount < centeredElements.length - 1) {
+        centeredElement.remove();
+      }
+
+      elementsCount += 1;
+    });
+
+    // replace last Block
+    const centeredResultTable = WebImporter.DOMUtils.createTable(centeredCells, document);
+
+    formatTableData(centeredResultTable, 'center');
+
+    const lastCenteredElement = centeredElements[centeredElements.length - 1];
+    lastCenteredElement.replaceWith(centeredResultTable);
+  }
+};
+
 export default {
   /**
    * preprocess-method: access data before it is removed by the EDS-logic later-on
@@ -794,6 +831,7 @@ export default {
     handleReferenceRows(main, document);
     handleSmallPrint(main, document);
     handleVariants(main, document);
+    handleTextCentered(main, document);
 
     // handle <br> after the Blocks, as they only work outside of them
     handleBrs(main, document);

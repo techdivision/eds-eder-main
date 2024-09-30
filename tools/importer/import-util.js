@@ -124,17 +124,27 @@ export const shouldBeImported = (entry, originalUrl) => {
 /**
  * This method allows to set the alignment of data-cells of a table
  * @param table
- * @param formats
+ * @param formats either an array that defines the formatting for each line individually,
+ * or a string that defines the formatting for all lines
  */
 export const formatTableData = (table, formats) => {
   const tableDataCells = table.querySelectorAll('td');
 
   let count = 0;
 
-  formats.forEach((format) => {
-    const tableDataCell = tableDataCells[count];
+  tableDataCells.forEach((tableCell) => {
+    let format;
 
-    tableDataCell.setAttribute('align', format);
+    // check if formatting is given as array
+    if (Array.isArray(formats)) {
+      // assign the entry that matches the position
+      format = formats[count];
+    } else {
+      // assign the same formatting to each entry
+      format = formats;
+    }
+
+    tableCell.setAttribute('align', format);
 
     count += 1;
   });
@@ -811,10 +821,17 @@ export const handleGallerySliders = (main, document, baseUrl) => {
 };
 
 export const handleTextBoxes = (main, document) => {
-  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865, div.custom-style-46916, div.custom-style-8085, div.custom-style-37473, div.custom-style-37503, div.custom-style-21924, div.custom-style-42828, div.custom-style-39502, div.custom-style-21926, div.custom-style-21927, div.custom-style-21928, div.custom-style-21929, div.custom-style-49293');
+  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865, div.custom-style-46916, div.custom-style-8085, div.custom-style-37473, div.custom-style-37503, div.custom-style-21924, div.custom-style-42828, div.custom-style-39502, div.custom-style-21926, div.custom-style-21927, div.custom-style-21928, div.custom-style-21929, div.custom-style-49293, div.custom-style-55586, div.custom-style-53610');
 
   if (redTextBoxes) {
     redTextBoxes.forEach((redTextBox) => {
+      // remove classes text-center from content to avoid collision with centered Columns later-on
+      const centeredElements = redTextBox.querySelectorAll('.text-center');
+
+      centeredElements.forEach((centeredElement) => {
+        centeredElement.className = '';
+      });
+
       const cells = [
         ['Text-Box (red)'],
         [redTextBox.innerHTML],
@@ -1133,35 +1150,64 @@ export const handleContacts = (main, document) => {
     // unfortunately there are several different Markups, and no unique identification
     const possibleContactHeadlines = sidebar.querySelectorAll('span, strong, h1, h2');
 
+    // flag, whether a Contact-headline was present above the Block
+    let containedContactHeadline = false;
+
     possibleContactHeadlines.forEach((contactHeadline) => {
       const contactHeadlineText = (contactHeadline.innerText).toLowerCase();
 
       if (contactHeadlineText.includes('kontakt')) {
         contactHeadline.remove();
+        containedContactHeadline = true;
       }
     });
+
+    // use regular Contact-Block variant by default
+    let blockName = 'Contacts';
+
+    // use variant without a headline if there was non originally
+    if (!containedContactHeadline) {
+      blockName = 'Contacts (no-headline)';
+    }
 
     // use id here, as there is no other way of identification
     const contactBlocks = sidebar.querySelectorAll('div.element-dce_dceuid2');
 
-    let parent;
+    let previousParent;
 
     if (contactBlocks.length > 0) {
-      const contactCells = [
-        ['Contacts'],
+      let contactCells = [
+        [blockName],
       ];
 
       contactBlocks.forEach((contactBlock) => {
-        parent = contactBlock.parentElement;
-
         const name = contactBlock.querySelector('p.staff-headline').innerText;
 
+        const currentParent = contactBlock.parentElement;
+
+        // if is not the first entry, and the parent is different
+        // -> replace Block and start a new list
+        if (previousParent && (currentParent !== previousParent)) {
+          const contactsResultTable = WebImporter.DOMUtils.createTable(contactCells, document);
+
+          previousParent.replaceWith(contactsResultTable);
+
+          contactCells = [
+            [blockName],
+          ];
+        }
+
+        // add entry in any case
         contactCells.push([name]);
+
+        // set previous parent for next iteration
+        previousParent = currentParent;
       });
 
+      // replace last entry
       const contactsResultTable = WebImporter.DOMUtils.createTable(contactCells, document);
 
-      parent.replaceWith(contactsResultTable);
+      previousParent.replaceWith(contactsResultTable);
     }
   }
 };
