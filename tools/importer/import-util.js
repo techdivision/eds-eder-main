@@ -83,6 +83,19 @@ export const isEderGmbh = (params) => {
 };
 
 /**
+ * Returns whether the current import takes place for eder-stapler.de
+ * @param params
+ * @returns {boolean}
+ */
+export const isEderStapler = (params) => {
+  const originalUrl = new URL(params.originalURL);
+
+  const originalDomain = originalUrl.host;
+
+  return originalDomain === 'www.eder-stapler.de';
+};
+
+/**
  * Determines whether the given news or events entry should be imported for the given domain
  * @param entry
  * @param originalUrl
@@ -841,7 +854,7 @@ export const handleGallerySliders = (main, document, baseUrl) => {
 };
 
 export const handleTextBoxes = (main, document) => {
-  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865, div.custom-style-46916, div.custom-style-8085, div.custom-style-37473, div.custom-style-37503, div.custom-style-21924, div.custom-style-42828, div.custom-style-39502, div.custom-style-21926, div.custom-style-21927, div.custom-style-21928, div.custom-style-21929, div.custom-style-49293, div.custom-style-55586, div.custom-style-53610');
+  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865, div.custom-style-46916, div.custom-style-8085, div.custom-style-37473, div.custom-style-37503, div.custom-style-21924, div.custom-style-42828, div.custom-style-39502, div.custom-style-21926, div.custom-style-21927, div.custom-style-21928, div.custom-style-21929, div.custom-style-49293, div.custom-style-55586, div.custom-style-53610, div.custom-style-8175, div.custom-style-39702');
 
   if (redTextBoxes) {
     redTextBoxes.forEach((redTextBox) => {
@@ -883,7 +896,7 @@ export const handleTextBoxes = (main, document) => {
   }
 };
 
-export const handleFilterAndRows = (main, document) => {
+export const handleFilterAndRows = (main, document, params) => {
   // get filter-block and product-rows, ids are used as there is no other possibility
   const filter = main.querySelector('div.element-dce_dceuid14');
 
@@ -942,8 +955,14 @@ export const handleFilterAndRows = (main, document) => {
       // perform modifications to original image-data
       const originalImages = originalImageDiv.querySelectorAll('img');
 
-      // use the second image, if there is one (= the bigger mobile-image)
-      const originalImage = originalImages[originalImages.length - 1];
+      // by default the second image should be used, if there is one (= the bigger mobile-image)
+      let originalImage = originalImages[originalImages.length - 1];
+
+      // custom handling for eder-stapler
+      if (isEderStapler(params)) {
+        // use the first image (= the Desktop-one) as the mobile-images are cut down
+        [originalImage] = originalImages;
+      }
 
       // create a new image tag in order to use the original jpg-value
       const resultImage = document.createElement('img');

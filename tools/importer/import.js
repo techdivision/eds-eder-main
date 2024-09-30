@@ -40,7 +40,7 @@ import {
   handleSup,
   handleReferenceRows,
   formatTableData,
-  sanitizePathname
+  sanitizePathname,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -817,7 +817,7 @@ export default {
     handleIframes(main, document);
     handleAccordions(main, document);
     handleTextBoxes(main, document);
-    handleFilterAndRows(main, document);
+    handleFilterAndRows(main, document, params);
     handleTeaserRows(main, document);
     handleImagesInText(main, document);
     handleTextPic(main, document);
