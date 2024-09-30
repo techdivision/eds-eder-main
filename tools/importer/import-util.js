@@ -111,6 +111,7 @@ export const shouldBeImported = (entry, originalUrl) => {
     'https://www.feedstar.com': 'Feedstar',
     'https://www.eder-profi.de': 'Profibaumarkt',
     'https://www.eder-anhaenger.de': 'Anhängercenter',
+    'https://www.eder-stapler.de': 'Stapler',
   };
 
   const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
