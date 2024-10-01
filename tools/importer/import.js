@@ -40,7 +40,7 @@ import {
   handleSup,
   handleReferenceRows,
   formatTableData,
-  sanitizePathname,
+  sanitizePathname, isEderStapler,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -162,10 +162,24 @@ export const handleShopData = (main, document) => {
 
       phoneNumberRows.forEach((phoneNumberRow) => {
         const icon = phoneNumberRow.querySelector('div.col-xs-3');
-        const text = phoneNumberRow.querySelector('div.col-xs-9');
-        const paragraph = text.querySelector('p');
 
-        phoneNumberRow.innerHTML = `${icon.innerHTML} ${paragraph.innerHTML}`;
+        let iconHTML = '';
+
+        if (icon) {
+          iconHTML = icon.innerHTML;
+        }
+
+        const text = phoneNumberRow.querySelector('div.col-xs-9');
+
+        let paragraphHTML = '';
+
+        if (text) {
+          const paragraph = text.querySelector('p');
+
+          paragraphHTML = paragraph.innerHTML;
+        }
+
+        phoneNumberRow.innerHTML = `${iconHTML} ${paragraphHTML}`;
       });
 
       // format openTimes
@@ -552,6 +566,13 @@ export const handleFeedstarContact = (main, document) => {
         linkInText.remove();
       });
 
+      // remove classes text-center from content to avoid collision with centered Columns later-on
+      const centeredElements = textOnlyBlock.querySelectorAll('.text-center');
+
+      centeredElements.forEach((centeredElement) => {
+        centeredElement.className = '';
+      });
+
       const cells = [
         ['Columns'],
         [textOnlyBlock],
@@ -705,35 +726,38 @@ export const handleUserlike = (main, document, params) => {
  * @param main
  * @param document
  */
-export const handleTextCentered = (main, document) => {
-  const centeredElements = document.querySelectorAll('p.text-center, h3.text-center');
+export const handleTextCentered = (main, document, params) => {
+  // execute conversion only for eder-stapler, as it might cause side effects on the other domains
+  if (isEderStapler(params)) {
+    const centeredElements = document.querySelectorAll('p.text-center, h3.text-center');
 
-  if (centeredElements.length > 1) {
-    const centeredCells = [
-      ['Columns'],
-    ];
+    if (centeredElements.length > 1) {
+      const centeredCells = [
+        ['Columns'],
+      ];
 
-    let elementsCount = 0;
+      let elementsCount = 0;
 
-    centeredElements.forEach((centeredElement) => {
-      // add clone of original entry to avoid any issues with replaceWith later-on
-      centeredCells.push([centeredElement.cloneNode(true)]);
+      centeredElements.forEach((centeredElement) => {
+        // add clone of original entry to avoid any issues with replaceWith later-on
+        centeredCells.push([centeredElement.cloneNode(true)]);
 
-      // remove all entries, but not the last one
-      if (elementsCount < centeredElements.length - 1) {
-        centeredElement.remove();
-      }
+        // remove all entries, but not the last one
+        if (elementsCount < centeredElements.length - 1) {
+          centeredElement.remove();
+        }
 
-      elementsCount += 1;
-    });
+        elementsCount += 1;
+      });
 
-    // replace last Block
-    const centeredResultTable = WebImporter.DOMUtils.createTable(centeredCells, document);
+      // replace last Block
+      const centeredResultTable = WebImporter.DOMUtils.createTable(centeredCells, document);
 
-    formatTableData(centeredResultTable, 'center');
+      formatTableData(centeredResultTable, 'center');
 
-    const lastCenteredElement = centeredElements[centeredElements.length - 1];
-    lastCenteredElement.replaceWith(centeredResultTable);
+      const lastCenteredElement = centeredElements[centeredElements.length - 1];
+      lastCenteredElement.replaceWith(centeredResultTable);
+    }
   }
 };
 
@@ -832,7 +856,7 @@ export default {
     handleReferenceRows(main, document);
     handleSmallPrint(main, document);
     handleVariants(main, document);
-    handleTextCentered(main, document);
+    handleTextCentered(main, document, params);
 
     // handle <br> after the Blocks, as they only work outside of them
     handleBrs(main, document);

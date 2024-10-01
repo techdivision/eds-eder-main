@@ -112,17 +112,34 @@ export const shouldBeImported = (entry, originalUrl) => {
     'https://www.eder-profi.de': 'Profibaumarkt',
     'https://www.eder-anhaenger.de': 'Anhängercenter',
     'https://www.eder-stapler.de': 'Stapler',
+    'https://lelycenterinbayern.de': 'Lely Center',
   };
 
   const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
 
   const targetSection = urlMapping[urlToCheck];
 
-  // handling multiple assignment - set "Überall"
+  // handle entries with multiple assignment
   const sectionList = entry.section.split(',');
 
   if (sectionList.length > 1) {
-    entry.section = 'Überall';
+    // special handling for Lely: assigment might be given
+    // e.g. as "Lely Center Tuntenhausen,Lely Center Grüb,Lely Center Baisweil,Lely Center Wernberg"
+    let isOnlyLelyCenter = true;
+
+    sectionList.forEach((sectionEntry) => {
+      if (!sectionEntry.includes('Lely Center')) {
+        isOnlyLelyCenter = false;
+      }
+    });
+
+    if (isOnlyLelyCenter) {
+      // set Lely Center assigment
+      entry.section = 'Lely Center';
+    } else {
+      // set "Überall" in all other cases with multiple assignment
+      entry.section = 'Überall';
+    }
   }
 
   // do not import if the section of the news does not match the section of the import
@@ -276,6 +293,7 @@ export const handleIcons = (main) => {
     'flaticon flaticon-phone': ':telephone:',
     'flaticon flaticon-fax': ':fax:',
     'flaticon flaticon-email': ':email:',
+    'flaticon flaticon-cell-phone': ':telephone:',
   };
 
   const originalIcons = main.querySelectorAll('span.flaticon');
@@ -994,6 +1012,12 @@ export const handleFilterAndRows = (main, document, params) => {
         rowCells.push(
           [resultImage, content],
         );
+
+        // remove each of the single items, but not the last one
+        if (rowsCount < rows.length - 1) {
+          row.remove();
+        }
+        rowsCount += 1;
       } else {
         // recommendations are present -> use Rows with full number of columns
         // only as first line of data: add headlines for filters
@@ -1348,13 +1372,25 @@ export const handleTeaserRows = (main, document) => {
       // extract last paragraph of the text and add link to
       const paragraphs = textDiv.querySelectorAll('p');
 
-      const lastParagraph = paragraphs[paragraphs.length - 1];
+      if (paragraphs.length > 1) {
+        const lastParagraph = paragraphs[paragraphs.length - 1];
 
-      const link = document.createElement('a');
-      link.append(lastParagraph.innerText);
-      link.href = href;
+        const link = document.createElement('a');
+        link.append(lastParagraph.innerText);
+        link.href = href;
 
-      lastParagraph.replaceWith(link);
+        lastParagraph.replaceWith(link);
+      } else {
+        // special case at Lely: no paragraphs -> append a link with text 'Details'
+        const link = document.createElement('a');
+        link.append('Details');
+        link.href = href;
+
+        const detailsDiv = document.createElement('div');
+        detailsDiv.append(link);
+
+        textDiv.append(detailsDiv);
+      }
 
       cells.push([img, textDiv]);
 
