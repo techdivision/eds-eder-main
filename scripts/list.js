@@ -243,8 +243,8 @@ function sortItems(items) {
     const dateB = getFirstAvailableDate(b);
 
     if (dateA && dateB) {
-      if (dateA < dateB) return 1;
-      if (dateA > dateB) return -1;
+      if (dateA > dateB) return 1;
+      if (dateA < dateB) return -1;
     } else if (dateA) {
       return -1;
     } else if (dateB) {
