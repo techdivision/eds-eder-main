@@ -440,15 +440,23 @@ function decorateIcon(span, prefix = '', alt = '') {
   const iconName = Array.from(span.classList)
     .find((c) => c.startsWith('icon-'))
     .substring(5);
-  const img = document.createElement('img');
-  img.dataset.iconName = iconName;
-  img.src = `${window.hlx.codeBasePath}${prefix}/icons/${iconName}.svg`;
-  img.alt = alt;
-  img.loading = 'lazy';
   // BEGIN CHANGE TechDivision
-  img.setAttribute('aria-label', alt !== '' ? alt : iconName);
-  // END CHANGE TechDivision
-  span.append(img);
+  // handle special case of hh:mm:ss which would generate an "icon" mm
+  if (iconName === 'mm') {
+    // replace the server-side rendered icon-span by the original text
+    span.replaceWith(document.createTextNode(':mm:'));
+  } else {
+    // END CHANGE TechDivision
+    const img = document.createElement('img');
+    img.dataset.iconName = iconName;
+    img.src = `${window.hlx.codeBasePath}${prefix}/icons/${iconName}.svg`;
+    img.alt = alt;
+    img.loading = 'lazy';
+    // BEGIN CHANGE TechDivision
+    img.setAttribute('aria-label', alt !== '' ? alt : iconName);
+    // END CHANGE TechDivision
+    span.append(img);
+  }
 }
 
 /**
