@@ -83,6 +83,19 @@ export const isEderGmbh = (params) => {
 };
 
 /**
+ * Returns whether the current import takes place for eder-stapler.de
+ * @param params
+ * @returns {boolean}
+ */
+export const isEderStapler = (params) => {
+  const originalUrl = new URL(params.originalURL);
+
+  const originalDomain = originalUrl.host;
+
+  return originalDomain === 'www.eder-stapler.de';
+};
+
+/**
  * Determines whether the given news or events entry should be imported for the given domain
  * @param entry
  * @param originalUrl
@@ -98,17 +111,35 @@ export const shouldBeImported = (entry, originalUrl) => {
     'https://www.feedstar.com': 'Feedstar',
     'https://www.eder-profi.de': 'Profibaumarkt',
     'https://www.eder-anhaenger.de': 'Anhängercenter',
+    'https://www.eder-stapler.de': 'Stapler',
+    'https://lelycenterinbayern.de': 'Lely Center',
   };
 
   const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
 
   const targetSection = urlMapping[urlToCheck];
 
-  // handling multiple assignment - set "Überall"
+  // handle entries with multiple assignment
   const sectionList = entry.section.split(',');
 
   if (sectionList.length > 1) {
-    entry.section = 'Überall';
+    // special handling for Lely: assigment might be given
+    // e.g. as "Lely Center Tuntenhausen,Lely Center Grüb,Lely Center Baisweil,Lely Center Wernberg"
+    let isOnlyLelyCenter = true;
+
+    sectionList.forEach((sectionEntry) => {
+      if (!sectionEntry.includes('Lely Center')) {
+        isOnlyLelyCenter = false;
+      }
+    });
+
+    if (isOnlyLelyCenter) {
+      // set Lely Center assigment
+      entry.section = 'Lely Center';
+    } else {
+      // set "Überall" in all other cases with multiple assignment
+      entry.section = 'Überall';
+    }
   }
 
   // do not import if the section of the news does not match the section of the import
@@ -124,20 +155,48 @@ export const shouldBeImported = (entry, originalUrl) => {
 /**
  * This method allows to set the alignment of data-cells of a table
  * @param table
- * @param formats
+ * @param formats either an array that defines the formatting for each line individually,
+ * or a string that defines the formatting for all lines
  */
 export const formatTableData = (table, formats) => {
   const tableDataCells = table.querySelectorAll('td');
 
   let count = 0;
 
-  formats.forEach((format) => {
-    const tableDataCell = tableDataCells[count];
+  tableDataCells.forEach((tableCell) => {
+    let format;
 
-    tableDataCell.setAttribute('align', format);
+    // check if formatting is given as array
+    if (Array.isArray(formats)) {
+      // assign the entry that matches the position
+      format = formats[count];
+    } else {
+      // assign the same formatting to each entry
+      format = formats;
+    }
+
+    tableCell.setAttribute('align', format);
 
     count += 1;
   });
+};
+
+/**
+ * Sanitize pathname by removing leading and trailing dashes from each section of the url
+ * @param pathname
+ * @returns {string}
+ */
+export const sanitizePathname = (pathname) => {
+  const modifiedPathnameSections = [];
+
+  // handle leading or trailing dashes in url-sections, that are not allowed (anymore) in EDS
+  const pathnameSections = pathname.split('/');
+
+  pathnameSections.forEach((pathnameSection) => {
+    modifiedPathnameSections.push(pathnameSection.replace(/^-+|-+$/g, ''));
+  });
+
+  return modifiedPathnameSections.join('/');
 };
 
 /**
@@ -234,6 +293,7 @@ export const handleIcons = (main) => {
     'flaticon flaticon-phone': ':telephone:',
     'flaticon flaticon-fax': ':fax:',
     'flaticon flaticon-email': ':email:',
+    'flaticon flaticon-cell-phone': ':telephone:',
   };
 
   const originalIcons = main.querySelectorAll('span.flaticon');
@@ -296,6 +356,8 @@ export const handleLinks = (main, document, baseUrl) => {
 
       // replace relative urls
       if (href.charAt(0) === '/') {
+        href = sanitizePathname(href);
+
         href = baseUrl + href;
 
         // remove possible parameters from internal links
@@ -811,10 +873,17 @@ export const handleGallerySliders = (main, document, baseUrl) => {
 };
 
 export const handleTextBoxes = (main, document) => {
-  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865, div.custom-style-46916, div.custom-style-8085, div.custom-style-37473, div.custom-style-37503, div.custom-style-21924, div.custom-style-42828, div.custom-style-39502, div.custom-style-21926, div.custom-style-21927, div.custom-style-21928, div.custom-style-21929, div.custom-style-49293');
+  const redTextBoxes = main.querySelectorAll('div.alert-danger, div.custom-style-865, div.custom-style-46916, div.custom-style-8085, div.custom-style-37473, div.custom-style-37503, div.custom-style-21924, div.custom-style-42828, div.custom-style-39502, div.custom-style-21926, div.custom-style-21927, div.custom-style-21928, div.custom-style-21929, div.custom-style-49293, div.custom-style-55586, div.custom-style-53610, div.custom-style-8175, div.custom-style-39702');
 
   if (redTextBoxes) {
     redTextBoxes.forEach((redTextBox) => {
+      // remove classes text-center from content to avoid collision with centered Columns later-on
+      const centeredElements = redTextBox.querySelectorAll('.text-center');
+
+      centeredElements.forEach((centeredElement) => {
+        centeredElement.className = '';
+      });
+
       const cells = [
         ['Text-Box (red)'],
         [redTextBox.innerHTML],
@@ -846,7 +915,7 @@ export const handleTextBoxes = (main, document) => {
   }
 };
 
-export const handleFilterAndRows = (main, document) => {
+export const handleFilterAndRows = (main, document, params) => {
   // get filter-block and product-rows, ids are used as there is no other possibility
   const filter = main.querySelector('div.element-dce_dceuid14');
 
@@ -905,8 +974,14 @@ export const handleFilterAndRows = (main, document) => {
       // perform modifications to original image-data
       const originalImages = originalImageDiv.querySelectorAll('img');
 
-      // use the second image, if there is one (= the bigger mobile-image)
-      const originalImage = originalImages[originalImages.length - 1];
+      // by default the second image should be used, if there is one (= the bigger mobile-image)
+      let originalImage = originalImages[originalImages.length - 1];
+
+      // custom handling for eder-stapler
+      if (isEderStapler(params)) {
+        // use the first image (= the Desktop-one) as the mobile-images are cut down
+        [originalImage] = originalImages;
+      }
 
       // create a new image tag in order to use the original jpg-value
       const resultImage = document.createElement('img');
@@ -937,6 +1012,12 @@ export const handleFilterAndRows = (main, document) => {
         rowCells.push(
           [resultImage, content],
         );
+
+        // remove each of the single items, but not the last one
+        if (rowsCount < rows.length - 1) {
+          row.remove();
+        }
+        rowsCount += 1;
       } else {
         // recommendations are present -> use Rows with full number of columns
         // only as first line of data: add headlines for filters
@@ -1133,35 +1214,64 @@ export const handleContacts = (main, document) => {
     // unfortunately there are several different Markups, and no unique identification
     const possibleContactHeadlines = sidebar.querySelectorAll('span, strong, h1, h2');
 
+    // flag, whether a Contact-headline was present above the Block
+    let containedContactHeadline = false;
+
     possibleContactHeadlines.forEach((contactHeadline) => {
       const contactHeadlineText = (contactHeadline.innerText).toLowerCase();
 
       if (contactHeadlineText.includes('kontakt')) {
         contactHeadline.remove();
+        containedContactHeadline = true;
       }
     });
+
+    // use regular Contact-Block variant by default
+    let blockName = 'Contacts';
+
+    // use variant without a headline if there was non originally
+    if (!containedContactHeadline) {
+      blockName = 'Contacts (no-headline)';
+    }
 
     // use id here, as there is no other way of identification
     const contactBlocks = sidebar.querySelectorAll('div.element-dce_dceuid2');
 
-    let parent;
+    let previousParent;
 
     if (contactBlocks.length > 0) {
-      const contactCells = [
-        ['Contacts'],
+      let contactCells = [
+        [blockName],
       ];
 
       contactBlocks.forEach((contactBlock) => {
-        parent = contactBlock.parentElement;
-
         const name = contactBlock.querySelector('p.staff-headline').innerText;
 
+        const currentParent = contactBlock.parentElement;
+
+        // if is not the first entry, and the parent is different
+        // -> replace Block and start a new list
+        if (previousParent && (currentParent !== previousParent)) {
+          const contactsResultTable = WebImporter.DOMUtils.createTable(contactCells, document);
+
+          previousParent.replaceWith(contactsResultTable);
+
+          contactCells = [
+            [blockName],
+          ];
+        }
+
+        // add entry in any case
         contactCells.push([name]);
+
+        // set previous parent for next iteration
+        previousParent = currentParent;
       });
 
+      // replace last entry
       const contactsResultTable = WebImporter.DOMUtils.createTable(contactCells, document);
 
-      parent.replaceWith(contactsResultTable);
+      previousParent.replaceWith(contactsResultTable);
     }
   }
 };
@@ -1262,13 +1372,25 @@ export const handleTeaserRows = (main, document) => {
       // extract last paragraph of the text and add link to
       const paragraphs = textDiv.querySelectorAll('p');
 
-      const lastParagraph = paragraphs[paragraphs.length - 1];
+      if (paragraphs.length > 1) {
+        const lastParagraph = paragraphs[paragraphs.length - 1];
 
-      const link = document.createElement('a');
-      link.append(lastParagraph.innerText);
-      link.href = href;
+        const link = document.createElement('a');
+        link.append(lastParagraph.innerText);
+        link.href = href;
 
-      lastParagraph.replaceWith(link);
+        lastParagraph.replaceWith(link);
+      } else {
+        // special case at Lely: no paragraphs -> append a link with text 'Details'
+        const link = document.createElement('a');
+        link.append('Details');
+        link.href = href;
+
+        const detailsDiv = document.createElement('div');
+        detailsDiv.append(link);
+
+        textDiv.append(detailsDiv);
+      }
 
       cells.push([img, textDiv]);
 

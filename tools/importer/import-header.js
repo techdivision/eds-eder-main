@@ -11,7 +11,10 @@
 
 /* global WebImporter */
 
-import { determineEdsBaseUrl } from './import-util.js';
+import {
+  determineEdsBaseUrl,
+  sanitizePathname,
+} from './import-util.js';
 
 /**
  * Exclude generic content from migration
@@ -57,6 +60,9 @@ const handleMenuEntry = (menuEntry, baseUrl) => {
 
   // check if the target of the link is relative: handle EDS-specific url-conversions
   if (href.charAt(0) === '/') {
+    // sanitize url-pathname
+    href = sanitizePathname(href);
+
     // add base-url
     href = baseUrl + href;
 
