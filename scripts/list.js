@@ -218,36 +218,54 @@ function getItemsForCurrentPage(items, itemsPerPage) {
  * @returns {Array}
  */
 function sortItems(items) {
-  // check for fields to check for sorting
-  const fieldsToSort = [
-    'endDate',
-    'startDate',
-    'publishDate',
-    'lastModified',
-  ];
+  // define field names and their sort order (ASC or DESC)
+  const fieldsToSort = {
+    startDate: 'ASC',
+    endDate: 'ASC',
+    publishDate: 'DESC',
+    lastModified: 'DESC',
+  };
 
-  // get first available date
+  // get the first available date and sort direction
   function getFirstAvailableDate(item) {
-    for (let i = 0; i < fieldsToSort.length; i += 1) {
-      const field = fieldsToSort[i];
-      if (item[field]) {
-        return item[field];
-      }
+    const foundField = Object.entries(fieldsToSort)
+      .find(([field]) => item[field]);
+    if (foundField) {
+      const [field, order] = foundField;
+      return {
+        date: item[field],
+        order,
+      };
     }
+
     return null;
   }
 
   // sort items
   items.sort((a, b) => {
-    const dateA = getFirstAvailableDate(a);
-    const dateB = getFirstAvailableDate(b);
+    const resultA = getFirstAvailableDate(a);
+    const resultB = getFirstAvailableDate(b);
 
-    if (dateA && dateB) {
-      if (dateA > dateB) return 1;
-      if (dateA < dateB) return -1;
-    } else if (dateA) {
+    if (resultA && resultB) {
+      const {
+        date: dateA,
+        order: orderA,
+      } = resultA;
+      // noinspection JSUnusedLocalSymbols
+      const {
+        date: dateB,
+      } = resultB;
+
+      if (orderA === 'ASC') {
+        if (dateA < dateB) return -1;
+        if (dateA > dateB) return 1;
+      } else {
+        if (dateA < dateB) return 1;
+        if (dateA > dateB) return -1;
+      }
+    } else if (resultA) {
       return -1;
-    } else if (dateB) {
+    } else if (resultB) {
       return 1;
     }
     return 0;
