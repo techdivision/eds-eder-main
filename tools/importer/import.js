@@ -40,7 +40,9 @@ import {
   handleSup,
   handleReferenceRows,
   formatTableData,
-  sanitizePathname, isEderStapler,
+  sanitizePathname,
+  isEderStapler,
+  isFeedstar,
 } from './import-util.js';
 
 const removeGenericContent = (main) => {
@@ -496,20 +498,14 @@ export const handleMetricsColumns = (main, document) => {
   const metricBox = main.querySelector('div.metric-box');
 
   if (metricBox) {
-    // create a custom table in order to allow formatting of entries
-    const resultTable = document.createElement('table');
-
-    // build headline-row
-    const headlineRow = document.createElement('tr');
-    const headlineCell = document.createElement('th');
-    headlineCell.setAttribute('colspan', 3);
-    headlineCell.append('Columns (metrics)');
-    headlineRow.append(headlineCell);
-
-    // build data-row
-    const dataRow = document.createElement('tr');
+    const cells = [
+      ['Columns (metrics)'],
+    ];
 
     const columns = metricBox.querySelectorAll('div.col-sm-4');
+
+    // represents one line of entries in the result-table
+    let resultLine = [];
 
     columns.forEach((column) => {
       const metricHeader = column.querySelector('div.metric-header');
@@ -525,15 +521,24 @@ export const handleMetricsColumns = (main, document) => {
       entry.append(metricHeader);
       entry.append(metricDescription);
 
-      const tableCell = document.createElement('td');
-      tableCell.setAttribute('align', 'center');
-      tableCell.append(entry);
+      resultLine.push(entry);
 
-      dataRow.append(tableCell);
+      // if 3 entries are reached
+      if (resultLine.length > 2) {
+        // add line to cell-array
+        cells.push(resultLine);
+        // create a new empty line for the next entries
+        resultLine = [];
+      }
     });
 
-    resultTable.append(headlineRow);
-    resultTable.append(dataRow);
+    // add possible, remaining entries to cell-array
+    if (resultLine.length > 0) {
+      cells.push(resultLine);
+    }
+
+    const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+    formatTableData(resultTable, 'center');
 
     metricBox.replaceWith(resultTable);
   }
@@ -705,11 +710,13 @@ export const handleVariants = (main, document) => {
  * Add userlike-Block if there was any in Typo3.
  * @param main
  * @param document
+ * @param params
  */
 export const handleUserlike = (main, document, params) => {
   const { userlikeKey } = params;
 
-  if (userlikeKey) {
+  // check for userlike-key, but avoid adding it to individual pages at feedstar
+  if (userlikeKey && !isFeedstar(params)) {
     const cells = [
       ['Thirdparty'],
       ['Userlike', userlikeKey],
@@ -725,6 +732,7 @@ export const handleUserlike = (main, document, params) => {
  * Replace centered text by Columns-Block with centered formatting
  * @param main
  * @param document
+ * @param params
  */
 export const handleTextCentered = (main, document, params) => {
   // execute conversion only for eder-stapler, as it might cause side effects on the other domains
@@ -853,7 +861,7 @@ export default {
     handleContactBanner(main, document);
     handleSup(main, document);
     handleMetricsColumns(main, document);
-    handleReferenceRows(main, document);
+    handleReferenceRows(main, document, params);
     handleSmallPrint(main, document);
     handleVariants(main, document);
     handleTextCentered(main, document, params);
