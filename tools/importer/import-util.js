@@ -139,6 +139,7 @@ export const shouldBeImported = (entry, originalUrl) => {
     'https://www.eder-anhaenger.de': 'Anhängercenter',
     'https://www.eder-stapler.de': 'Stapler',
     'https://lelycenterinbayern.de': 'Lely Center',
+    'https://www.eder-kommunal.de': 'Kommunal',
   };
 
   const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
@@ -159,9 +160,20 @@ export const shouldBeImported = (entry, originalUrl) => {
       }
     });
 
+    // special handling for eder-kommunal and eder-golf, which will merged to eder-kommunal in EDS
+    let isOnlyEderKommunal = false;
+
+    // check if there are two entries: both "Kommunal" and "Golftechnik"
+    if (sectionList.length === 2 && sectionList.includes('Kommunal') && sectionList.includes('Golftechnik')) {
+      isOnlyEderKommunal = true;
+    }
+
     if (isOnlyLelyCenter) {
       // set Lely Center assigment
       entry.section = 'Lely Center';
+    } else if (isOnlyEderKommunal) {
+      // set assignment to "Kommunal"
+      entry.section = 'Kommunal';
     } else {
       // set "Überall" in all other cases with multiple assignment
       entry.section = 'Überall';
