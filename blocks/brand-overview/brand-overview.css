@@ -53,14 +53,16 @@ main .section.brand-overview-container {
 
     h2 {
       position: absolute;
-      bottom: 0;
+      top: 50%;
       left: 0;
       right: 0;
       text-align: center;
+      font-weight: bold;
+      margin: 0;
       color: var(--color-white);
       font-size: var(--heading-font-size-xxl);
-      font-weight: bold;
-      line-height: 300px;
+      line-height: var(--heading-line-height-xxl);
+      transform: translateY(-50%);
     }
   }
 

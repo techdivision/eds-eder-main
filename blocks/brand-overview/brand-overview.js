@@ -56,7 +56,7 @@ export default function decorate(block) {
 
       // rebuild block for other headers
       const content = block
-        .querySelector(`:scope > div:nth-child(2) > div:nth-child(${i})`);
+        .querySelector(`:scope > div:nth-child(2) > div:nth-child(${i + 1})`);
       rebuildBlock(block.parentNode, header, content);
     });
   }
