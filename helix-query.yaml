@@ -142,6 +142,7 @@ indices:
       - /aktuelles/agratec-aktuell/news/artikel/**/**
       - /aktuelles/landtechnik-aktuell/news/artikel/**
       - /aktuelles/landtechnik-aktuell/news/artikel/**/**
+      - /aktuelles/profibaumarkt-aktuell/news/news/*
     target: /query-index-news.xlsx
     properties:
       title:
