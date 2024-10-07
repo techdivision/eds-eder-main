@@ -83,6 +83,19 @@ export const isEderGmbh = (params) => {
 };
 
 /**
+ * Returns whether the current import takes place for feedstar.com
+ * @param params
+ * @returns {boolean}
+ */
+export const isFeedstar = (params) => {
+  const originalUrl = new URL(params.originalURL);
+
+  const originalDomain = originalUrl.host;
+
+  return originalDomain === 'www.feedstar.com';
+};
+
+/**
  * Returns whether the current import takes place for eder-stapler.de
  * @param params
  * @returns {boolean}
@@ -93,6 +106,19 @@ export const isEderStapler = (params) => {
   const originalDomain = originalUrl.host;
 
   return originalDomain === 'www.eder-stapler.de';
+};
+
+/**
+ * Returns whether the current import takes place for eder-stalltechnik.de
+ * @param params
+ * @returns {boolean}
+ */
+export const isEderStalltechnik = (params) => {
+  const originalUrl = new URL(params.originalURL);
+
+  const originalDomain = originalUrl.host;
+
+  return originalDomain === 'www.eder-stalltechnik.de';
 };
 
 /**
@@ -113,6 +139,7 @@ export const shouldBeImported = (entry, originalUrl) => {
     'https://www.eder-anhaenger.de': 'Anhängercenter',
     'https://www.eder-stapler.de': 'Stapler',
     'https://lelycenterinbayern.de': 'Lely Center',
+    'https://www.eder-kommunal.de': 'Kommunal',
   };
 
   const urlToCheck = `${originalUrl.protocol}//${originalUrl.host}`;
@@ -133,9 +160,20 @@ export const shouldBeImported = (entry, originalUrl) => {
       }
     });
 
+    // special handling for eder-kommunal and eder-golf, which will merged to eder-kommunal in EDS
+    let isOnlyEderKommunal = false;
+
+    // check if there are two entries: both "Kommunal" and "Golftechnik"
+    if (sectionList.length === 2 && sectionList.includes('Kommunal') && sectionList.includes('Golftechnik')) {
+      isOnlyEderKommunal = true;
+    }
+
     if (isOnlyLelyCenter) {
       // set Lely Center assigment
       entry.section = 'Lely Center';
+    } else if (isOnlyEderKommunal) {
+      // set assignment to "Kommunal"
+      entry.section = 'Kommunal';
     } else {
       // set "Überall" in all other cases with multiple assignment
       entry.section = 'Überall';
@@ -212,15 +250,8 @@ export const preprocessHrefLang = (document, params) => {
 
     const xDefaultSections = xDefaultValue.split('/');
 
-    const lastEntry = xDefaultSections[xDefaultSections.length - 1];
-    const secondLastEntry = xDefaultSections[xDefaultSections.length - 2];
-
-    // last entry might be empty, due to a trailing slash
-    if (lastEntry !== '') {
-      params.hreflangKey = lastEntry;
-    } else {
-      params.hreflangKey = secondLastEntry;
-    }
+    // return the second-most entry
+    params.hreflangKey = xDefaultSections[xDefaultSections.length - 2];
   }
 };
 
@@ -765,6 +796,11 @@ export const handleIframes = (main, document) => {
         // handle height of iframe
         let height = iframe.getAttribute('height');
 
+        // set height to 1200px if there is none given and it's a technikboerse-iframe
+        if (!height && src.startsWith('https://dealersites.technikboerse.com/')) {
+          height = '1200px';
+        }
+
         if (height && height.includes('px')) {
           height = height.replace('px', '');
 
@@ -977,8 +1013,8 @@ export const handleFilterAndRows = (main, document, params) => {
       // by default the second image should be used, if there is one (= the bigger mobile-image)
       let originalImage = originalImages[originalImages.length - 1];
 
-      // custom handling for eder-stapler
-      if (isEderStapler(params)) {
+      // custom handling for eder-stapler and eder-stalltechnik
+      if (isEderStapler(params) || isEderStalltechnik(params)) {
         // use the first image (= the Desktop-one) as the mobile-images are cut down
         [originalImage] = originalImages;
       }
@@ -1004,13 +1040,37 @@ export const handleFilterAndRows = (main, document, params) => {
         contactButton.innerHTML = contactButtonParagraph.outerHTML;
       }
 
-      // check for different types of rows
-      if (originalImageDiv && originalContentDiv && !originalRecommendDiv) {
-        // image and content are present, but no recommendations -> Rows with only two columns
+      // check for special structure at eder-stalltechnik
+      let productLogo;
+      if (isEderStalltechnik(params)) {
+        // remove collapse-div, as it is present, but not visible nor collapsable in Typo3
+        const collapse = content.querySelector('div.collapse');
+        if (collapse) {
+          collapse.remove();
+        }
 
-        // store modified data
+        // check for product-logo within content
+        productLogo = content.querySelector('div.product-logo');
+      }
+
+      // check for different types of rows
+      if (originalImageDiv && originalContentDiv && !productLogo && !originalRecommendDiv) {
+        // image and content are present, but no logo nor recommendations
+        // -> Rows with only two columns
+
         rowCells.push(
           [resultImage, content],
+        );
+
+        // remove each of the single items, but not the last one
+        if (rowsCount < rows.length - 1) {
+          row.remove();
+        }
+        rowsCount += 1;
+      } else if (originalImageDiv && originalContentDiv && productLogo && !originalRecommendDiv) {
+        // image, logo and content are present, but no recommendations -> Rows with three columns
+        rowCells.push(
+          [resultImage, productLogo, content],
         );
 
         // remove each of the single items, but not the last one
@@ -1414,9 +1474,20 @@ export const handleTeaserRows = (main, document) => {
  * Handle teaser-rows from Typo3 by converting them to an EDS Rows-Block
  * @param main
  * @param document
+ * @param params
  */
-export const handleReferenceRows = (main, document) => {
-  const referenceList = main.querySelector('div.element-news_pi1');
+export const handleReferenceRows = (main, document, params) => {
+  let referenceList = main.querySelector('div.element-news_pi1');
+
+  // handle special case at eder-stalltechnik
+  if (isEderStalltechnik(params)) {
+    const originalUrl = new URL(params.originalURL);
+
+    // identify page by its url, was there is no other way
+    if (originalUrl.pathname === '/faszination-eder/erleben/referenzberichte') {
+      referenceList = main.querySelector('div.news-list-view');
+    }
+  }
 
   if (referenceList) {
     const rows = referenceList.querySelectorAll('div.row');
@@ -1449,9 +1520,12 @@ export const handleReferenceRows = (main, document) => {
         }
       });
 
-      const resultTable = WebImporter.DOMUtils.createTable(cells, document);
+      // only replace if there is at least one entry (plus the headline)
+      if (cells.length > 1) {
+        const resultTable = WebImporter.DOMUtils.createTable(cells, document);
 
-      referenceList.replaceWith(resultTable);
+        referenceList.replaceWith(resultTable);
+      }
     }
   }
 };
