@@ -43,7 +43,7 @@ export default async function decorate(block) {
   });
 
   // add headline if sidebar contains contacts block
-  if (hasBodyClass('has-sidebar')) {
+  if (hasBodyClass('has-sidebar') && !block.classList.contains('no-headline')) {
     const contact = document.body.querySelector('.section.sidebar > .contacts-wrapper');
 
     if (contact && !contact.querySelector(':scope > .contact-headline')) {
