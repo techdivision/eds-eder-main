@@ -358,7 +358,7 @@ function updateMetaTitle(doc) {
 async function loadEager(doc) {
   // ensure correct domain
   if (['hlx.page', 'hlx.live'].includes(getTLD())) {
-    (window.top?.location || window?.location).replace(
+    (window.top?.location || window.location).replace(
       getCurrentUrl()
         .replace('hlx.page', 'aem.page')
         .replace('hlx.live', 'aem.live'),
