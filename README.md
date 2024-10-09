@@ -78,3 +78,4 @@ the [placeholders.xlsx](https://edergmbh3.sharepoint.com/:x:/r/sites/MarketingED
 and use asynchronous `await t('Your text here')` or synchronous `ts('Your text here')` if you (can) **ensure**
 placeholders have
 been loaded with `await loadPlaceholders()` before.
+
