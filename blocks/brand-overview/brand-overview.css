@@ -30,7 +30,6 @@ main .section.brand-overview-container {
 .brand-overview {
   display: grid;
   grid-template-rows: 0.5fr auto;
-
   flex: 1;
   min-width: 0;
 
@@ -82,12 +81,10 @@ main .section.brand-overview-container {
 
     > div {
       padding: var(--spacing-half);
-
       display: grid;
       grid-template-rows: 0.1fr auto 0.1fr;
 
       /* each 2nd element should have gray background */
-
       &:nth-child(2n - 1):not(:only-child) {
         background-color: var(--light-color);
       }
