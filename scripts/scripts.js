@@ -128,6 +128,12 @@ function buildSidebarAndHero(main) {
 
     // if there is both a sidebar and a hero-image: it should cover both content and sidebar
     if (hasHero) {
+      // remove unused p tag
+      if (picture) {
+        picture.closest('p')
+          ?.remove();
+      }
+
       const section = document.createElement('div');
       section.classList.add('section', 'sidebar-hero');
       section.append(picture);
@@ -136,6 +142,11 @@ function buildSidebarAndHero(main) {
     }
     // if there is no sidebar, but a hero image; and no events-hero (that is handled differently)
   } else if (hasHero && !hasCustomHero) {
+    // remove unused p tag
+    if (picture) {
+      picture.closest('p')
+        ?.remove();
+    }
     const section = document.createElement('div');
     section.classList.add('section', 'hero');
     section.append(picture);
@@ -273,7 +284,7 @@ export function decorateLinkedPictures(block) {
 }
 
 /**
- * Adds onClick to links that lead to external urls and PDFs
+ * Adds target=_blank to links that lead to external urls and PDFs
  * @param main
  */
 export function decorateLinkTarget(main) {
@@ -286,13 +297,8 @@ export function decorateLinkTarget(main) {
           .trim();
         // check for external links or PDFs
         if (!href.startsWith('/') || extension === 'pdf') {
-          // add window.open to open them in new tab
-          a.onclick = () => {
-            window.open(href);
-            return false;
-          };
-          // change href to prevent scroll to top
-          a.href = 'javascript:void(0)';
+          // set target blank to open them in new tab
+          a.setAttribute('target', '_blank');
         }
       }
     });

@@ -45,10 +45,9 @@ export default function decorate(block) {
 
     if (li.querySelectorAll('a').length === 1) {
       li.addEventListener('click', () => {
-        window.open(link.href, '_self');
+        li.querySelector('a')
+          .dispatchEvent(new Event('click'));
       });
-
-      li.className = 'clickable';
     }
 
     ul.append(li);

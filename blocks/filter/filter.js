@@ -221,7 +221,6 @@ export default function decorate(block) {
     decoration: 'htmlOptions',
   };
 
-  console.log(block);
   // create filters array
   const filters = transformRowsToData(headers, block);
   setInitialState(filters);
