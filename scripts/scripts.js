@@ -124,6 +124,10 @@ function buildSidebarAndHero(main) {
 
     // if there is both a sidebar and a hero-image: it should cover both content and sidebar
     if (hasHero) {
+      if (picture) {
+        picture.closest('p')
+          ?.remove();
+      }
       const section = document.createElement('div');
       section.classList.add('section', 'sidebar-hero');
       section.append(picture);
@@ -132,6 +136,10 @@ function buildSidebarAndHero(main) {
     }
     // if there is no sidebar, but a hero image; and no events-hero (that is handled differently)
   } else if (hasHero && !hasCustomHero) {
+    if (picture) {
+      picture.closest('p')
+        ?.remove();
+    }
     const section = document.createElement('div');
     section.classList.add('section', 'hero');
     section.append(picture);
