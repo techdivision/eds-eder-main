@@ -28,11 +28,7 @@ import {
 } from './aem.js';
 import { getCurrentLanguage, tContent } from './i18n.js';
 import {
-  addBodyClass,
-  getCurrentUrl,
-  getTLD,
-  hasUrlParam,
-  isLocal,
+  addBodyClass, getCurrentUrl, getTLD, hasUrlParam, isLocal,
 } from './helpers.js';
 import { clearFetchCache } from './load-resource.js';
 import { renderCanonical, renderHrefLang } from './partials/header-link-tags.js';
@@ -368,10 +364,23 @@ async function loadEager(doc) {
 
   // scroll to anchor
   if (window.location.hash) {
-    setTimeout(() => document.querySelector(
-      decodeURIComponent(window.location.hash),
-    )
-      ?.scrollIntoView(), 300);
+    setTimeout(
+      () => {
+        let
+          hashElement = document.querySelector(
+            decodeURIComponent(window.location.hash),
+          );
+        const parentElement = hashElement?.closest('.block');
+        if (parentElement) {
+          hashElement = parentElement;
+        }
+        hashElement?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      },
+      300,
+    );
   }
 
   // head and body tags
