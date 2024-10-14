@@ -11,8 +11,7 @@
 
 :root {
   /* colors */
-  --feedstar-grey: #58595b;
-  --feedstar-red: #d7172f;
+  --kommunal-orange: #f98b1f;
   --color-red: #ed1c24;
   --color-green: #869d67;
   --color-green-light: #f3f6ef;
@@ -31,10 +30,10 @@
   --text-color-reverse: var(--color-white);
 
   /* theme vars */
-  --link-color: var(--feedstar-red);
+  --link-color: var(--kommunal-orange);
   --button-color: var(--color-white);
-  --button-color-hover: var(--feedstar-grey);
-  --button-background: var(--feedstar-grey);
+  --button-color-hover: var(--kommunal-orange);
+  --button-background: var(--kommunal-orange);
   --button-background-hover: var(--color-white);
-  --button-border: var(--feedstar-grey);
+  --button-border: var(--kommunal-orange);
 }
