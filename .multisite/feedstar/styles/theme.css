@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2024 TechDivision GmbH
+ * All rights reserved
+ *
+ * This product includes proprietary software developed at TechDivision GmbH, Germany
+ * For more information see https://www.techdivision.com/
+ *
+ * To obtain a valid license for using this software please contact us at
+ * license@techdivision.com
+ */
+
+:root {
+  /* colors */
+  --feedstar-grey: #58595b;
+  --feedstar-red: #d7172f;
+  --color-red: #ed1c24;
+  --color-green: #869d67;
+  --color-green-light: #f3f6ef;
+  --color-green-dark: #436f45;
+  --color-gray-light: #e5e5e5;
+  --color-gray: #999;
+  --color-gray-dark: #4c4c4c;
+  --color-gray-darker: #303030;
+  --color-black: #000;
+  --color-white: #fff;
+  --color-blue-profi: #1f3c90;
+  --color-blue: var(--color-blue-profi);
+  --background-color: var(--color-white);
+  --light-color: #eee;
+  --dark-color: #ccc;
+  --text-color: var(--color-black);
+  --text-color-reverse: var(--color-white);
+
+  /* theme vars */
+  --link-color: var(--feedstar-red);
+  --button-color: var(--color-white);
+  --button-color-hover: var(--feedstar-grey);
+  --button-background: var(--feedstar-grey);
+  --button-background-hover: var(--color-white);
+  --button-border: var(--feedstar-grey);
+}
