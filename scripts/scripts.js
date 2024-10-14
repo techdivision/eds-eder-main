@@ -273,7 +273,7 @@ export function decorateLinkedPictures(block) {
 }
 
 /**
- * Adds target=_blank to links that lead to external urls and PDFs
+ * Adds onClick to links that lead to external urls and PDFs
  * @param main
  */
 export function decorateLinkTarget(main) {
@@ -286,8 +286,13 @@ export function decorateLinkTarget(main) {
           .trim();
         // check for external links or PDFs
         if (!href.startsWith('/') || extension === 'pdf') {
-          // set target blank to open them in new tab
-          a.setAttribute('target', '_blank');
+          // add window.open to open them in new tab
+          a.onclick = () => {
+            window.open(href);
+            return false;
+          };
+          // change href to prevent scroll to top
+          a.href = 'javascript:void(0)';
         }
       }
     });

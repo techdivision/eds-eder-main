@@ -78,7 +78,12 @@
 }
 
 .rows .content > h3 {
+  margin-top: 0;
   max-width: calc(100% - 150px);
+}
+
+.rows .content > h2 {
+  margin-top: 0;
 }
 
 .rows .content .logo {

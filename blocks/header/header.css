@@ -492,6 +492,7 @@ header nav .mobile-menu li.is-visible > ul {
   header nav .pre-header .default-content-wrapper a {
     position: relative;
     padding-right: 15px;
+    padding-top: 20px;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul > li > a::after,
@@ -501,13 +502,13 @@ header nav .mobile-menu li.is-visible > ul {
     width: 8px;
     height: 8px;
     position: absolute;
-    top: 6px;
     right: 2px;
     transform: rotate(45deg);
     border-radius: 0 1px 0 0;
     border-style: solid;
     border-color: currentcolor;
     border-width: 2px 2px 0 0;
+    margin-bottom: 2px;
   }
 
   header .pre-header[aria-expanded='true'] .default-content-wrapper > ul > li > ul {
