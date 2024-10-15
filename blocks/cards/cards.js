@@ -30,7 +30,6 @@ export default function decorate(block) {
   /* change to ul, li */
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
-    const link = row.querySelector('a');
     const li = document.createElement('li');
     copyAttributes(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
@@ -45,10 +44,9 @@ export default function decorate(block) {
 
     if (li.querySelectorAll('a').length === 1) {
       li.addEventListener('click', () => {
-        window.open(link.href, '_self');
+        li.querySelector('a')
+          .dispatchEvent(new Event('click'));
       });
-
-      li.className = 'clickable';
     }
 
     ul.append(li);

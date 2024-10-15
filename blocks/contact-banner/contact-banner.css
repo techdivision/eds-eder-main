@@ -12,7 +12,7 @@
 /* banner */
 .contact-banner {
   /* CLS issues */
-  min-height: 650px;
+  min-height: 320px;
 
   @media (width >= 900px) {
     min-height: 320px;

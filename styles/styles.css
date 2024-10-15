@@ -336,15 +336,6 @@ main .section.highlight {
 /* hero image */
 main .sidebar-hero,
 main .hero {
-  padding-top: var(--spacing-simple);
-  padding-bottom: var(--spacing-simple);
-
-  @media (width >= 900px) {
-    padding-top: var(--spacing-double);
-    padding-bottom: var(--spacing-double);
-    margin-bottom: 0;
-  }
-
   img {
     width: 100%;
     height: auto;

@@ -219,6 +219,10 @@ header .pre-header ul > li > ul > li > ul {
   font-weight: var(--font-weight-regular);
 }
 
+.pre-header > .section:last-child {
+  padding-top: 20px
+}
+
 header .pre-header[aria-expanded='true'] {
   display: flex;
   visibility: visible;
