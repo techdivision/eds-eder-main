@@ -30,7 +30,7 @@ main .events-hero-container {
   margin-right: auto;
 
   @media (width >= 900px) {
-    min-height: 360px;
+    min-height: 450px;
     display: flex;
     align-items: start;
   }
