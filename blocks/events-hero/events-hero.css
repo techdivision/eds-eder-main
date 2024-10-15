@@ -30,7 +30,7 @@ main .events-hero-container {
   margin-right: auto;
 
   @media (width >= 900px) {
-    min-height: 360px;
+    min-height: 450px;
     display: flex;
     align-items: start;
   }
@@ -52,10 +52,10 @@ main .events-hero-container {
   /* content */
 
   .container-content {
-    padding: var(--spacing-double) var(--spacing-simple);
+    padding: 150px var(--spacing-simple);
 
     @media (width >= 1200px) {
-      padding: var(--spacing-double) 0;
+      padding: 150px 0;
     }
 
     p {
