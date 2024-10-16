@@ -23,6 +23,7 @@
   --color-black: #000;
   --color-white: #fff;
   --color-blue: var(--color-blue);
+  --color-orange: var(--kommunal-orange);
   --background-color: var(--color-white);
   --light-color: #eee;
   --dark-color: #ccc;
@@ -30,10 +31,10 @@
   --text-color-reverse: var(--color-white);
 
   /* theme vars */
-  --link-color: var(--kommunal-orange);
+  --link-color: var(--color-orange);
   --button-color: var(--color-white);
-  --button-color-hover: var(--kommunal-orange);
-  --button-background: var(--kommunal-orange);
+  --button-color-hover: var(--color-orange);
+  --button-background: var(--color-orange);
   --button-background-hover: var(--color-white);
-  --button-border: var(--kommunal-orange);
+  --button-border: var(--color-orange);
 }

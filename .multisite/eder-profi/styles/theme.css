@@ -23,6 +23,7 @@
   --color-white: #fff;
   --color-blue-profi: #1f3c90;
   --color-blue: var(--color-blue-profi);
+  --color-orange: #f98b1f;
   --background-color: var(--color-white);
   --light-color: #eee;
   --dark-color: #ccc;

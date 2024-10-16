@@ -19,7 +19,8 @@
 }
 
 .text-box.red a,
-.text-box.blue a {
+.text-box.blue a,
+.text-box.orange a {
   color: var(--color-white);
 }
 
@@ -29,4 +30,8 @@
 
 .text-box.blue {
   background-color: var(--color-blue);
+}
+
+.text-box.orange {
+  background-color: var(--color-orange);
 }
