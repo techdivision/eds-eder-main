@@ -22,6 +22,7 @@
   --color-white: #fff;
   --color-blue-agratec: #00529c;
   --color-blue: var(--color-blue-agratec);
+  --color-orange: #f98b1f;
   --background-color: var(--color-white);
   --light-color: #eee;
   --dark-color: #ccc;

@@ -24,6 +24,7 @@
   --color-black: #000;
   --color-white: #fff;
   --color-blue: var(--color-blue);
+  --color-orange: #f98b1f;
   --background-color: var(--color-white);
   --light-color: #eee;
   --dark-color: #ccc;
