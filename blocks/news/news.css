@@ -27,7 +27,7 @@
     /* details */
 
     .details-wrapper {
-      flex: 3;
+      flex: 2;
       margin: 0 !important;
       padding: 40px;
 
@@ -59,7 +59,6 @@
     }
 
     /* image */
-
     .image-wrapper {
       flex: 1;
       margin: 0;
@@ -67,8 +66,8 @@
       img {
         display: block;
         width: 100%;
-        height: 260px;
-        object-fit: contain;
+        height: 100%;
+        object-fit: cover;
       }
     }
   }
