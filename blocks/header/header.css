@@ -220,7 +220,13 @@ header .pre-header ul > li > ul > li > ul {
 }
 
 .pre-header > .section:last-child {
-  padding-top: 20px
+  padding-top: 20px;
+  position: absolute;
+  right: 25px;
+
+  @media (width >= 1400px) {
+    position: unset;
+  }
 }
 
 header .pre-header[aria-expanded='true'] {
@@ -344,8 +350,11 @@ header nav .mobile-menu li.is-visible > ul {
     position: relative;
     grid-template: 'preheader preheader preheader'
     'logo sections .';
-    justify-content: center;
     background: linear-gradient(to bottom, var(--color-gray-dark) 50%, var(--color-white) 50%);
+
+    @media (width >= 1400px) {
+      justify-content: center;
+    }
   }
 
   header nav[aria-expanded='true'] {
@@ -527,7 +536,7 @@ header nav .mobile-menu li.is-visible > ul {
 /* breadcrumbs */
 .breadcrumbs {
   max-width: var(--page-width);
-  margin: 0 auto;
+  margin: 15px auto;
   font-size: var(--body-font-size-s);
   line-height: var(--body-line-height-s);
 
