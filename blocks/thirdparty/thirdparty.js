@@ -54,12 +54,12 @@ function loadUserlike(id) {
 }
 
 /**
- * Load Google Analytics
+ * Load Google Tag Manager
  *
  * @param {String} id
  * @returns {Promise}
  */
-function loadGoogleAnalytics(id) {
+function loadGoogleTagManager(id) {
   window.dataLayer = window.dataLayer || [];
 
   function gtag() {
@@ -70,7 +70,7 @@ function loadGoogleAnalytics(id) {
   gtag('js', new Date());
   gtag('config', id);
 
-  return loadThirdPartyScript(`https://www.googletagmanager.com/gtag/js?id=${id}`);
+  return loadThirdPartyScript(`https://www.googletagmanager.com/gtm.js?id=${id}`);
 }
 
 /**
@@ -154,8 +154,8 @@ export default function decorate(block) {
         loadUserlike(script.config)
           .then();
         break;
-      case 'google analytics':
-        loadGoogleAnalytics(script.config)
+      case 'google tag manager':
+        loadGoogleTagManager(script.config)
           .then();
         break;
       case 'adobe analytics':
