@@ -154,6 +154,7 @@ export default function decorate(block) {
         loadUserlike(script.config)
           .then();
         break;
+      case 'google analytics':
       case 'google tag manager':
         loadGoogleTagManager(script.config)
           .then();
