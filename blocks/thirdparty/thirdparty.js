@@ -80,7 +80,8 @@ function initDataLayer(id) {
  */
 function loadGoogleTagManager(id) {
   const gtmUrl = `https://www.googletagmanager.com/gtag/js?id=${id}`;
-  if (hasUrlParam('gtm_debug')) {
+  if (hasUrlParam('gtm_debug') || sessionStorage.getItem('gtm_debug')) {
+    sessionStorage.setItem('gtm_debug', 1);
     betterLoadScript(gtmUrl).then();
     createScriptTag(null, initDataLayer.toString());
     return Promise.resolve();
