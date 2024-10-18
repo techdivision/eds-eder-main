@@ -28,10 +28,13 @@ import { betterLoadScript, createScriptTag } from '../../scripts/load-resource.j
 function loadUsercentrics(id) {
   /*
     FIXME
-      If we use "bundle.js" with loadThirdPartyScript:
+      If we use "bundle.js" with "loadThirdPartyScript":
         it works with partytown but settings button in footer doesn't work
-      If we use "loader.js" with betterLoadScript:
+      If we use "loader.js" with "betterLoadScript":
         everything works but without partytown loading to a lower lighthouse score
+      If we use "loadThirdPartyScriptWithoutPartytown"
+        the script will load too late
+      So we use "betterLoadScript" for now.
    */
   return betterLoadScript(
     'https://app.usercentrics.eu/browser-ui/latest/loader.js',
@@ -49,7 +52,7 @@ function loadUsercentrics(id) {
  * @returns {Promise}
  */
 function loadUserlike(id) {
-  // FIXME we already contacted userlike to provide support for partytown
+  // FIXME we already contacted userlike to provide support for partytown, they did not respond yet
   return loadThirdPartyScriptWithoutPartytown(
     `https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/${id}.js`,
   );
@@ -79,9 +82,14 @@ function initDataLayer(id) {
  * @returns {Promise}
  */
 function loadGoogleTagManager(id) {
+  /*
+   * FIXME our marketing consultants report that with partytown, no data is tracked
+   *   so we will serve GTM normally for now
+   */
+  const usePartyTownForGTM = false;
   const gtmUrl = `https://www.googletagmanager.com/gtag/js?id=${id}`;
-  if (hasUrlParam('gtm_debug') || sessionStorage.getItem('gtm_debug')) {
-    sessionStorage.setItem('gtm_debug', 1);
+  if (!usePartyTownForGTM || hasUrlParam('gtm_debug') || sessionStorage.getItem('gtm_debug')) {
+    sessionStorage.setItem('gtm_debug', '1');
     betterLoadScript(gtmUrl).then();
     createScriptTag(null, initDataLayer.toString());
     return Promise.resolve();
