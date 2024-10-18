@@ -10,15 +10,14 @@
  */
 
 import {
+  createThirdPartyRelatedScriptTag,
   loadThirdPartyScript,
   loadThirdPartyScriptWithoutPartytown,
 } from '../../scripts/load-thirdparty-script.js';
 import {
-  getCurrentUrl,
-  isLocal,
-  isTest,
-  transformRowsToData,
+  getCurrentUrl, hasUrlParam, isLocal, isTest, transformRowsToData,
 } from '../../scripts/helpers.js';
+import { betterLoadScript, createScriptTag } from '../../scripts/load-resource.js';
 
 /**
  * Load usercentrics
@@ -28,11 +27,14 @@ import {
  */
 function loadUsercentrics(id) {
   /*
-    FIXME loader.js works for settings button, bundle.js doesn't, but loader.js
-    will lead to lighthouse score issues
+    FIXME
+      If we use "bundle.js" with loadThirdPartyScript:
+        it works with partytown but settings button in footer doesn't work
+      If we use "loader.js" with betterLoadScript:
+        everything works but without partytown loading to a lower lighthouse score
    */
-  return loadThirdPartyScript(
-    'https://app.usercentrics.eu/browser-ui/latest/bundle.js',
+  return betterLoadScript(
+    'https://app.usercentrics.eu/browser-ui/latest/loader.js',
     {
       id: 'usercentrics-cmp',
       'data-settings-id': id,
@@ -54,23 +56,41 @@ function loadUserlike(id) {
 }
 
 /**
+ * Init data layer
+ *
+ * @param {string} id
+ */
+function initDataLayer(id) {
+  window.dataLayer = window.dataLayer || [];
+
+  window.gtag = function gtag() {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer.push(arguments);
+  };
+
+  window.gtag('js', new Date());
+  window.gtag('config', id);
+}
+
+/**
  * Load Google Tag Manager
  *
  * @param {String} id
  * @returns {Promise}
  */
 function loadGoogleTagManager(id) {
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    // eslint-disable-next-line prefer-rest-params
-    window.dataLayer.push(arguments);
+  const gtmUrl = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+  if (hasUrlParam('gtm_debug')) {
+    betterLoadScript(gtmUrl).then();
+    createScriptTag(null, initDataLayer.toString());
+    return Promise.resolve();
   }
-
-  gtag('js', new Date());
-  gtag('config', id);
-
-  return loadThirdPartyScript(`https://www.googletagmanager.com/gtag/js?id=${id}`);
+  return Promise.all(
+    [
+      loadThirdPartyScript(gtmUrl),
+      createThirdPartyRelatedScriptTag(initDataLayer.toString()),
+    ],
+  );
 }
 
 /**

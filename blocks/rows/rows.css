@@ -114,6 +114,10 @@
     gap: var(--spacing-simple);
     grid-template:
     'image content recommendation' / 1fr 2fr 1fr;
+
+    .logo {
+      padding-top: var(--spacing-half);
+    }
   }
 
   .rows .image img {
@@ -121,7 +125,8 @@
   }
 
   .rows .content {
-    padding: 0;
+    padding: var(--spacing-half) 0;
+    margin-top: 0;
   }
 
   .rows .content .logo {
