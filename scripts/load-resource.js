@@ -50,6 +50,30 @@ function addResolver(href, resolve) {
 }
 
 /**
+ * Create script tag
+ *
+ * @param {Object} attrs
+ * @param {string} [scriptContent]
+ */
+function createScriptTag(attrs, scriptContent) {
+  const script = document.createElement('script');
+  if (attrs) {
+    // eslint-disable-next-line no-restricted-syntax, guard-for-in
+    for (const attr in attrs) {
+      if (['src', 'onload', 'onerror'].includes(attr)) {
+        script[attr] = attrs[attr];
+      } else {
+        script.setAttribute(attr, attrs[attr]);
+      }
+    }
+  }
+  if (scriptContent) {
+    script.innerHTML = scriptContent;
+  }
+  document.head.append(script);
+}
+
+/**
  * Loads a CSS file.
  * @param {string} href URL to the CSS file
  */
@@ -84,17 +108,13 @@ async function betterLoadScript(href, attrs) {
   return new Promise((resolve, reject) => {
     addResolver(href, resolve);
     if (!document.querySelector(`head > script[src="${href}"]`)) {
-      const script = document.createElement('script');
-      script.src = href;
-      if (attrs) {
-        // eslint-disable-next-line no-restricted-syntax, guard-for-in
-        for (const attr in attrs) {
-          script.setAttribute(attr, attrs[attr]);
-        }
-      }
-      script.onload = () => resolveLoad(href);
-      script.onerror = reject;
-      document.head.append(script);
+      const finalizedAttrs = {
+        ...(attrs || {}),
+        src: href,
+        onload: () => resolveLoad(href),
+        onerror: reject,
+      };
+      createScriptTag(finalizedAttrs);
     }
   });
 }
@@ -220,6 +240,7 @@ async function clearFetchCache() {
 }
 
 export {
+  createScriptTag,
   betterLoadScript,
   betterLoadCSS,
   loadThirdPartyBundle,

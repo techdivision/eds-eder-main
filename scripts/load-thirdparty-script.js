@@ -9,7 +9,7 @@
  * license@techdivision.com
  */
 
-import { betterLoadScript } from './load-resource.js';
+import { betterLoadScript, createScriptTag } from './load-resource.js';
 import { isLocal } from './helpers.js';
 
 /**
@@ -21,6 +21,8 @@ function definePartytownConfig() {
     lib: '/scripts/vendor/partytown/',
     forward: [
       ['dataLayer.push', { preserveBehavior: true }],
+      ['fbq', { preserveBehavior: false }],
+      'gtm.push',
     ],
   };
 }
@@ -36,6 +38,13 @@ function loadPartytown() {
     '../../../scripts/vendor/partytown/partytown.js',
     { type: 'module' },
   );
+}
+
+/**
+ * Inform partytown about new scripts
+ */
+function informPartyTownAboutNewScripts() {
+  window.dispatchEvent(new CustomEvent('ptupdate'));
 }
 
 /**
@@ -58,7 +67,7 @@ function loadThirdPartyScript(script, attrs) {
       // load via partytown
       betterLoadScript(script, attributes)
         .then();
-      window.dispatchEvent(new CustomEvent('ptupdate'));
+      informPartyTownAboutNewScripts();
     });
 }
 
@@ -80,7 +89,27 @@ function loadThirdPartyScriptWithoutPartytown(url) {
   });
 }
 
+/**
+ * Create third party related script tag
+ *
+ * @param {String} scriptContent
+ * @returns {Promise}
+ */
+function createThirdPartyRelatedScriptTag(scriptContent) {
+  return loadPartytown()
+    .then(() => {
+      createScriptTag(
+        {
+          type: 'text/partytown',
+        },
+        scriptContent,
+      );
+      informPartyTownAboutNewScripts();
+    });
+}
+
 export {
   loadThirdPartyScript,
   loadThirdPartyScriptWithoutPartytown,
+  createThirdPartyRelatedScriptTag,
 };
