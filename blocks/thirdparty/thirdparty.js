@@ -70,7 +70,7 @@ function loadGoogleTagManager(id) {
   gtag('js', new Date());
   gtag('config', id);
 
-  return loadThirdPartyScript(`https://www.googletagmanager.com/gtm.js?id=${id}`);
+  return loadThirdPartyScript(`https://www.googletagmanager.com/gtag/js?id=${id}`);
 }
 
 /**
