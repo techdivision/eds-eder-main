@@ -17,7 +17,7 @@ import {
 import {
   getCurrentUrl, hasUrlParam, isLocal, isTest, transformRowsToData,
 } from '../../scripts/helpers.js';
-import { betterLoadScript, createScriptTag } from '../../scripts/load-resource.js';
+import { betterLoadScript } from '../../scripts/load-resource.js';
 
 /**
  * Load usercentrics
@@ -83,21 +83,21 @@ function initDataLayer(id) {
  */
 function loadGoogleTagManager(id) {
   /*
-   * FIXME our marketing consultants report that with partytown, no data is tracked
-   *   so we will serve GTM normally for now
+   * If our marketing consultants report that with partytown no data is tracked
+   *   we can switch to serving GTM normally here
    */
-  const usePartyTownForGTM = false;
+  const usePartyTownForGTM = true;
   const gtmUrl = `https://www.googletagmanager.com/gtag/js?id=${id}`;
   if (!usePartyTownForGTM || hasUrlParam('gtm_debug') || sessionStorage.getItem('gtm_debug')) {
     sessionStorage.setItem('gtm_debug', '1');
+    initDataLayer(id);
     betterLoadScript(gtmUrl).then();
-    createScriptTag(null, initDataLayer.toString());
     return Promise.resolve();
   }
   return Promise.all(
     [
+      createThirdPartyRelatedScriptTag(`${initDataLayer.toString()} ${initDataLayer.name}('${id}');`),
       loadThirdPartyScript(gtmUrl),
-      createThirdPartyRelatedScriptTag(initDataLayer.toString()),
     ],
   );
 }
