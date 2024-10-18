@@ -130,13 +130,14 @@
 
 /* styling half-width cards with brand logo */
 .cards.half-width .cards-card-image + .cards-card-image {
+  max-width: 80px;
   position: absolute;
   right: var(--spacing-simple);
   margin-top: var(--spacing-simple);
 }
 
 .cards.half-width .cards-card-image + .cards-card-image + .cards-card-body {
-  padding-top: var(--spacing-double);
+  padding-right: 110px;
 }
 
 @media (width >= 600px) {
