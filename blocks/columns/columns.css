@@ -39,6 +39,10 @@
   display: block;
 }
 
+.columns.usp {
+  padding: 0 var(--spacing-simple)
+}
+
 .columns.usp span.icon {
   box-sizing: border-box;
   width: 85px;
@@ -87,6 +91,12 @@
 }
 
 /* styling desktop */
+@media (width >= 1200px) {
+  .columns.usp {
+    padding: 0;
+  }
+}
+
 @media (width >= 900px) {
   .columns > div {
     max-width: 100%;
