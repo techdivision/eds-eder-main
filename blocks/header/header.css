@@ -504,7 +504,7 @@ header nav .mobile-menu li.is-visible > ul {
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul > li > a,
   header nav .pre-header .default-content-wrapper a {
     position: relative;
-    padding-right: 15px;
+    padding-right: var(--spacing-half);
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul > li > a::after,
@@ -536,7 +536,7 @@ header nav .mobile-menu li.is-visible > ul {
 /* breadcrumbs */
 .breadcrumbs {
   max-width: var(--page-width);
-  margin: 15px auto;
+  margin: var(--spacing-half) auto;
   font-size: var(--body-font-size-s);
   line-height: var(--body-line-height-s);
 
